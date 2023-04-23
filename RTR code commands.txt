@@ -1,0 +1,5 @@
+--- 1st code---
+
+>cl.exe /c /EHsc /I C:\freeglut\include filename.cpp
+>link.exe filename.obj /LIBPATH:C:\freeglut\lib\x64 /SUBSYSTEM:CONSOLE
+
