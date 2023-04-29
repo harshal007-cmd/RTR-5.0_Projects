@@ -1,6 +1,6 @@
 #include<GL\freeglut.h>
 
-int bIsFullScreen = false;
+int bIsWindowFull = false;
 
 int main(int argc, char* argv[])
 {
@@ -11,14 +11,12 @@ int main(int argc, char* argv[])
 	void mouse(int, int, int, int);
 	void uninitialize(void);
 
-	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE);
-	glutInitWindowSize(800, 900);
-	glutInitWindowPosition(100, 200);
-	glutCreateWindow("Practicing RTR program");
+	glutInit(argc*, argv);
+	glutInitDisplayMode(GL_DOUBLE | GL_RGBA);
+	glutInitWindowSize(900, 900);
+	glutCreateWindow("Again doing practice");
 
 	initialize();
-
 	glutReshapeFunc(resize);
 	glutDisplayFunc(display);
 	glutKeyboardFunc(keyboard);
@@ -32,83 +30,41 @@ int main(int argc, char* argv[])
 void initialize(void)
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-
 }
 
 void resize(int width, int height)
 {
-	glMatrixMode(GL_PROJECTION);	
+	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glViewport(0, 0, (GLsizei)width, (GLsizei)height);
-
-}
-
-void display(void)
-{
-	glClear(GL_COLOR_BUFFER_BIT);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	glBegin(GL_TRIANGLES);
-	glColor3f(0.0f, 2.0f, 0.0f);
-	glVertex3f(0.0f, 1.0f, 0.0f);
-
-	glColor3f(1.0f, 1.0f, 0.0f);
-	glVertex3f(-1.0f, -1.0f, 0.0f);
-
-	glColor3f(1.0f, 0.0f, 0.0f);
-	glVertex3f(1.0f, -1.0f, 0.0f);
-
-	glEnd();
-	
-	glutSwapBuffers();
-
-}
-
-void keyboard(unsigned char key, int x, int y)
-{
-	switch (key)
-	{
-	case 27:
-		glutLeaveMainLoop();
-		break;
-		
-	case 'F':
-	case 'f':
-		if (bIsFullScreen == false)
-		{
-			glutFullScreen();
-			bIsFullScreen = true;
-
-		}
-		else
-		{
-			glutLeaveFullScreen();
-			bIsFullScreen = false;
-		}
-		break;
-	default:
-		break;
-	}
+	gl
 }
 
 
-void mouse(int button, int state, int x, int y)
-{
-	switch (button)
-	{
-	case GLUT_RIGHT_BUTTON:
-		glutLeaveMainLoop();
-		break;
-	default:
-		break;
 
-	}
-}
 
-void uninitialize()
-{
 
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /*
