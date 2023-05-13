@@ -178,16 +178,13 @@
 18. Elaye Raja
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+=============================================== 11 May 2023 ========================================================
+Basic of Number systems
+Why we use bits.
+Decimal to Binary
+ASCII values
+Why 8 bit?
+Bit -> Byte and other units.
+	
+1. Twiked smily assignment in Texture. In this we will need, Interprete 0-9 as Number and Char 
 
