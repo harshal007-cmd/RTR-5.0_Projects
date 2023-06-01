@@ -574,3 +574,75 @@ Bit -> Byte and other units.
 
 
 unigine heaven troppical, troppics vally
+
+
+
+========================================== 1 June 2023 ==========================
+
+##Types of Rendering
+
+A. Type 1. How are you presenting
+	1.Real/Imigiate mode
+		- All UI rendanring, ALL games, Animations.
+		- Show as it comes.
+	
+
+B. Type 2. How rendanring occuring
+	1. Offline
+		- Combining somethig and make them packate. ex Video, images
+	2. Online
+		- It contain interactions.
+	
+C. Type 3. Who is doing redering
+	1.Hardware
+		- Other GPU , NVIDIA, AMD
+	2.Software
+		- OS GPU, VESA, NOVau
+	
+D. Type 4. Retainded mode redering.
+	- Retained before showing, All UI is Retainded mode.
+
+Q.What is Rendering ?
+- Presenting something...Our is Graphical.
+- Online is RTR.
+
+##Starts From
+
+SPHIGS/PHIGS - Simple Portable Hirarchial Interactive Graphics System
+
+	- XPARC- Xerox Paro alto reserch center made these pacakges 
+
+- Cook and Catmull , Mathematics expert and join lucasfield. Lorren Carperter they all make one 
+  algorithm "REYES"
+  - Render Everything You Ever Saw
+  - RenderMan library is made. Used in 'Star Wars-Wrath of Khan'
+  - Programing language of effects, RSL
+  - Renderman Shading Language
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
