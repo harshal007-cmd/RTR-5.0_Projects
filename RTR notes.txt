@@ -619,11 +619,40 @@ SPHIGS/PHIGS - Simple Portable Hirarchial Interactive Graphics System
   - Programing language of effects, RSL
   - Renderman Shading Language
   
-  
-  
-  
-  
-  
+  -Silicon graphics international made online redaring from this
+	- OpenGL in Irix OS, then Steven Sphillburf then used in Dinasor Movie in 1991.
+	- 1993 DirectX made in COM.
+	- OpenGL 4.6 is latest
+	- DirectX 12 Ultimate.
+    - Vulkan after OpenGL with some additional features
+	- DirectX 12.1 Ultimate.
+	- ARB - Aritech Review Board, they make SGL that make OpenGL.
+  	- UNIx, Apple , MS make their own OpenGL using documentation of OpenGL.
+	- ARB --> Khronos, opengl is under this now
+	- OpenGL ES for Embedded. 3.2 latest.
+	- Mark Killgard make GLUT. 1992 cant make 2002 OpenGL using this. It is FFP.
+	- PP is Shader based.
+	- SDL - Simple Directmedia Layer
+	- Qt- Quick Toolkit
+	
+	- OS->  Window ->  G Contex ->  OpenGL, called as Bridging API's from Window to GC. its Native
+	
+		- Bridging API
+			- Win  : WGL  - Windows 
+			- Linux : GLX  - GL for X Windos
+			- Mac  : AGL -Apple GL 
+					 CGL - Core GL
+			- Android : EGL - Embedded
+			- IOS : EAGL- Embedded Apple GL 
+			- Web : EGL- Embedded GL
+
+	- Window - Windows + Client Area -> GC
+	- Linux - Window + client rectangel -> GC
+	- Mac - View (Window + Client area) 
+	- Android - View/Surface
+	- IOS - View 
+	- Web - Canvas (window + Client area)
+	- Direct X - Surface 
   
   
   
