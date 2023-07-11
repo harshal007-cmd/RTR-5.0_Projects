@@ -654,23 +654,13 @@ SPHIGS/PHIGS - Simple Portable Hirarchial Interactive Graphics System
 	- Web - Canvas (window + Client area)
 	- Direct X - Surface 
   
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+=============================== 9th July =============================
+#Message Loop
+
+-Programs for User,GDI, Karnel 32.dll are stored in
+	-NT.dll, run32.dll, win32k.sys
+	
+-Hardware messages are Post messages, which send by GetMessage().
   
   
   
