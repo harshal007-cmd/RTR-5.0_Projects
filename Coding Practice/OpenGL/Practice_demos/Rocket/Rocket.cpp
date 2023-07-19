@@ -56,33 +56,109 @@ void GridLines()
 }
 void Rocket()
 {
+	//Middle Cylinder
 	glBegin(GL_POLYGON);
-	
-	//middle Cylinder
-	glColor3f(0.5, 0.5, 0.5);
+	glColor3f(0.9, 0.9, 0.9);
 	glVertex3f(-0.045, -0.75, 0.0);//bottom left
 	glVertex3f(-0.045, -0.20, 0.0);//top left
+	
+	glColor3f(0.4, 0.4, 0.4);
 	glVertex3f(0.045, -0.20, 0.0);//top right
 	glVertex3f(0.045, -0.75, 0.0);//bottom right
 	glEnd();
+
+	//Middle Cylinder Head Triangle
+	glBegin(GL_TRIANGLES);
 	
-	//left Cylinder
-	glColor3f(0.5, 0.5, 0.5);
-	glVertex3f(-0.0675, -0.75, 0.0);//bottom left
-	glVertex3f(-0.0675, -0.40, 0.0);//top left
-	glVertex3f(-0.045, -0.40, 0.0);//top right
-	glVertex3f(-0.045, -0.75, 0.0);//bottom right
+	glColor3f(1.0, 1.0, 1.0);
+	glVertex2f(-0.045, -0.20);//bottom left
+	
+	
+	glColor3f(0.7, 0.7, 0.7);
+	glVertex2f(0.0, -0.10);   //top
+	glVertex2f(0.045, -0.20);  //bottom right
+		
 	glEnd();
 
-	//right Cylinder
-	glColor3f(0.5, 0.5, 0.5);
-	glVertex3f(0.045, -0.75, 0.0);//bottom left
-	glVertex3f(0.045, -0.40, 0.0);//top left
-	glVertex3f(0.0675, -0.20, 0.0);//top right
-	glVertex3f(0.0675, -0.75, 0.0);//bottom right
+	//Middle cylinder exaust cover
+	glBegin(GL_POLYGON);
+	glColor3f(0.3, 0.3, 0.3);
+	glVertex3f(-0.053, -0.79, 0.0);//bottom left
+	glVertex3f(-0.045, -0.75, 0.0);//top left
+	glVertex3f(0.045, -0.75, 0.0);//top right
+	glVertex3f(0.053, -0.79, 0.0);//bottom right
 	glEnd();
 
 	
+//xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx Middle Full Cylinder Ends xxxxxxxxxxxxxxxxxxxxxxxxxx
+
+
+
+	//Left Cylinder
+	glBegin(GL_POLYGON);
+	glColor3f(0.9, 0.9, 0.9);
+	glVertex3f(-0.0875, -0.72, 0.0);//bottom left
+	glVertex3f(-0.0875, -0.30, 0.0);//top left
+	
+	glColor3f(0.4, 0.4, 0.4);
+	glVertex3f(-0.045, -0.30, 0.0);//top right
+	glVertex3f(-0.045, -0.72, 0.0);//bottom right
+	glEnd();
+
+	//Left Cylinder Head Triangle
+	glBegin(GL_TRIANGLES);
+	glColor3f(1.0, 1.0, 1.0);
+	glVertex2f(-0.0875, -0.30);//bottom left
+	
+	glColor3f(0.7, 0.7, 0.7);
+	glVertex2f(-0.06625, -0.25);   //top
+	glVertex2f(-0.045, -0.30);  //bottom right
+	glEnd();
+
+	//Left cylinder exaust cover
+	glBegin(GL_POLYGON);
+	glColor3f(0.3, 0.3, 0.3);
+	glVertex3f(-0.0950, -0.74, 0.0);//bottom left
+	glVertex3f(-0.0875, -0.72, 0.0);//top left
+	glVertex3f(-0.045, -0.72, 0.0);//top right
+	glVertex3f(-0.040, -0.74, 0.0);//bottom right
+	glEnd();
+
+	
+//xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx Left Full Cylinder Ends xxxxxxxxxxxxxxxxxxxxxxxxxx
+
+	//Right Cylinder
+	glBegin(GL_POLYGON);
+	glColor3f(0.9, 0.9, 0.9);
+	glVertex3f(0.045, -0.72, 0.0);//bottom left
+	glVertex3f(0.045, -0.30, 0.0);//top left
+	
+	glColor3f(0.4, 0.4, 0.4);
+	glVertex3f(0.0875, -0.30, 0.0);//top right
+	glVertex3f(0.0875, -0.72, 0.0);//bottom right
+	glEnd();
+	
+	//Right Cylinder Head Triangle
+	glBegin(GL_TRIANGLES);
+	glColor3f(1.0, 1.0, 1.0);
+	glVertex2f(0.0875, -0.30);//bottom left
+	
+	glColor3f(0.7, 0.7, 0.7);
+	glVertex2f(0.06625, -0.25);   //top
+	glVertex2f(0.045, -0.30);  //bottom right
+	glEnd();
+
+	//Right cylinder exaust cover
+	glBegin(GL_POLYGON);
+	glColor3f(0.3, 0.3, 0.3);
+	glVertex3f(0.040, -0.74, 0.0);//bottom left
+	glVertex3f(0.045, -0.72, 0.0);//top left
+	glVertex3f(0.0875, -0.72, 0.0);//top right
+	glVertex3f(0.0950, -0.74, 0.0);//bottom right
+	glEnd();
+
+//xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx Right Full Cylinder Ends xxxxxxxxxxxxxxxxxxxxxxxxxx
+
 }
 
 
@@ -125,7 +201,6 @@ void initialize(void)
 {
 	// code
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
 	
 
 }
@@ -146,9 +221,9 @@ void display(void)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	GridLines();
-	//Rocket();
+	Rocket();
 
-	Points();
+//	Points();
 
 
 	glutSwapBuffers();
