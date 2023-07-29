@@ -1,48 +1,5 @@
 #include<GL\freeglut.h>
 
-int bIsWindowFull = false;
-
-int main(int argc, char* argv[])
-{
-	void initialize(void);
-	void resize(int, int);
-	void display(void);
-	void keyboard(unsigned char, int, int);
-	void mouse(int, int, int, int);
-	void uninitialize(void);
-
-	glutInit(argc*, argv);
-	glutInitDisplayMode(GL_DOUBLE | GL_RGBA);
-	glutInitWindowSize(900, 900);
-	glutCreateWindow("Again doing practice");
-
-	initialize();
-	glutReshapeFunc(resize);
-	glutDisplayFunc(display);
-	glutKeyboardFunc(keyboard);
-	glutMouseFunc(mouse);
-	glutCloseFunc(uninitialize);
-
-	glutMainLoop();
-	return 0;
-}
-
-void initialize(void)
-{
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-}
-
-void resize(int width, int height)
-{
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-//	gl
-}
-
-
-/*
-#include<GL\freeglut.h>
-
 int bIsScreenFull = false;
 
 int main(int argc, char* argv[])
@@ -154,5 +111,3 @@ void uninitialize(void)
 {
 
 }
-
-*/
