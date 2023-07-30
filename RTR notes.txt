@@ -725,6 +725,34 @@ while(bDone == False)
 }
 
 
+========================================== 29 July ========================================
+#BaseCode is DirectX code
+	Windows->ffp->opengl
+	Windows->pp->opengl
+	Windows->DirectX
+	
+resize(LOWORD(lParam),HIWORD(lParam));
+		- lparam = width and height
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
