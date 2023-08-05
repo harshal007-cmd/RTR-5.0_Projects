@@ -9,7 +9,7 @@ float rocket_acceleration = 0.000001f;
 
 void GridLines()
 {
-    //rocket symattry line
+    //rocket symmetry line
     glBegin(GL_LINES);
     glColor3f(0.0, 0.7, 0.0);
     glVertex2f(-0.65, 0.0);
@@ -39,7 +39,7 @@ void drawRocket() {
 
     glColor3f(0.4, 0.4, 0.4);
     glVertex3f(rocket_x+ 0.045, rocket_y + 0.3, 0.0);//top right
-    glVertex3f(rocket_x+0.045, rocket_y, 0.0);//bottom right
+    glVertex3f(rocket_x+ 0.045, rocket_y, 0.0);//bottom right
     glEnd();
 
     //Middle Cylinder Head Triangle
@@ -120,14 +120,55 @@ void drawRocket() {
     //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx Left Full Cylinder Ends xxxxxxxxxxxxxxxxxxxxxxxxxx
     
 
+    
+    //xxxxxxxxxxxxxxxxxxxxxx Right Cylinder Starts xxxxxxxxxxxxxxxxxxxxxxxxxxxxx//
+
+    glBegin(GL_POLYGON);
+    glColor3f(0.9, 0.9, 0.9);
+    glVertex3f(rocket_x + 0.045, rocket_y + 0.027, 0.0);//bottom left
+    glVertex3f(rocket_x + 0.045, rocket_y + 0.25, 0.0);//top left
+
+    glColor3f(0.4, 0.4, 0.4);
+    glVertex3f(rocket_x+0.075, rocket_y + 0.25, 0.0);//top right
+    glVertex3f(rocket_x+0.075, rocket_y + 0.027, 0.0);//bottom right
+    glEnd();
+
+    //Right Cylinder Head Triangle
+    glBegin(GL_TRIANGLES);
+    glColor3f(1.0, 1.0, 1.0);
+    glVertex2f(rocket_x + 0.045, rocket_y + 0.25);//bottom left
+
+    glColor3f(0.7, 0.7, 0.7);
+    glVertex2f(rocket_x + 0.060, rocket_y + 0.3);  //top
+    glVertex2f(rocket_x + 0.075, rocket_y + 0.25);  //bottom right
+    glEnd();
+
+
+    //Right cylinder exaust cover
+    glBegin(GL_POLYGON);
+    glColor3f(0.3, 0.3, 0.3);
+    glVertex3f(rocket_x + 0.040, rocket_y + 0.010, 0.0);//bottom left
+    glVertex3f(rocket_x + 0.045, rocket_y + 0.027, 0.0);//top left
+    glVertex3f(rocket_x + 0.075, rocket_y + 0.027, 0.0);//top right
+    glVertex3f(rocket_x + 0.080, rocket_y + 0.010, 0.0);//bottom right
+    glEnd();
+
+
+    //Right cylinder exaust fire
+    glBegin(GL_TRIANGLES);
+    glColor3f(1.0, 0.9, 0.0);
+    glVertex2f(rocket_x + 0.040, rocket_y + 0.010);//top left
+    glVertex2f(rocket_x + 0.080, rocket_y + 0.010);  //top right
+
+    glColor3f(0.8, 0.0, 0.0);
+    glVertex2f(rocket_x + 0.060, rocket_y - 0.072);  //down
+    glEnd();
+
+    //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx Right Full Cylinder Ends xxxxxxxxxxxxxxxxxxxxxxxxxx
+
 
 }
 
-// Function to draw the background
-void drawBackground() {
-    // Implement your background drawing code here
-    // You can draw stars, moon, sky, etc.
-}
 
 // Function to update the rocket position and velocity
 void updateRocket() {
@@ -176,8 +217,8 @@ int main(int argc, char** argv) {
 
     glutDisplayFunc(displayFunc);
     glutReshapeFunc(reshapeFunc);
-//  glutKeyboardFunc(keyboardFunc);
-   // glutTimerFunc(0, updateScene, 0);
+    glutKeyboardFunc(keyboardFunc);
+    glutTimerFunc(0, updateScene, 0);
 
     glutMainLoop();
     return 0;
