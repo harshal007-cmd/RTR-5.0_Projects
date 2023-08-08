@@ -33,12 +33,16 @@ void drawRocket() {
     //xxxxxxxxxxxxxxxxxxxxxx Middle Cylinder Starts xxxxxxxxxxxxxxxxxxxxxxxxxxxxx//
 
     glBegin(GL_POLYGON);
-    glColor3f(0.9, 0.9, 0.9);
+    glColor3f(0.0, 0.9, 0.0);
     glVertex3f(rocket_x, rocket_y, 0.0);//bottom left
+
+    glColor3f(0.9, 0.9, 0.9);
     glVertex3f(rocket_x, rocket_y+0.3, 0.0);//top left
 
-    glColor3f(0.4, 0.4, 0.4);
+    glColor3f(0.9, 0.5, 0.0);
     glVertex3f(rocket_x+ 0.045, rocket_y + 0.3, 0.0);//top right
+
+    glColor3f(0.9, 0.9, 0.9);
     glVertex3f(rocket_x+ 0.045, rocket_y, 0.0);//bottom right
     glEnd();
 
