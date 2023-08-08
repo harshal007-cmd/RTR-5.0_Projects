@@ -33,25 +33,26 @@ void drawRocket() {
     //xxxxxxxxxxxxxxxxxxxxxx Middle Cylinder Starts xxxxxxxxxxxxxxxxxxxxxxxxxxxxx//
 
     glBegin(GL_POLYGON);
-    glColor3f(0.0, 0.9, 0.0);
+    glColor3f(0.0, 1.0, 0.0);  //green
     glVertex3f(rocket_x, rocket_y, 0.0);//bottom left
 
-    glColor3f(0.9, 0.9, 0.9);
+    glColor3f(1.0, 1.0, 1.0);  //white
     glVertex3f(rocket_x, rocket_y+0.3, 0.0);//top left
+    
+    glColor3f(1.0, 0.5, 0.0);  //green
 
-    glColor3f(0.9, 0.5, 0.0);
     glVertex3f(rocket_x+ 0.045, rocket_y + 0.3, 0.0);//top right
-
-    glColor3f(0.9, 0.9, 0.9);
+    
+    glColor3f(0.3, 0.8, 0.3);  
     glVertex3f(rocket_x+ 0.045, rocket_y, 0.0);//bottom right
     glEnd();
 
     //Middle Cylinder Head Triangle
     glBegin(GL_TRIANGLES);
-    glColor3f(1.0, 1.0, 1.0);
+    glColor3f(0.9, 0.9, 0.9);
     glVertex2f(rocket_x, rocket_y + 0.3);//bottom left
    
-    glColor3f(0.7, 0.7, 0.7);
+    glColor3f(1.0, 0.5, 0.0);
     glVertex2f(rocket_x + 0.0225, rocket_y + 0.36);  //top
     glVertex2f(rocket_x + 0.045, rocket_y + 0.3);  //bottom right
     glEnd();
@@ -81,21 +82,26 @@ void drawRocket() {
     //xxxxxxxxxxxxxxxxxxxxxx Left Cylinder Starts xxxxxxxxxxxxxxxxxxxxxxxxxxxxx//
 
     glBegin(GL_POLYGON);
-    glColor3f(0.9, 0.9, 0.9);
+    glColor3f(0.0, 1.0, 0.0); 
     glVertex3f(rocket_x - 0.03, rocket_y + 0.027, 0.0);//bottom left
-    glVertex3f(rocket_x-0.03, rocket_y + 0.25, 0.0);//top left
 
-    glColor3f(0.4, 0.4, 0.4);
+    
+    glColor3f(1.0, 1.0, 1.0);
+    glVertex3f(rocket_x-0.03, rocket_y + 0.25, 0.0);//top left
+   
+    glColor3f(1.0, 0.5, 0.0);
     glVertex3f(rocket_x, rocket_y + 0.25, 0.0);//top right
+
+    glColor3f(0.3, 0.8, 0.3);
     glVertex3f(rocket_x, rocket_y+0.027, 0.0);//bottom right
     glEnd();
 
     //Left Cylinder Head Triangle
     glBegin(GL_TRIANGLES);
-    glColor3f(1.0, 1.0, 1.0);
+    glColor3f(0.9, 0.9, 0.9);
     glVertex2f(rocket_x - 0.03, rocket_y + 0.25);//bottom left
 
-    glColor3f(0.7, 0.7, 0.7);
+    glColor3f(1.0, 0.5, 0.0);
     glVertex2f(rocket_x - 0.0150, rocket_y + 0.3);  //top
     glVertex2f(rocket_x, rocket_y + 0.25);  //bottom right
     glEnd();
@@ -128,21 +134,25 @@ void drawRocket() {
     //xxxxxxxxxxxxxxxxxxxxxx Right Cylinder Starts xxxxxxxxxxxxxxxxxxxxxxxxxxxxx//
 
     glBegin(GL_POLYGON);
-    glColor3f(0.9, 0.9, 0.9);
+    glColor3f(0.0, 1.0, 0.0); //green
     glVertex3f(rocket_x + 0.045, rocket_y + 0.027, 0.0);//bottom left
-    glVertex3f(rocket_x + 0.045, rocket_y + 0.25, 0.0);//top left
 
-    glColor3f(0.4, 0.4, 0.4);
+    glColor3f(1.0, 1.0, 1.0);
+    glVertex3f(rocket_x + 0.045, rocket_y + 0.25, 0.0);//top left
+    
+    glColor3f(1.0, 0.5, 0.0);
     glVertex3f(rocket_x+0.075, rocket_y + 0.25, 0.0);//top right
+    
+    glColor3f(0.3, 0.8, 0.3); //green
     glVertex3f(rocket_x+0.075, rocket_y + 0.027, 0.0);//bottom right
     glEnd();
 
     //Right Cylinder Head Triangle
     glBegin(GL_TRIANGLES);
-    glColor3f(1.0, 1.0, 1.0);
+    glColor3f(0.9, 0.9, 0.9);
     glVertex2f(rocket_x + 0.045, rocket_y + 0.25);//bottom left
 
-    glColor3f(0.7, 0.7, 0.7);
+    glColor3f(1.0, 0.5, 0.0);
     glVertex2f(rocket_x + 0.060, rocket_y + 0.3);  //top
     glVertex2f(rocket_x + 0.075, rocket_y + 0.25);  //bottom right
     glEnd();
@@ -222,7 +232,7 @@ int main(int argc, char** argv) {
     glutDisplayFunc(displayFunc);
     glutReshapeFunc(reshapeFunc);
     glutKeyboardFunc(keyboardFunc);
-    glutTimerFunc(0, updateScene, 0);
+    //glutTimerFunc(0, updateScene, 0);
 
     glutMainLoop();
     return 0;
