@@ -135,11 +135,11 @@ void Flag1()
 
 void Flag2()
 {
-    float xCenter = 0.05f, yCenter = 0.4f;
+    float xCenter = 0.01f, yCenter = 0.4f;
     float radius = 0.015f;
     float len = 0.1f;
 
-    float x = 0.05, y;
+    float x = 0.01, y;
 
     glColor3f(1.0f, 0.5f, 0);//orange
 
@@ -255,6 +255,7 @@ void Flag2()
     glEnd();
 
 }
+
 
 void GridLines()
 {
@@ -468,6 +469,7 @@ void india(void)
     glVertex2f(0.86, -0.1);
     glEnd();
 }
+
 
 
 //Indiagate
@@ -1782,21 +1784,34 @@ void displayFunc() {
     glPopMatrix();
 
     //xxxxxxx Clouds End xxxxxxx//
-    drawRocket();
+   
+    glPushMatrix();
+    glTranslatef(0.1, 0.0, 0.0);
+    glScalef(1.2, 1.2, 0.0);
+    drawRocket();  //Rocket
+    glPopMatrix();
+
 
     glPushMatrix();
     glTranslatef(-0.2, 0.60, 0);
-    IndiaGate();
+    IndiaGate();  //India gate
     glPopMatrix();
    
-    // india();
-    //GridLines();
-    //glPushMatrix();
-   // glTranslatef(-0.4, -0.6, 0.0);
-  //  Flag1();
-    //Flag2();
-    //glPopMatrix();
-    
+        
+    //xxxxxxxxxx Flag Positions xxxxxxxxxxxxxx//
+    glPushMatrix();
+    glTranslatef(-0.2, -0.4, 0.0);
+    glScalef(0.4f, 0.4f, 0);
+    Flag1();  
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(0.7, -0.4, 0.0);
+    glScalef(0.4f, 0.4f, 0);
+    Flag2();
+    glPopMatrix();
+    //xxxxxxxxxxxxxxxxx Flag Display Ends xxxxxxxxxxxxx//
+    GridLines();
     glutSwapBuffers();
 }
 
