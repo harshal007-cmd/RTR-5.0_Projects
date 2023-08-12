@@ -4,7 +4,7 @@
 // Rocket properties
 float rocket_x = -0.65f;
 float rocket_y = 0.0f;
-float rocket_speed = 0.00003f;
+float rocket_speed = 0.00039f;
 float rocket_acceleration = 0.000001f;
 
 void GridLines()
@@ -181,12 +181,64 @@ void drawRocket() {
     //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx Right Full Cylinder Ends xxxxxxxxxxxxxxxxxxxxxxxxxx
 
 
+    //xxxxxxxxxxx IND name xxxxxxxxxxxxxxxxxx//
+    glBegin(GL_LINES);
+    glColor3f(0.0, 0.0, 0.0);
+    // I
+    glVertex2f(rocket_x+0.007, rocket_y + 0.25); //upper left point
+    glVertex2f(rocket_x + 0.037, rocket_y + 0.25); // upper right point
+  
+    glVertex2f(rocket_x + 0.0225, rocket_y + 0.25); //middle line upper point
+    glVertex2f(rocket_x + 0.0225, rocket_y + 0.20); //middle line lower point
+    
+    glVertex2f(rocket_x + 0.007, rocket_y + 0.20); //lower left point
+    glVertex2f(rocket_x + 0.037, rocket_y + 0.20); //lower right point
+
+    glEnd();
+   
+    // N
+
+    glBegin(GL_LINES);
+    glColor3f(0.0, 0.0, 0.0);
+  
+    glVertex2f(rocket_x + 0.007, rocket_y + 0.18); //upper left point
+    glVertex2f(rocket_x + 0.007, rocket_y + 0.12); // lower right point
+
+    glVertex2f(rocket_x + 0.007, rocket_y + 0.18); //middle line upper point
+    glVertex2f(rocket_x + 0.037, rocket_y + 0.12); //middle line lower point
+
+    glVertex2f(rocket_x + 0.037, rocket_y + 0.12); //lower left point
+    glVertex2f(rocket_x + 0.037, rocket_y + 0.18); //upper right point
+
+    glEnd();
+
+    
+    // D
+    glBegin(GL_LINES);
+    glColor3f(0.0, 0.0, 0.0);
+
+    glVertex2f(rocket_x + 0.007, rocket_y + 0.10); //upper left point
+    glVertex2f(rocket_x + 0.037, rocket_y + 0.10); // upper right point
+
+    glVertex2f(rocket_x + 0.018, rocket_y + 0.10); //middle line upper point
+    glVertex2f(rocket_x + 0.018, rocket_y + 0.05); //middle line lower point
+
+    glVertex2f(rocket_x + 0.007, rocket_y + 0.05); //lower left point
+    glVertex2f(rocket_x + 0.037, rocket_y + 0.05); //upper right point
+    
+    glVertex2f(rocket_x + 0.037, rocket_y + 0.10); //right line of D
+    glVertex2f(rocket_x + 0.037, rocket_y + 0.05); //right line of D
+
+
+    glEnd();
+ 
+    //xxxxxxxxxxxxxx  IND name End xxxxxxxxxxxx//
 }
 
 
 // Function to update the rocket position and velocity
 void updateRocket() {
-    rocket_speed += rocket_acceleration;
+  //  rocket_speed += rocket_acceleratio;
     rocket_y += rocket_speed;
    
 }
@@ -232,7 +284,7 @@ int main(int argc, char** argv) {
     glutDisplayFunc(displayFunc);
     glutReshapeFunc(reshapeFunc);
     glutKeyboardFunc(keyboardFunc);
-    //glutTimerFunc(0, updateScene, 0);
+    glutTimerFunc(0, updateScene, 0);
 
     glutMainLoop();
     return 0;
