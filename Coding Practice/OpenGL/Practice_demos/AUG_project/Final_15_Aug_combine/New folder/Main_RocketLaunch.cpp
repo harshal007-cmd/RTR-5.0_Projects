@@ -683,18 +683,7 @@ void Ground(void)
     glEnd();
 }
 
-void Ground1()
-{
-    glBegin(GL_POLYGON);
-    glColor3f(0.2, 0.8, 0.3);
-    
-    glVertex3f(-1.0, -1.0, 0.0); //BL
-    glVertex3f(-1.0, -0.2, 0.0); //TL
-    glVertex3f( 1.0, -0.2, 0.0); //TR
-    glVertex3f( 1.0, -1.0, 0.0); //BR
-    glEnd();
 
-}
 
 void BackgroundSky()
 {
