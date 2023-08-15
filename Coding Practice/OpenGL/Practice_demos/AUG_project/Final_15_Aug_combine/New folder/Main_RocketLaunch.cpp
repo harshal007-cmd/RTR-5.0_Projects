@@ -278,32 +278,426 @@ void GridLines()
 
 }
 
-void Ground()
+void StreetLamp1(void)
 {
     glBegin(GL_QUADS);
-    glColor3f(0.2, 0.8, 0.3);
-    
-    glVertex3f(-1.0, -1.0, 0.0); //BL
-    glVertex3f(-1.0, -0.2, 0.0); //TL
-    glVertex3f( 1.0, -0.2, 0.0); //TR
-    glVertex3f( 1.0, -1.0, 0.0); //BR
+
+    glColor3f(0.0f, 0.0f, 0.0f);
+    glVertex2f(-0.036f, 0.84f);
+    glVertex2f(0.036f, 0.84f);
+    glVertex2f(0.036f, 0.82f);
+    glVertex2f(-0.036f, 0.82f);
     glEnd();
 
+    //Trapezium above Yellow Part's Block
+    glBegin(GL_POLYGON);
+
+    glColor3f(0.0f, 0.0f, 0.0f);
+    glVertex2f(-0.04f, 0.82f);
+    glVertex2f(0.04f, 0.82f);
+    glVertex2f(0.086f, 0.72f);
+    glVertex2f(-0.086f, 0.72f);
+    glEnd();
+
+
+    //Block Above Yellow Part
+    glBegin(GL_QUADS);
+
+    glColor3f(0.0f, 0.0f, 0.0f);
+    glVertex2f(-0.09f, 0.72f);
+    glVertex2f(0.09f, 0.72f);
+    glVertex2f(0.09f, 0.7f);
+    glVertex2f(-0.09f, 0.7f);
+    glEnd();
+
+    //Yellow Part(Light)
+    glBegin(GL_POLYGON);
+
+    glColor3f(1.0f, 3.22f, 0.0f);
+    glVertex2f(-0.09f, 0.7f);
+    glVertex2f(0.09f, 0.7f);
+    glVertex2f(0.05f, 0.5f);
+    glVertex2f(-0.05f, 0.5f);
+    glEnd();
+
+    glBegin(GL_LINE_LOOP);
+
+    glColor3f(0.0f, 0.0f, 0.0f);
+    glVertex2f(-0.09f, 0.7f);
+    glVertex2f(0.09f, 0.7f);
+    glVertex2f(0.05f, 0.5f);
+    glVertex2f(-0.05f, 0.5f);
+    glEnd();
+
+    // Line On Top Of Block 
+    glBegin(GL_POLYGON);
+
+    glColor3f(0.0f, 0.0f, 0.0f);
+    glVertex2f(-0.005f, 0.7f);
+    glVertex2f(0.005f, 0.7f);
+    glVertex2f(0.005f, 0.5f);
+    glVertex2f(-0.005f, 0.5f);
+    glEnd();
+
+    //Block on top of Light Pole
+    glBegin(GL_QUADS);
+
+    glColor3f(0.0f, 0.0f, 0.0f);
+    glVertex2f(-0.05f, 0.5f);
+    glVertex2f(0.05f, 0.5f);
+    glVertex2f(0.05f, 0.48f);
+    glVertex2f(-0.05f, 0.48f);
+    glEnd();
+
+    // Light Pole
+    glBegin(GL_POLYGON);
+
+    glColor3f(0.0f, 0.0f, 0.0f); // color (grey) 
+    glVertex2f(-0.007f, 0.5f);
+    glVertex2f(0.007f, 0.5f);
+    glVertex2f(0.007f, -0.5f);
+    glVertex2f(-0.007f, -0.5f);
+    glEnd();
+
+    //Block Above Pole
+    glBegin(GL_QUADS);
+
+    glColor3f(0.0f, 0.0f, 0.0f);
+    glVertex2f(-0.04f, -0.3f);
+    glVertex2f(0.04f, -0.3f);
+    glVertex2f(0.04f, -0.52f);
+    glVertex2f(-0.04f, -0.52f);
+    glEnd();
+
+    // Base
+    glBegin(GL_QUADS);
+
+    glColor3f(0.0f, 0.0f, 0.0f);
+    glVertex2f(-0.09f, -0.5f);
+    glVertex2f(0.09f, -0.5f);
+    glVertex2f(0.09f, -0.55f);
+    glVertex2f(-0.09f, -0.55f);
+    glEnd();
 }
+
+void StreetLamp2(void)
+{
+    glBegin(GL_QUADS);
+
+    glColor3f(0.0f, 0.0f, 0.0f);
+    glVertex2f(-0.036f, 0.84f);
+    glVertex2f(0.036f, 0.84f);
+    glVertex2f(0.036f, 0.82f);
+    glVertex2f(-0.036f, 0.82f);
+    glEnd();
+
+    //Trapezium above Yellow Part's Block
+    glBegin(GL_POLYGON);
+
+    glColor3f(0.0f, 0.0f, 0.0f);
+    glVertex2f(-0.04f, 0.82f);
+    glVertex2f(0.04f, 0.82f);
+    glVertex2f(0.086f, 0.72f);
+    glVertex2f(-0.086f, 0.72f);
+    glEnd();
+
+
+    //Block Above Yellow Part
+    glBegin(GL_QUADS);
+
+    glColor3f(0.0f, 0.0f, 0.0f);
+    glVertex2f(-0.09f, 0.72f);
+    glVertex2f(0.09f, 0.72f);
+    glVertex2f(0.09f, 0.7f);
+    glVertex2f(-0.09f, 0.7f);
+    glEnd();
+
+    //Yellow Part(Light)
+    glBegin(GL_POLYGON);
+
+    glColor3f(1.0f, 3.22f, 0.0f);
+    glVertex2f(-0.09f, 0.7f);
+    glVertex2f(0.09f, 0.7f);
+    glVertex2f(0.05f, 0.5f);
+    glVertex2f(-0.05f, 0.5f);
+    glEnd();
+
+    glBegin(GL_LINE_LOOP);
+
+    glColor3f(0.0f, 0.0f, 0.0f);
+    glVertex2f(-0.09f, 0.7f);
+    glVertex2f(0.09f, 0.7f);
+    glVertex2f(0.05f, 0.5f);
+    glVertex2f(-0.05f, 0.5f);
+    glEnd();
+
+    // Line On Top Of Block 
+    glBegin(GL_POLYGON);
+
+    glColor3f(0.0f, 0.0f, 0.0f);
+    glVertex2f(-0.005f, 0.7f);
+    glVertex2f(0.005f, 0.7f);
+    glVertex2f(0.005f, 0.5f);
+    glVertex2f(-0.005f, 0.5f);
+    glEnd();
+
+    //Block on top of Light Pole
+    glBegin(GL_QUADS);
+
+    glColor3f(0.0f, 0.0f, 0.0f);
+    glVertex2f(-0.05f, 0.5f);
+    glVertex2f(0.05f, 0.5f);
+    glVertex2f(0.05f, 0.48f);
+    glVertex2f(-0.05f, 0.48f);
+    glEnd();
+
+    // Light Pole
+    glBegin(GL_POLYGON);
+
+    glColor3f(0.0f, 0.0f, 0.0f); // color (grey) 
+    glVertex2f(-0.007f, 0.5f);
+    glVertex2f(0.007f, 0.5f);
+    glVertex2f(0.007f, -0.5f);
+    glVertex2f(-0.007f, -0.5f);
+    glEnd();
+
+    //Block Above Pole
+    glBegin(GL_QUADS);
+
+    glColor3f(0.0f, 0.0f, 0.0f);
+    glVertex2f(-0.04f, -0.3f);
+    glVertex2f(0.04f, -0.3f);
+    glVertex2f(0.04f, -0.52f);
+    glVertex2f(-0.04f, -0.52f);
+    glEnd();
+
+    // Base
+    glBegin(GL_QUADS);
+
+    glColor3f(0.0f, 0.0f, 0.0f);
+    glVertex2f(-0.09f, -0.5f);
+    glVertex2f(0.09f, -0.5f);
+    glVertex2f(0.09f, -0.55f);
+    glVertex2f(-0.09f, -0.55f);
+    glEnd();
+}
+
+void Ground(void)
+{
+    //Ground
+
+    glBegin(GL_POLYGON);
+    glColor3f(1.0, 0.5, 0.0);
+
+    glVertex3f(-1.0, -1.0, 0.0); //BL
+    glVertex3f(-1.0, -0.3, 0.0); //TL
+    glVertex3f(1.0, -0.3, 0.0); //TR
+    glVertex3f(1.0, -1.0, 0.0); //BR
+    glEnd();
+
+    //xxxxx Streetlamp xxxxxxxxxx//
+   
+    glPushMatrix();
+    glScalef(0.22, 0.22, 0.0);
+    glTranslatef(0.0,-3.0, 0.0);
+    StreetLamp1();
+    glPopMatrix();
+   
+    glPushMatrix();
+    glScalef(0.22, 0.22, 0.0);
+    glTranslatef(2.65, -3.0, 0.0);
+    StreetLamp2();
+    glPopMatrix();
+
+
+
+    //xxxxx Streetlamp End xxxxxxxxx//
+
+//xxxxx ROAD and Divider xxxxx//
+    glPushMatrix();
+    glTranslatef(0.3, 0.0, 0.0);
+    //road
+    glBegin(GL_POLYGON);
+    glColor3f(0.5f, 0.5f, 0.5f);
+    glVertex3f(-0.15f, -0.38f, 0.0f);
+    glVertex3f(0.15f, -0.38f, 0.0f);
+    glVertex3f(0.3f, -1.0f, 0.0f);
+    glVertex3f(-0.3f, -1.0f, 0.0f);
+    glEnd();
+
+    //divider
+    glBegin(GL_POLYGON);
+    glColor3f(1.0f, 1.0f, 0.0f);
+    glVertex3f(-0.0015f, -0.5f, 0.0f);
+    glVertex3f(0.0015f, -0.5f, 0.0f);
+    glVertex3f(0.0015f, -0.65f, 0.0f);
+    glVertex3f(-0.0015f, -0.65f, 0.0f);
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    glColor3f(1.0f, 1.0f, 0.0f);
+    glVertex3f(-0.0015f, -0.67f, 0.0f);
+    glVertex3f(0.0015f, -0.67f, 0.0f);
+    glVertex3f(0.0018f, -0.85f, 0.0f);
+    glVertex3f(-0.0018f, -0.85f, 0.0f);
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    glColor3f(1.0f, 1.0f, 0.0f);
+    glVertex3f(-0.0018f, -0.87f, 0.0f);
+    glVertex3f(0.0018f, -0.87f, 0.0f);
+    glVertex3f(0.002f, -1.0f, 0.0f);
+    glVertex3f(-0.002f, -1.0f, 0.0f);
+    glEnd();
+
+    glPopMatrix();
+
+//xxxx ROAD DIVIDER ENDS xxxxxxxxxxx//
+   
+    // left bench 1
+    glBegin(GL_POLYGON);
+    glColor3f(1.0f, 0.7f, 0.0f);
+    glVertex3f(-0.9f, -0.4f, 0.0f);
+    glVertex3f(-0.7f, -0.4f, 0.0f);
+    glColor3f(0.0f, 0.0f, 0.0f);
+    glVertex3f(-0.7f, -0.42f, 0.0f);
+    glVertex3f(-0.9f, -0.42f, 0.0f);
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    glColor3f(1.0f, 0.7f, 0.0f);
+    glVertex3f(-0.9f, -0.43f, 0.0f);
+    glVertex3f(-0.7f, -0.43f, 0.0f);
+    //glColor3f(0.0f, 0.0f, 0.0f);
+    glVertex3f(-0.7f, -0.45f, 0.0f);
+    glVertex3f(-0.9f, -0.45f, 0.0f);
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    glColor3f(1.0f, 0.6f, 0.0f);
+    glVertex3f(-0.9f, -0.47f, 0.0f);
+    glVertex3f(-0.7f, -0.47f, 0.0f);
+    glColor3f(0.0f, 0.0f, 0.0f);
+    glVertex3f(-0.7f, -0.48f, 0.0f);
+    glVertex3f(-0.9f, -0.48f, 0.0f);
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    glColor3f(1.0f, 0.6f, 0.0f);
+    glVertex3f(-0.89f, -0.485f, 0.0f);
+    glVertex3f(-0.71f, -0.485f, 0.0f);
+    glColor3f(0.0f, 0.0f, 0.0f);
+    glVertex3f(-0.71f, -0.495f, 0.0f);
+    glVertex3f(-0.89f, -0.495f, 0.0f);
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    glColor3f(1.0f, 0.6f, 0.0f);
+    glVertex3f(-0.89f, -0.505f, 0.0f);
+    glVertex3f(-0.71f, -0.505f, 0.0f);
+    glColor3f(0.0f, 0.0f, 0.0f);
+    glVertex3f(-0.71f, -0.515f, 0.0f);
+    glVertex3f(-0.89f, -0.515f, 0.0f);
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    glColor3f(1.0f, 0.6f, 0.0f);
+    glVertex3f(-0.89f, -0.48f, 0.0f);
+    glVertex3f(-0.88f, -0.48f, 0.0f);
+    glColor3f(0.0f, 0.0f, 0.0f);
+    glVertex3f(-0.88f, -0.525f, 0.0f);
+    glVertex3f(-0.89f, -0.525f, 0.0f);
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    glColor3f(1.0f, 0.6f, 0.0f);
+    glVertex3f(-0.71f, -0.48f, 0.0f);
+    glVertex3f(-0.72f, -0.48f, 0.0f);
+    glColor3f(0.0f, 0.0f, 0.0f);
+    glVertex3f(-0.71f, -0.525f, 0.0f);
+    glVertex3f(-0.72f, -0.525f, 0.0f);
+    glEnd();
+
+    // right bench 1
+    glBegin(GL_POLYGON);
+    glColor3f(1.0f, 0.7f, 0.0f);
+    glVertex3f(0.9f, -0.4f, 0.0f);
+    glVertex3f(0.7f, -0.4f, 0.0f);
+    glColor3f(0.0f, 0.0f, 0.0f);
+    glVertex3f(0.7f, -0.42f, 0.0f);
+    glVertex3f(0.9f, -0.42f, 0.0f);
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    glColor3f(1.0f, 0.7f, 0.0f);
+    glVertex3f(0.9f, -0.43f, 0.0f);
+    glVertex3f(0.7f, -0.43f, 0.0f);
+    //glColor3f(0.0f, 0.0f, 0.0f);
+    glVertex3f(0.7f, -0.45f, 0.0f);
+    glVertex3f(0.9f, -0.45f, 0.0f);
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    glColor3f(1.0f, 0.6f, 0.0f);
+    glVertex3f(0.9f, -0.47f, 0.0f);
+    glVertex3f(0.7f, -0.47f, 0.0f);
+    glColor3f(0.0f, 0.0f, 0.0f);
+    glVertex3f(0.7f, -0.48f, 0.0f);
+    glVertex3f(0.9f, -0.48f, 0.0f);
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    glColor3f(1.0f, 0.6f, 0.0f);
+    glVertex3f(0.89f, -0.485f, 0.0f);
+    glVertex3f(0.71f, -0.485f, 0.0f);
+    glColor3f(0.0f, 0.0f, 0.0f);
+    glVertex3f(0.71f, -0.495f, 0.0f);
+    glVertex3f(0.89f, -0.495f, 0.0f);
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    glColor3f(1.0f, 0.6f, 0.0f);
+    glVertex3f(0.89f, -0.505f, 0.0f);
+    glVertex3f(0.71f, -0.505f, 0.0f);
+    glColor3f(0.0f, 0.0f, 0.0f);
+    glVertex3f(0.71f, -0.515f, 0.0f);
+    glVertex3f(0.89f, -0.515f, 0.0f);
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    glColor3f(1.0f, 0.6f, 0.0f);
+    glVertex3f(0.89f, -0.48f, 0.0f);
+    glVertex3f(0.88f, -0.48f, 0.0f);
+    glColor3f(0.0f, 0.0f, 0.0f);
+    glVertex3f(0.88f, -0.525f, 0.0f);
+    glVertex3f(0.89f, -0.525f, 0.0f);
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    glColor3f(1.0f, 0.6f, 0.0f);
+    glVertex3f(0.71f, -0.48f, 0.0f);
+    glVertex3f(0.72f, -0.48f, 0.0f);
+    glColor3f(0.0f, 0.0f, 0.0f);
+    glVertex3f(0.71f, -0.525f, 0.0f);
+    glVertex3f(0.72f, -0.525f, 0.0f);
+    glEnd();
+}
+
+
 
 void BackgroundSky()
 {
     //xxxxxxx Background Sky xxxxxxx//
     glBegin(GL_QUADS);
     glColor3f(0.529, 0.908, 0.922); //some blue shade
-    glVertex3f(-1.0, -0.2, 0.0); //bottom left
+    glVertex3f(-1.0, -0.3, 0.0); //bottom left
 
     glColor3f(0.5, 0.8, 1.0); //sky blue
     glVertex3f(-1.0, 1.0, 0.0); //top left
     glVertex3f(1.0, 1.0, 0.0); //top right
 
     glColor3f(0.529, 0.908, 0.922); //some blue shade
-    glVertex3f(1.0, -0.2, 0.0); //bottom right
+    glVertex3f(1.0, -0.3, 0.0); //bottom right
 
 
     glEnd();
@@ -1746,7 +2140,6 @@ void drawRocket() {
 
 }
 
-
 // Function to update the rocket position and velocity
 void updateRocket() {
    // rocket_speed += rocket_acceleration;
@@ -1800,18 +2193,14 @@ void displayFunc() {
         
     //xxxxxxxxxx Flag Positions xxxxxxxxxxxxxx//
     glPushMatrix();
-    glTranslatef(-0.2, -0.4, 0.0);
+    glTranslatef(-0.4, -0.4, 0.0);
     glScalef(0.4f, 0.4f, 0);
     Flag1();  
     glPopMatrix();
 
-    glPushMatrix();
-    glTranslatef(0.7, -0.4, 0.0);
-    glScalef(0.4f, 0.4f, 0);
-    Flag2();
-    glPopMatrix();
+    
     //xxxxxxxxxxxxxxxxx Flag Display Ends xxxxxxxxxxxxx//
-    GridLines();
+   // GridLines();
     glutSwapBuffers();
 }
 
