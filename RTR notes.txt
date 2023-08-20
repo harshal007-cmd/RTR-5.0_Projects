@@ -736,9 +736,32 @@ resize(LOWORD(lParam),HIWORD(lParam));
 
 	
 
+========================================== 18 Aug offline ==========================
+#Books
 
+*- compulsary
+#- easy
 
+A) Mathematics in Computer Graphics
+	*1.Mathematics for Computer gharphics - Eric Lengyel
+	#2.3D math primer - Fletchre Dunn
+	3.Essentials mathematics for games and interactive applications - van verth
+	4.Mathamatics and Gemotry and Calculas for computer graphics - john vince, 3 books
+	5.Mathematics for rendanring - Glassner
 
+B) Books for Computer Graphics
+	*1.Computer Graphics principals and Practice - Hughes, vandam, foley
+	2.Interactive computer graphics - Edward angel, daves shreiner
+	3.Computer Graphics - Hill
+	4.Computer Graphics through OpenGL - sumntha guha
+	5.3D computer Graphics - Alan Watt
+
+c) OpenGL FFP
+	*1.OpenGL programming guide 2nd or 3rd edition - Mason Woo, Dev Shriner (Red Book)
+	#*2.OpenGL super bibel - 2nd or 3rd edition - Richard wrights Jr (Blue book)
+	3.OpenGL programming for X-Windows system - Mark Killgard (green book)
+	4.Advance OpenGL graphics programming - McReynolds, Blythe
+	#5.Begining OpenGL game programming - Dave astel
 
 
 
