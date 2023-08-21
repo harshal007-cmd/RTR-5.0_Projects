@@ -1,243 +1,237 @@
-// Header Files
-#include<GL/freeglut_std.h>
-#include<GL/gl.h>
-#include<stdbool.h>
-#include<GL/freeglut.h>
-#include <stddef.h>
-#include<stdio.h>
+#include<gl\freeglut.h>
+#define _USE_MATH_DEFINES 0
 #include<math.h>
-
 #include"MyMath.h"
+#define ARRAY_LENGTH(arr) (sizeof(arr)/sizeof(arr[0]))
 
-#define  ARRAY_LENGTH(arr) (sizeof(arr) / sizeof(arr[0]))
+GLfloat fade = 0.0f;
 
-// global variables
-bool b_FullScreen = false;
-static GLfloat t = 0.0f;
+static GLfloat t =0.0f;
 
-vec2 p0 = { -0.5f,-0.3f };
-vec2 p1 = { -0.3f,0.2f };
-vec2 p2 = { 0.3,0.2 };
-vec2 p3 = { -0.5, -0.3 }; 
-vec2 p;
-vec2 a1, a2;
+vec2 p0={-0.5f,0.0f};
+vec2 p1={-0.3f,0.5f};
+vec2 p2={0.3f,0.5f};
+vec2 p3={0.5f,0.0f};
 vec2 c1,c2,c3;
-vec2* selected;
+vec2 a1,a2,p;
 
-void vec2_translate(vec2* result, float x, float y)
+vec2* selected=&p0;
+
+void vec2_translation(vec2*result,float x,float y)
 {
-    result->data[0] += x;
-    result->data[1] += y;
-
+	result->data[0]+=x;
+	result->data[1]+=y;
+	
 }
 
-float myrand(float min, float max)
+float lerp(float start, float end, float t)
 {
-    return min + (rand() / (RAND_MAX / (max -min)));
+	return start + t * (end - start);
 }
 
-// liear interpolation // lerp // smoothstep
-float lerp(float start, float end, float t){
-    return start + t * (end - start);
-}
 
-// Entry-point Function
 int main(int argc, char* argv[])
 {
-    // local function declarations
-    void initialize(void);
-    void resize(int,int);
-    void display(void);
-    void update(int val);
-    void keyboard(unsigned char,int,int);
-    void mouse(int,int,int,int);
-    void uninitialize(void);
+	void init(void);
+	void display(void);
+	void resize(int, int);
+	void update(int val);
+    void keyboard(unsigned char key,int x,int y);
 
-    // code
-    glutInit(&argc,argv);
-    glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGBA);
 
-    glutInitWindowSize(800,600);
-    glutInitWindowPosition(100,100);
-    glutCreateWindow("HSBC");
+	//code
+	glutInit(&argc, argv);
+	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE);
+	glutInitWindowSize(600, 600);
+	glutInitWindowPosition(100, 100);
+	glutCreateWindow("GRP");
 
-    initialize();
+	init();
 
-    glutReshapeFunc(resize);
-    glutDisplayFunc(display);
-    glutTimerFunc(1000/60, update, 0);
-    glutKeyboardFunc(keyboard);
-    glutMouseFunc(mouse);
-    glutCloseFunc(uninitialize);
+	glutDisplayFunc(display);
+	glutReshapeFunc(resize);
+	glutKeyboardFunc(keyboard);
+	glutTimerFunc(1000 / 60, update, 0);
+	glutMainLoop();
+	
 
-    glutMainLoop();
-
-    return 0;
+	return 0;
 }
 
-void initialize(void)
+void init(void)
 {
-    glClearColor(1.0f,1.0f,1.0f,1.0f);
-    
-    //glEnable(GL_BLEND);
-    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	//glEnable(GL_BLEND);
+	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 }
 
-void resize(int width,int height)
+void resize(int width, int height)
 {
-    glViewport(0,0,width,height);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glViewport(0, 0, (GLsizei)width, (GLsizei)height);
+	glEnable(GL_BLEND);
+
+	
+}
+void keyboard(unsigned char key,int x,int y)
+{
+	switch(key)
+	{
+		case 'w':
+		vec2_translation(selected,0.0f,0.1f);
+
+		
+		break;
+
+		case 's':
+		vec2_translation(selected,0.0f,-0.1f);
+
+		
+
+		break;
+
+		case 'd':
+		vec2_translation(selected,0.1f,0.0f);
+
+  			 //vec2_translation(p1,0.01,0);
+		break;
+
+		case 'a':
+		vec2_translation(selected,-0.1f,0.0f);
+
+		break;
+
+		case 'q':
+		if(t <= 1.0f)
+			t+=0.1f;
+		break;
+
+		case 'e':
+		if(t>0.1f)
+			t-=0.1f;
+		break;
+
+		case '1':
+		selected=&p0;
+		break;
+
+		case '2':
+		selected=&p1;
+		break;
+
+		case '3':
+		selected=&p2;
+
+		break;
+
+		case '4':
+		selected=&p3;
+		break;
+
+	}
+}
+
+
+void update(int val)
+{
+
+	if (fade < 1.0)
+		fade += 0.005f;
+
+	glutPostRedisplay();
+
+	glutTimerFunc(1000 / 60, update, 0);
 }
 
 void display(void)
 {
-    glClear(GL_COLOR_BUFFER_BIT);
+	//code
+	glClear(GL_COLOR_BUFFER_BIT);
 
-    vec2_lerp(&c1, &p0, &p1, t);
-    vec2_lerp(&c2, &p0, &p2, t);
-    vec2_lerp(&c3, &p2, &p3, t);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+    glEnable(GL_LINE_SMOOTH);
+	 glEnable(GL_POINT_SMOOTH);
+	
+	vec2_lerp(&c1,&p0,&p1,t);
+	vec2_lerp(&c2,&p1,&p2,t);
+	vec2_lerp(&c3,&p2,&p3,t);
+	
+	vec2_lerp(&a1,&c1,&c2,t);
+	vec2_lerp(&a2,&c2,&c3,t);
+	vec2_lerp(&p,&a1,&a2,t);
+	
+
+	
+    glLineWidth(5);
+  
+	glColor3f(0.0f,1.0f,0.0f);
+	
+	glBegin(GL_LINES);
+		glVertex2fv(p0.data);
+		glVertex2fv(p1.data);
+
+		glVertex2fv(p1.data);
+		glVertex2fv(p2.data);
+		
+		glVertex2fv(p2.data);
+		glVertex2fv(p3.data);
+	/*
+	glColor3f(0.0f,0.0f,1.0f);
+		
+		glVertex2fv(c1.data);
+		glVertex2fv(c2.data);
+		
+		glVertex2fv(c2.data);
+		glVertex2fv(c3.data);
+	
+	glColor3f(1.0f,0.0f,1.0f);
+		
+		glVertex2fv(a1.data);
+		glVertex2fv(a2.data);
+*/
+	glEnd();
     
-    vec2_lerp(&a1 &c1, &c2, t);
-    vec2_lerp(&a2, &c2, &c3, t);
-    
-    vec2_lerp(&p, &a1, &c3, t);
+	
+   glPointSize(5);
+	glColor3f(1.0f,0.0f,0.0f);
+		
+		glBegin(GL_POINTS);
+		glVertex2fv(c1.data);
+		glVertex2fv(c2.data);
+		glVertex2fv(c3.data);
+		glVertex2fv(a1.data);
+		glVertex2fv(a2.data);
+	
+		glColor3f(1.0f,0.0f,1.0f);
+		glVertex2fv(p.data);
+	glEnd();
 
 
-    glLineWidth(5.0);
-    glColor3f(0.0f, 1.0f, 0.0f);
-    glBegin(GL_LINES);
-        glVertex2fv(p0.data);
-        glVertex2fv(p1.data);
+	glBegin(GL_LINE_STRIP);
+		glColor3f(0.0f,0.0f,0.0f);
 
-        glVertex2fv(p1.data);
-        glVertex2fv(p2.data);
+		for(float i=0.0f;i<=1.1f;i=i+0.1f)
+		{
+			
+			vec2_lerp(&c1,&p0,&p1,i);
+			vec2_lerp(&c2,&p1,&p2,i);
+			vec2_lerp(&c3,&p2,&p3,i);
+			
+			vec2_lerp(&a1,&c1,&c2,i);
+			vec2_lerp(&a2,&c2,&c3,i);
+			vec2_lerp(&p,&a1,&a2,i);
+			
 
-        glVertex2fv(p2.data);
-        glVertex2fv(p3.data);
+			glVertex2fv(p.data);
+		}
 
-    glEnd();
+	glEnd();
 
-
-    glPointSize(15.0);
-    glColor3f(1.0f, 0.0f, 0.0f);
-    glBegin(GL_POINTS);
-        glColor3f(1.0, 0.0, 0.0);
-        glVertex2fv(p0.data);
-        glVertex2fv(p1.data);
-        glVertex2fv(p2.data);
-        glVertex2fv(p3.data);
-
-        glColor3f(1.0, 0.0, 0.0);
-        glVertex2fv(selected->data);
-
-        glColor3f(1.0, 0.0, 0.0);
-        glVertex2fv(p.data);
-    glEnd();
-
-    glBegin(GL_LINE_STRIP);
-    glColor3f(0.0, 0.0, 0.0);
-    for (float i = 0;i <= 1.1;i += 0.1)
-    {
-        vec2_lerp(&c1, &p0, &p1, i);
-        vec2_lerp(&c2, &p0, &p1, i);
-        vec2_lerp(&c3, &p2, &p3, i);
-
-        vec2_lerp(&a1 & c1, &c2, i);
-        vec2_lerp(&a2, &c2, &c3, i);
-
-        vec2_lerp(&p, &a1, &c3, i);
-        glVertex2fv(f.data);
-    }
-
-
-    glEnd();
-    glutSwapBuffers();
+	glutSwapBuffers();
 }
 
-void update(int val){
-    glutPostRedisplay();
-    glutTimerFunc(1000/60, update, 0);
-}
 
-void keyboard(unsigned char key,int x,int y)
-{
-    switch(key)
-    {
-        case 27:
-            glutLeaveMainLoop();
-        break;
-        case 'W':
-        case 'w':
-            vec2_translate(selected, 0.0, 0.1);
-        break;
-        case 'S':
-        case 's':
-            vec2_translate(selected, 0.0, -0.1);
-        break;
-        case 'D':
-        case 'd':
-            vec2_translate(selected, 0.1, 0.0);
-            break;
-        case 'A':
-        case 'a':
-            vec2_translate(selected, -0.1, 0.0);
-        break;
-        case 'Q':
-        case 'q':
-            if (t < 1.0)
-                t += 0.1;
-        break;
-        case 'E':
-        case 'e':
-            if (t < 0.1)
-                t -= 0.1;
-        break;
-        case '1':
-            selected = &p0;
-            break;
-        case '2':
-            selected = &p1;
-            break;
-        case '3':
-            selected = &p2;
-            break;
-        case '4':
-            selected = &p4;
-            break;
 
-        case 'R':
-        case 'r':
-        break;
-        case 'F':
-        case 'f':
-            if(b_FullScreen == false)
-            {
-                glutFullScreen();
-                b_FullScreen = true;
-            }else
-            {
-                glutLeaveFullScreen();
-                b_FullScreen = false;
-            }
-        break;
-        default:
-
-        break;
-    }
-}
-
-void mouse(int button,int state,int x,int y)
-{
-    switch(button)
-    {
-        case GLUT_LEFT_BUTTON:
-            //glutLeaveMainLoop();
-        break;
-        default:
-        break;
-    }
-}
-
-void uninitialize(void)
-{
-
-}
