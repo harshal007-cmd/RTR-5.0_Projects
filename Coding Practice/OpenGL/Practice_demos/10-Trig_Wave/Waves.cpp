@@ -1,35 +1,48 @@
 #include<GL\freeglut.h>
-#include<math.h>
+
+#include<cmath>
 int bIsScreenFull = false;
+#define M_PI 3.145
+const int width = 800;
+const int height = 600;
 
-static GLfloat t = 0.0f;
 
-float lerp1(float start, float end, float t)
+void sineWave(GLfloat xStart, GLfloat yStart, GLfloat Amp, GLfloat WavCount)
 {
-	return start + t * (end - start);
+	GLfloat angle;
+
+	for (int i = 0; i < 100; i++)
+	{
+		float x = (float)i;
+		angle = WavCount * M_PI * (i / 100.0);
+		float y = yStart + Amp * sin(angle);
+
+		glVertex2f(x, y);
+
+		xStart = xStart + 0.01f;
+
+	}
+
+
 }
 
-void update(int val)
+/*
+void sineWave(float amplitude, float frequency, float phase, float yOffset)
 {
-	static int flag = 0;
-
-	if (t < 1.0 && flag == 0)
-	{
-		t += 0.005f;
-		if (t >= 1.0)
-			flag = 1;
-	}
-	else if (t > 0.0f && flag == 1)
-	{
-		t -= 0.005f;
-		if (t <= 0.0f)
-			flag = 0;
-	}
 	
-	glutPostRedisplay();
-	glutTimerFunc(1000 / 60, update, 0);
+	glBegin(GL_LINE_STRIP);
+	glColor3f(1.0, 0.0, 0.0);
+	for (int i = 0; i < 800; i++)
+	{
+		float x = static_cast<float>(i);
+		float y = amplitude * sin(2 * M_PI * frequency * (x / width) + phase) + yOffset;
+		//float y = 50.0f * sin(2 * 3.145f * 2.0f * (x / 800) + 0.0f)+100;
+		glVertex2f(x, y);
+	}
+	glEnd();
+	
 }
-
+*/
 int main(int argc, char* argv[])
 {
 	void initialize(void);
@@ -42,7 +55,7 @@ int main(int argc, char* argv[])
 	glutInit(&argc, argv);
 
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
-	glutInitWindowSize(800,700);
+	glutInitWindowSize(width,height);
 	glutInitWindowPosition(100, 100);
 	glutCreateWindow("My practice window: The Great Harshal");
 
@@ -52,7 +65,7 @@ int main(int argc, char* argv[])
 	glutDisplayFunc(display);
 	glutKeyboardFunc(keyboard);
 	glutMouseFunc(mouse);
-	glutTimerFunc(1000 / 60, update, 0);
+	//glutTimerFunc(1000 / 60, update, 0);
 	glutCloseFunc(uninitialize);
 
 	glutMainLoop();
@@ -73,6 +86,8 @@ void resize(int width, int height) {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glViewport(0, 0, (GLsizei)width, (GLsizei)height);
+	gluOrtho2D(0.1, width, 0.1, height);
+	glMatrixMode(GL_MODELVIEW);
 }
 
 void display(void)
@@ -81,24 +96,9 @@ void display(void)
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	glEnable(GL_POINT_SMOOTH);
-	glEnable(GL_LINE_SMOOTH);
-	glEnable(GL_POINT_SIZE);
-	
-	glLineWidth(5.0);
-	glBegin(GL_LINES);
-		glColor3f(lerp1(1.0,0.0,t), 0.0, 0.0);
-		glVertex2f(-0.5, 0.0);
-		glVertex2f(0.5, 0.0);
+	glBegin(GL_LINE_STRIP);
+	sineWave(-1.0,0.0,50.0,100);
 	glEnd();
-
-	glPointSize(20.0);
-	glBegin(GL_POINTS);
-		glColor3f(1.0, 1.0, 1.0);
-		glVertex2f(0.0, 0.0);
-	glEnd();
-
-
 	glutSwapBuffers();
 }
 
