@@ -4,9 +4,51 @@ int bIsScreenFull = false;
 
 static GLfloat t = 0.0f;
 
+void stippledLine()
+{
+	glLineStipple(4, 0x0C0F);
+	glEnable(GL_LINE_STIPPLE);
+
+	glBegin(GL_LINES);
+
+	glColor3f(1.0, 0.0, 0.0);
+	glVertex2f(-0.5, 0.5);
+	glVertex2f(-0.5, -0.5);
+	glEnd();
+	glDisable(GL_LINE_STIPPLE);
+
+
+}
 float lerp1(float start, float end, float t)
 {
 	return start + t * (end - start);
+}
+void display(void)
+{
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	glEnable(GL_POINT_SMOOTH);
+	glEnable(GL_LINE_SMOOTH);
+	glEnable(GL_POINT_SIZE);
+
+	glLineWidth(5.0);
+	glBegin(GL_LINES);
+	glColor3f(lerp1(1.0, 0.0, t), 0.0, 0.0);
+	glVertex2f(-0.5, 0.0);
+	glVertex2f(0.5, 0.0);
+	glEnd();
+
+	glPointSize(20.0);
+	glBegin(GL_POINTS);
+	glColor3f(1.0, 1.0, 1.0);
+	glVertex2f(0.0, 0.0);
+	glEnd();
+
+	stippledLine();
+
+	glutSwapBuffers();
 }
 
 void update(int val)
@@ -75,32 +117,7 @@ void resize(int width, int height) {
 	glViewport(0, 0, (GLsizei)width, (GLsizei)height);
 }
 
-void display(void)
-{
-	glClear(GL_COLOR_BUFFER_BIT);
 
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	glEnable(GL_POINT_SMOOTH);
-	glEnable(GL_LINE_SMOOTH);
-	glEnable(GL_POINT_SIZE);
-	
-	glLineWidth(5.0);
-	glBegin(GL_LINES);
-		glColor3f(lerp1(1.0,0.0,t), 0.0, 0.0);
-		glVertex2f(-0.5, 0.0);
-		glVertex2f(0.5, 0.0);
-	glEnd();
-
-	glPointSize(20.0);
-	glBegin(GL_POINTS);
-		glColor3f(1.0, 1.0, 1.0);
-		glVertex2f(0.0, 0.0);
-	glEnd();
-
-
-	glutSwapBuffers();
-}
 
 void keyboard(unsigned char key, int x, int y)
 {
