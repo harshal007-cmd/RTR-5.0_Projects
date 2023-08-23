@@ -1,4 +1,4 @@
-#include<GL\freeglut.h>
+#include<GL\freeglut.h>
 
 #include<cmath>
 int bIsScreenFull = false;
@@ -7,22 +7,23 @@ const int width = 800;
 const int height = 600;
 
 
-void sineWave()
+void sineWave(GLfloat xStart, GLfloat yStart, GLfloat Amp, GLfloat WavCount)
 {
 	GLfloat angle;
+	GLfloat x, y;
+	for (int i = 0; i < 100; i++)
+	{
+		x = xStart;
+		angle = WavCount * M_PI * (i / 100.0);
+	    y = yStart + Amp * sin(angle);
+		glVertex2f(x, y);
+		
+		xStart = xStart + 0.01f;
+		
+		
 
-	for ( angle_wave ; angle_wave <= 2 * pi ; angle_wave = angle_wave + 0.001f)
-    {
-        glColor3f(1.0,1.0,1.0);
-        float x_edge =  x;
-        float y_edge = radius* sin(angle_wave);
-        glVertex3f(x_edge, y + y_edge , 0.0f);
-        glColor3f(1.0,1.0,1.0);
-        glVertex3f(x_edge,y + y_edge, 0.0f);
-        x = x + 0.001f;
-        if (x > 1.0f)
-            break;
-    }
+	}
+
 
 }
 
@@ -86,8 +87,8 @@ void resize(int width, int height) {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glViewport(0, 0, (GLsizei)width, (GLsizei)height);
-	gluOrtho2D(0.1, width, 0.1, height);
-	glMatrixMode(GL_MODELVIEW);
+	//gluOrtho2D(0.1, width, 0.1, height);
+	// glMatrixMode(GL_MODELVIEW);
 }
 
 void display(void)
@@ -96,8 +97,8 @@ void display(void)
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	glBegin(GL_LINE);
-	sineWave(-1.0,0.0);
+	glBegin(GL_LINE_STRIP);
+	sineWave(-0.0,0.0,1.0,10);
 	glEnd();
 	glutSwapBuffers();
 }
