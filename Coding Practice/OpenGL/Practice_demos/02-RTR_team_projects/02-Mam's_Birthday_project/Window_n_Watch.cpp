@@ -13,6 +13,23 @@ float lerp(float start, float end, float t)
 {
 	return start + t * (end - start);
 }
+
+void stars()
+{
+	//glEnable(GL_POINT_SMOOTH);
+	glPointSize(0.5);
+	glBegin(GL_POINTS);
+	//glColor3f(lerp(0.0,1.0,t2), lerp(0.0, 1.0, t2), lerp(0.0, 1.0, t2));
+	glColor3f(1.0, 1.0, 1.0);
+		glVertex2f(-0.50, 0.40);
+		glVertex2f(-0.15, 0.20);
+		glVertex2f(-0.45, 0.20);
+		glVertex2f(-0.50, 0.13);
+		glVertex2f(-0.11, 0.37);
+		glVertex2f(-0.30, 0.12);
+	glEnd();
+}
+
 void windowGrid()
 {
 	//Window gril Lines
@@ -20,18 +37,21 @@ void windowGrid()
 	glLineWidth(1.0);
 	glBegin(GL_LINES);
 	glColor3f(0.0, 0.0, 0.0);
-	glVertex2f(-0.275, 0.0);
-	glVertex2f(-0.275, 0.55);
+		glVertex2f(-0.275, 0.0);
+		glVertex2f(-0.275, 0.55);
 	glEnd();
 
 	glLineWidth(1.0);
 	glBegin(GL_LINES);
 	glColor3f(0.0, 0.0, 0.0);
-	glVertex2f(-0.55, 0.275);
-	glVertex2f(0.0, 0.275);
+		glVertex2f(-0.55, 0.275);
+		glVertex2f(0.0, 0.275);
 	glEnd();
 	glDisable(GL_LINE_SMOOTH);
+
+	
 }
+
 void window()
 {
 	
@@ -40,20 +60,20 @@ void window()
 	glPolygonMode(GL_BACK, GL_FILL);
 	glBegin(GL_POLYGON);
 	glColor3f(0.5, 0.5, 0.5);  ///window color
-	glVertex3f(-0.6, -0.0, 0.0);//Bottom Left point
-	glVertex3f(-0.6, 0.6, 0.0);
-	glVertex3f(0.0, 0.6, 0.0);
-	glVertex3f(0.0, 0.0, 0.0);//Bottom right point
+		glVertex3f(-0.7, 0.0, 0.0);//Bottom Left point
+		glVertex3f(-0.7, 0.5, 0.0);
+		glVertex3f(0.0, 0.5, 0.0);
+		glVertex3f(0.0, 0.0, 0.0);//Bottom right point
 	glEnd();
 	
 	//Borders for outer window
 	glLineWidth(2.0);
 	glBegin(GL_LINE_LOOP);
 	glColor3f(0.0, 0.0, 0.0);
-	glVertex2f(-0.6, -0.0);//Bottom Left point
-	glVertex2f(-0.6, 0.6);
-	glVertex2f(0.0, 0.6);
-	glVertex2f(0.0, 0.0);//Bottom right point
+		glVertex2f(-0.7, -0.0);//Bottom Left point
+		glVertex2f(-0.7, 0.5);
+		glVertex2f(0.0, 0.5);
+		glVertex2f(0.0, 0.0);//Bottom right point
 	glEnd();
 	//Borders for outer window Ends
 //--------------------- Outer Window Ends ---------------------------//
@@ -61,21 +81,21 @@ void window()
 	//Inner window
 	glBegin(GL_POLYGON);
 	glColor3f(lerp(0.0,0.5294,t), lerp(0.0,0.8078,t), lerp(0.0, 0.9215, t));// 135, 206, 235
-	glVertex3f(-0.55, 0.0, 0.0);//BL point
-	glVertex3f(-0.55, 0.55, 0.0);
-	glVertex3f(0.0, 0.55, 0.0);
-	glVertex3f(0.0, 0.0, 0.0);//BR point
+		glVertex3f(-0.65, 0.0, 0.0);//BL point
+		glVertex3f(-0.65, 0.45, 0.0);
+		glVertex3f(0.0, 0.45, 0.0);
+		glVertex3f(0.0, 0.0, 0.0);//BR point
 	glEnd();
 
 	
-	//Borders Lines for inner window
+	//Borders Lines for inner window ----------
 	//glLineWidth(1.0);
 	glBegin(GL_LINE_LOOP);
 	glColor3f(0.0, 0.0, 0.0);
-	glVertex2f(-0.55, 0.0);//BL
-	glVertex2f(-0.55, 0.55);//TL
-	glVertex2f(0.0, 0.55);//TR
-	glVertex2f(0.0, 0.0);//BR
+		glVertex2f(-0.65, 0.0);//BL
+		glVertex2f(-0.65, 0.45);//TL
+		glVertex2f(0.0, 0.45);//TR
+		glVertex2f(0.0, 0.0);//BR
 	glEnd();
 
 //------------------ Inner Window Ends ------------------------//
@@ -84,44 +104,32 @@ void window()
 	//Upper left corner line
 	glBegin(GL_LINES);
 	glColor3f(0.0, 0.0, 0.0);
-	glVertex2f(-0.6, 0.6);
-	glVertex2f(-0.55, 0.55);
+		glVertex2f(-0.7, 0.5);
+		glVertex2f(-0.65, 0.45);
 	glEnd();
 	//---------
 
 	//Window gril Lines
 	glEnable(GL_LINE_SMOOTH);
 	glLineWidth(1.0);
-	glBegin(GL_LINES);
-	glColor3f(0.0, 0.0, 0.0);
-	glVertex2f(-0.275, 0.0);
-	glVertex2f(-0.275, 0.55);
+		glBegin(GL_LINES);//vertical
+		glColor3f(0.0, 0.0, 0.0);
+		glVertex2f(-0.325, 0.0);
+		glVertex2f(-0.325, 0.45);
 	glEnd();
 
 	glLineWidth(1.0);
 	glBegin(GL_LINES);
-	glColor3f(0.0, 0.0, 0.0);
-	glVertex2f(-0.55, 0.275);
-	glVertex2f(0.0, 0.275);
-	glEnd();
+		glColor3f(0.0, 0.0, 0.0);
+		glVertex2f(-0.65, 0.225);
+		glVertex2f(0.0, 0.225);
+		glEnd();
 	glDisable(GL_LINE_SMOOTH);
+
+	//Windwo grill Lines ends ----------
 }
 
-void stars()
-{
-	//glEnable(GL_POINT_SMOOTH);
-//	glPointSize(0.5);
-	glBegin(GL_POINTS);
-	//glColor3f(lerp(0.0,1.0,t2), lerp(0.0, 1.0, t2), lerp(0.0, 1.0, t2));
-	glColor3f(1.0, 1.0, 1.0);
-	glVertex2f(-0.45, 0.45);
-	glVertex2f(-0.35, 0.25);
-	glVertex2f(-0.25, 0.15);
-	glVertex2f(-0.20, 0.23);
-	glVertex2f(-0.29, 0.40);
-	glVertex2f(-0.38, 0.12);
-	glEnd();
-}
+
 void watch_border(float cx, float cy, float r, int num_segments)
 {
 	//watch border
@@ -148,8 +156,9 @@ void watch_on_Wall(float cx, float cy, float r, int num_segments)
 	glColor3f(0.8f, 0.8f, 0.8f);
 	glBegin(GL_TRIANGLE_FAN);
 	glVertex2f(cx, cy);
+	float theta;
 	for (int i = 0; i <= num_segments; ++i) {
-		float theta = 2.0f * 3.1415926f * float(i) / float(num_segments);
+		 theta = 2.0f * 3.1415926f * float(i) / float(num_segments);
 		float x = r * cosf(theta);
 		float y = r * sinf(theta);
 		glVertex2f(cx + x, cy + y);
@@ -160,16 +169,37 @@ void watch_on_Wall(float cx, float cy, float r, int num_segments)
 	glEnable(GL_POINT_SIZE);
 	glPointSize(2.0);
 	glBegin(GL_POINTS);
-	glColor3f(0.0, 0.0, 0.0);
-	glVertex2f(0.4, 0.6);//center
-	glVertex2f(0.4, 0.68);//12
-	glVertex2f(0.48, 0.6);//3
-	glVertex2f(0.4, 0.52);//6
-	glVertex2f(0.32, 0.6);//9
+		glColor3f(0.0, 0.0, 0.0);
+		glVertex2f(cx, cy);//center
+		glVertex2f(0.4, 0.68);//12
+		glVertex2f(0.48, 0.6);//3
+		glVertex2f(0.4, 0.52);//6
+		glVertex2f(0.32, 0.6);//9
 	glEnd();
 	glDisable(GL_POINT_SIZE);
 
 
+	//Moving clock hands --------------
+
+	glLineWidth(1.0);
+	glBegin(GL_LINES);   //hour hand
+		glColor3f(0.0, 0.0, 0.0);
+		glVertex2f(cx, cy);
+		glVertex2f(lerp(0.41,0.40,t),lerp(0.56,0.55,t));
+	glEnd();
+
+	glPushMatrix();
+	
+	glLineWidth(1.0);
+	glBegin(GL_LINES);   //minute hand
+		glColor3f(0.0, 0.0, 0.0);
+		glVertex2f(cx, cy);
+		glRotatef(45, 0.33, 0.6, 0.0);
+		//glVertex2f(0.33, 0.6);
+		glVertex2f(lerp(0.33, 0.4, t), lerp(0.6, 0.67, t));
+	glEnd();
+	glPopMatrix();
+	
 	
 }
 
@@ -177,16 +207,13 @@ void display(void)
 {
 	// code
 	glClear(GL_COLOR_BUFFER_BIT);
-
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
 	window();
-	windowGrid();
 	stars();
-	//glEnable(GL_LINE_WIDTH);
+
 	watch_border(0.4f, 0.6f, 0.1f, 100);
-	//glDisable(GL_LINE_WIDTH);
 	watch_on_Wall(0.4f, 0.6f, 0.1f, 100);
 	
 	glutSwapBuffers();
@@ -214,7 +241,7 @@ int main(int argc, char* argv[])
 	glutInitWindowSize(800, 800);
 	glutInitWindowSize(800, 800);
 	glutInitWindowPosition(100, 100);
-	glutCreateWindow("Clouds");
+	glutCreateWindow("Window and Watch: Mam's B'day project");
 
 	initialize();
 
@@ -241,8 +268,27 @@ void resize(int width, int height)
 	// code
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-
+	
+	if (width <= height)
+	{
+		glOrtho(-1.0f,
+			1.0f,
+			-1.0f * ((GLfloat)height / (GLfloat)width),
+			1.0f * ((GLfloat)height / (GLfloat)width),
+			-1.0f,
+			-1.0f);
+	}
+	else
+	{
+		glOrtho(-1.0f * ((GLfloat)width / (GLfloat)height),
+			1.0f * ((GLfloat)width / (GLfloat)height),
+			-1.0f,
+			1.0f,
+			-1.0f,
+			1.0f);
+	}
 	glViewport(0, 0, (GLsizei)width, (GLsizei)height);
+
 }
 
 
@@ -293,7 +339,7 @@ void update(int val)
 
 	if (t < 1.0)
 	{
-		t += 0.008f;
+		t += 0.0008f;
 		
 	}
 	
