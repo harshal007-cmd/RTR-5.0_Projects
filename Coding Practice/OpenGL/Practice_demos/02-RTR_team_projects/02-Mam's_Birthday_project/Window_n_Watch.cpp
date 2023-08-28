@@ -4,7 +4,6 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 static GLfloat t = 0.0f;
-static GLfloat t2 = 0.0f;
 
 // global variable declarations
 bool bIsFullScreen = false;
@@ -251,7 +250,6 @@ int main(int argc, char* argv[])
 	glutKeyboardFunc(keyboard);
 	glutMouseFunc(mouse);
 	glutTimerFunc(1000 / 60, update, 0);
-	glutTimerFunc(1000 / 60, update2, 0);
 	glutCloseFunc(uninitialize);
 
 	glutMainLoop();
@@ -346,26 +344,7 @@ void update(int val)
 	glutPostRedisplay();
 	glutTimerFunc(1000 / 60, update, 0);
 }
-void update2(int val)
-{
-	static int flag = 0;
 
-	if (t2 < 1.0 && flag == 0)
-	{
-		t2 += 1.0f;
-		if (t2 >= 1.0)
-			flag = 1;
-	}
-	else if (t2 > 0.0f && flag == 1)
-	{
-		t2 -= 1.0f;
-		if (t2 <= 0.0f)
-			flag = 0;
-	}
-
-	glutPostRedisplay();
-	glutTimerFunc(1000/60, update2, 0);
-}
 
 void uninitialize(void)
 {
