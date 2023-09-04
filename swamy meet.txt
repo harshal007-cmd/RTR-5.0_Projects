@@ -1,0 +1,25 @@
+ Hello Ganesh,
+ 
+ I about that Dashboard issue I talked yesterday, I by mistake give some wrong version info
+ Following are version info for it, if you know then please check and suggest what can be done here and what might be issue 
+ 
+ In System Manager - ADA Dashboard does not display
+ 
+ Build no:     8.1.0.0
+ Patch   :      8.1.0.102001
+ Build no:     10.1.0.2.0715038
+ Upgraded from 8.1 to 10.1
+ 
+ 
+ https://jira.forge.avaya.com/browse/ZEPHYR-70078
+ 
+ https://jira.forge.avaya.com/issues/?filter=-5&jql=project%20%3D%20EDS%20AND%20text%20~%20%22dlcolovap01.nonprod.avaya.com%22%20order%20by%20priority%20DESC%2Cupdated%20DESC
+ 
+ 
+ https://confluence.forge.avaya.com/pages/viewpage.action?pageId=87433682
+ 
+ http://10.129.184.75/SMGR/SMGR_Releases/10.2.0.0.4/VMware/PROFILE2/Build-15/Install_Logs/InstallLogs_Builld-15.zip
+ 
+ logEntry INFO: Copying DeviceAdapterResourceType.xml to $JBOSS_HOME/avmgmt/configuration/quantum/elementRegistry/elementType/ ...
+
+cp -fv $ADA_DIR/DeviceAdapterResourceType.xml $JBOSS_HOME/avmgmt/configuration/quantum/elementRegistry/elementType/
