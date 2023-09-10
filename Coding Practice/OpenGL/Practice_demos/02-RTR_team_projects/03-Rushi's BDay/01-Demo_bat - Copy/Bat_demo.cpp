@@ -1,60 +1,41 @@
 #include<GL\freeglut.h>
-#include<math.h>
+
 int bIsScreenFull = false;
 
+GLfloat batman_array[] = { 0.529, 0.169 ,
+					0.647, 0.165 ,
+					0.563, 0.118 ,
+					0.525, 0.037 ,
+					0.488, 0.120,
+					0.400, 0.169
+};
 
-void shape()
+GLfloat rect[] = {
+	0.5,0.5,
+	0.5,-0.5,
+	-0.5,-0.5,
+	-0.5,0.5
+};
+
+void batman()
 {
-	static GLfloat vertices[] = { 0.25, 0.25,
-								0.100, 0.325,
-								1.75, 0.25,
-								1.75, 3.25,
-								2.50, 0.25,
-								3.25, 3.25 };
-	static GLfloat colors[] = { 1.0, 0.2, 0.2,
-								0.2, 0.2, 1.0,
-								0.8, 1.0, 0.2,
-								0.75, 0.75, 0.75,
-								0.35, 0.35, 0.35,
-								0.5, 0.5, 0.5 };
-
-	glEnableClientState(GL_COLOR_ARRAY);
 	glEnableClientState(GL_VERTEX_ARRAY);
-	glColorPointer(3, GL_FLOAT, 0, colors);
-	glVertexPointer(2, GL_INT, 0, vertices);
+	//glEnableClientState(GL_COLOR_ARRAY);
+
+	glVertexPointer(2, GL_FLOAT, 0, &batman_array[0]);
+
+	//glScalef(1.0, -1.0, 1.0);
+	glBegin(GL_POLYGON);
+//	glColor3f(1.0, 1.0, 1.0);
+	glArrayElement(0);
+	glArrayElement(1);
+	glArrayElement(2);
+	glArrayElement(3);
+	glArrayElement(4);
+	glArrayElement(5);
+	glEnd();
 }
 
-void display(void)
-{
-	glClear(GL_COLOR_BUFFER_BIT);
-
-	shape();
-	//PolyMode();
-
-	glutSwapBuffers();
-}
-/*
-void update(int val)
-{
-	static int flag = 0;
-
-	if (t < 1.0 && flag == 0)
-	{
-		t += 0.005f;
-		if (t >= 1.0)
-			flag = 1;
-	}
-	else if (t > 0.0f && flag == 1)
-	{
-		t -= 0.005f;
-		if (t <= 0.0f)
-			flag = 0;
-	}
-	
-	glutPostRedisplay();
-	glutTimerFunc(1000 / 60, update, 0);
-}
-*/
 int main(int argc, char* argv[])
 {
 	void initialize(void);
@@ -77,7 +58,6 @@ int main(int argc, char* argv[])
 	glutDisplayFunc(display);
 	glutKeyboardFunc(keyboard);
 	glutMouseFunc(mouse);
-//	glutTimerFunc(1000 / 60, update, 0);
 	glutCloseFunc(uninitialize);
 
 	glutMainLoop();
@@ -89,7 +69,8 @@ int main(int argc, char* argv[])
 
 void initialize(void)
 {
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	//glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 }
 
@@ -98,10 +79,20 @@ void resize(int width, int height) {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glViewport(0, 0, (GLsizei)width, (GLsizei)height);
-	gluOrtho2D(-1.0, 1.0, -1.0, 1.0);
 }
 
+void display(void)
+{
+	glClear(GL_COLOR_BUFFER_BIT);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
 
+	
+	batman();
+
+	
+	glutSwapBuffers();
+}
 
 void keyboard(unsigned char key, int x, int y)
 {
