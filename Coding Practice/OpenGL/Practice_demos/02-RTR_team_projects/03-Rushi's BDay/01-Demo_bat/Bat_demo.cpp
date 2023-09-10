@@ -80,6 +80,8 @@ void batman_cape()
 
 void batman_body()
 {
+	
+	/*
 	//body
 	glBegin(GL_POLYGON);
 	glColor3f(0.5, 0.5, 0.5);
@@ -92,7 +94,7 @@ void batman_body()
 	glVertex2f(0.90, 0.84);
 	glVertex2f(0.59, 0.99);
 	glEnd();
-
+*/
 }
 
 int main(int argc, char* argv[])
