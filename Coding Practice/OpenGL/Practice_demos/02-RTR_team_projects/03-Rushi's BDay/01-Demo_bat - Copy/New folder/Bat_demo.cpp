@@ -204,24 +204,33 @@ void batman_body()
 
 void batman_cape()
 {
-//	glTranslatef(0.0, 0.2, 0.0);
+	//	glTranslatef(0.0, 0.2, 0.0);
 	glBegin(GL_POLYGON);
 	glColor3f(0.0, 0.0, 0.0);
-		glVertex2f(0.273, 0.241);//center pt, cape knot near neck
-		glVertex2f(0.155, 0.317);
-		glVertex2f(0.155, 0.250);
-		glVertex2f(0.243, 0.215);
-		glVertex2f(0.248, 0.171);
-		glVertex2f(0.252, 0.115);
-		glVertex2f(0.261, 0.150);
-		glVertex2f(0.281, 0.151);
-		glVertex2f(0.288, 0.112);
-		glVertex2f(0.296, 0.165);
-		glVertex2f(0.301, 0.214);
-		glVertex2f(0.391, 0.246);
-		glVertex2f(0.398, 0.310);
+	glVertex2f(0.273, 0.241);//center pt, cape knot near neck
+	glVertex2f(0.155, 0.317);
+	glVertex2f(0.155, 0.250);
+	glVertex2f(0.243, 0.215);
+	glVertex2f(0.248, 0.171);
+	glVertex2f(0.252, 0.115);
+	glVertex2f(0.261, 0.150);
+	glVertex2f(0.281, 0.151);
+	glVertex2f(0.288, 0.112);
+	glVertex2f(0.296, 0.165);
+	glVertex2f(0.301, 0.214);
+	glVertex2f(0.391, 0.246);
+	glVertex2f(0.398, 0.310);
 	glEnd();
-	
+
+	glBegin(GL_POLYGON);
+	glColor3f(0.8, 0.8, 0.8);
+		glVertex2f(0.274, 0.202);
+		glVertex2f(0.292, 0.194);
+		glVertex2f(0.288, 0.223);
+		glVertex2f(0.263, 0.223);
+		glVertex2f(0.254, 0.194);
+	glEnd();
+
 }
 
 
