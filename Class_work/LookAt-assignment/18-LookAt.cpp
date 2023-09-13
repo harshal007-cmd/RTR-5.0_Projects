@@ -168,8 +168,8 @@ LRESULT CALLBACK WndProg(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_SIZE:
 		resize(LOWORD(lParam),HIWORD(lParam));
-		width = 800;
-		height = 600;
+		width = LOWORD(lParam);
+		height = HIWORD(lParam);
 		break;
 	case WM_ERASEBKGND:
 		return 0;
@@ -202,12 +202,12 @@ LRESULT CALLBACK WndProg(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 
 		case 52:
 		case VK_NUMPAD4:
-			glViewport(0, HEIGHT / 2, (GLsizei)width / 2, (GLsizei)height / 2);
+			glViewport(0, height / 2, (GLsizei)width / 2, (GLsizei)height / 2);
 			break;
 
 		case 53:
 		case VK_NUMPAD5:
-			glViewport(0, HEIGHT/2, (GLsizei)width, (GLsizei)height / 2);
+			glViewport(0, height/2, (GLsizei)width, (GLsizei)height / 2);
 			break;
 			
 		}
@@ -341,7 +341,7 @@ void resize(int width, int height)
 		
 	}
 	
-	//glViewport(0, 0, (GLsizei)width, (GLsizei)height);
+	glViewport(0, 0, (GLsizei)width, (GLsizei)height);
 	glMatrixMode(GL_PROJECTION);//use GL_Projection from Matrix maths from OpenGL math lib
 	glLoadIdentity();
 	gluPerspective(45.0f, (GLfloat)width / (GLfloat)height, 0.1f, 100.0f);
