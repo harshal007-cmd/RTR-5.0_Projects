@@ -217,17 +217,17 @@ LRESULT CALLBACK WndProg(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 
 		case 55:
 		case VK_NUMPAD7:
-			glViewport(0, 0, (GLsizei)width / 2, (GLsizei)height);
+			glViewport(0, height / 4, (GLsizei)width / 2, (GLsizei)height / 2);
 			break;
 
 		case 56:
 		case VK_NUMPAD8:
-			glViewport(0, height / 2, (GLsizei)width, (GLsizei)height / 2);
+			glViewport(width / 2, height / 4, (GLsizei)width / 2, (GLsizei)height / 2);
 			break;
 
 		case 57:
 		case VK_NUMPAD9:
-			glViewport(0, height / 2, (GLsizei)width, (GLsizei)height / 2);
+			glViewport(width / 4, height / 4, (GLsizei)width / 2, (GLsizei)height / 2);
 			break;
 		
 		}
