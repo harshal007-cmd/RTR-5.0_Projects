@@ -91,7 +91,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLi
 	//creating window
 	hwnd = CreateWindowEx(WS_EX_APPWINDOW,
 		szAppName,
-		TEXT("HVS:Point_assignment"),
+		TEXT("HVS:Triangle_assignment"),
 		WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | WS_VISIBLE,
 		(xScreen - WIDTH / 2), (yScreen - HEIGHT / 2), WIDTH, HEIGHT,
 		NULL, NULL,
@@ -308,45 +308,7 @@ void resize(int width, int height)
 	glViewport(0, 0, (GLsizei)width, (GLsizei)height);
 	glMatrixMode(GL_PROJECTION);//use GL_Projection from Matrix maths from OpenGL math lib
 	glLoadIdentity();
-	gluPerspective(45.0f, (GLfloat)width / (GLfloat)height, 0.1f, 100.0f);
-
-}
-
-void HorizontalLines()
-{
-	float yPt1=0.025f;
-	float yPt2=-0.025f;
-	glColor3f(0.0, 0.0, 1.0);
-	for (int i = 0; i < 20; i++) 
-	{
-		if (i % 5 == 0)
-			glLineWidth(1.5);
-		else
-			glLineWidth(1.0);
-		
-		glBegin(GL_LINES);
-		glVertex2f(-1.0f, yPt1);
-		glVertex2f(1.0f, yPt1);
-		
-		yPt1 += 0.025;
-		
-	}
-	glEnd();
-
-	glColor3f(0.0, 0.0, 1.0);
-	for (int j = 0; j < 20; j++) 
-	{
-		if (j % 5 == 0)
-			glLineWidth(1.5);
-		else
-			glLineWidth(1.0);
-		glBegin(GL_LINES);
-		glVertex2f(-1.0f, yPt2);
-		glVertex2f(1.0f, yPt2);
-		
-		yPt2 -= 0.025f;
-	}
-	glEnd();
+	//gluPerspective(45.0f, (GLfloat)width / (GLfloat)height, 0.1f, 100.0f);
 
 }
 
@@ -357,20 +319,17 @@ void display(void)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	
-	glTranslatef(0.0f, 0.0f, -1.0f);
 	
 //	glEnable(GL_LINE_SMOOTH);
-	glLineWidth(2.5);
-	glBegin(GL_LINES);
-	glColor3f(1.0, 0.0, 0.0);
-	glVertex3f(-1.0, 0.0, 0.0);
-	glVertex3f(1.0, 0.0, 0.0);
-	glColor3f(0.0, 0.0, 1.0);
+	glLineWidth(1.0);
+	glBegin(GL_LINE_LOOP);
+	glColor3f(1.0, 1.0, 0.0);
+	glVertex3f(0.0, 0.5, 0.0);
+	glVertex3f(-0.5, -0.5, 0.0);
+	glVertex3f(0.5, -0.5, 0.0);
 	//glDisable(GL_LINE_SMOOTH);
 	glEnd();
 
-	HorizontalLines();
-	
 	SwapBuffers(ghdc);
 }
 

@@ -291,7 +291,7 @@ int initialize(void)
 
 	//Set the Clear color of Window to Blue
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f); //here OpenGL starts
-
+	
 	resize(WIDTH, HEIGHT);
 	return 0;
 }
@@ -308,43 +308,51 @@ void resize(int width, int height)
 	glViewport(0, 0, (GLsizei)width, (GLsizei)height);
 	glMatrixMode(GL_PROJECTION);//use GL_Projection from Matrix maths from OpenGL math lib
 	glLoadIdentity();
-	gluPerspective(45.0f, (GLfloat)width / (GLfloat)height, 0.1f, 100.0f);
+	//gluPerspective(45.0f, (GLfloat)width / (GLfloat)height, 0.1f, 100.0f);
 
 }
 
-void HorizontalLines()
+void VerticalLines()
 {
-	float yPt1=0.025f;
-	float yPt2=-0.025f;
+	float xPt1=0.025f;
+	float xPt2=-0.025f;
 	glColor3f(0.0, 0.0, 1.0);
-	for (int i = 0; i < 20; i++) 
+	for (int i = 1; i <= 40; i++) 
 	{
 		if (i % 5 == 0)
-			glLineWidth(1.5);
+			glLineWidth(2.2);
 		else
 			glLineWidth(1.0);
 		
 		glBegin(GL_LINES);
-		glVertex2f(-1.0f, yPt1);
-		glVertex2f(1.0f, yPt1);
+		glVertex2f(xPt1, 1.0);
+		glVertex2f(xPt1, -1.0);
 		
-		yPt1 += 0.025;
+		xPt1 += 0.025;
 		
 	}
 	glEnd();
 
 	glColor3f(0.0, 0.0, 1.0);
-	for (int j = 0; j < 20; j++) 
+	for (int j = 1; j <= 40; j++) 
 	{
-		if (j % 5 == 0)
-			glLineWidth(1.5);
+		if (j % 5 == 0) 
+		{
+			glLineWidth(2.2);
+			fprintf(gpFILE, "j if count = %d\n", j);
+		}
 		else
+		{
 			glLineWidth(1.0);
+			fprintf(gpFILE, "j else count = %d\n", j);
+
+		}
+			
 		glBegin(GL_LINES);
-		glVertex2f(-1.0f, yPt2);
-		glVertex2f(1.0f, yPt2);
+		glVertex2f(xPt2, 1.0);
+		glVertex2f(xPt2, -1.0);
 		
-		yPt2 -= 0.025f;
+		xPt2 -= 0.025f;
 	}
 	glEnd();
 
@@ -357,19 +365,17 @@ void display(void)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	
-	glTranslatef(0.0f, 0.0f, -1.0f);
-	
+	glTranslatef(0.0, 0.0, -1.0);
 //	glEnable(GL_LINE_SMOOTH);
-	glLineWidth(2.5);
+	glLineWidth(3.2);
 	glBegin(GL_LINES);
-	glColor3f(1.0, 0.0, 0.0);
-	glVertex3f(-1.0, 0.0, 0.0);
-	glVertex3f(1.0, 0.0, 0.0);
-	glColor3f(0.0, 0.0, 1.0);
+	glColor3f(0.0, 1.0, 0.0);
+	glVertex3f(0.0, 1.0, 0.0);
+	glVertex3f(0.0, -1.0, 0.0);
 	//glDisable(GL_LINE_SMOOTH);
 	glEnd();
 
-	HorizontalLines();
+	VerticalLines();
 	
 	SwapBuffers(ghdc);
 }
