@@ -317,14 +317,19 @@ void VerticalLines()
 	float xPt1=0.025f;
 	float xPt2=-0.025f;
 	glColor3f(0.0, 0.0, 1.0);
-	for (int i = 1; i <= 40; i++) 
+	for (int i = 0; i <= 40; i++) 
 	{
-		if (i % 5 == 0)
-			glLineWidth(2.2);
-		else
-			glLineWidth(1.0);
-		
+		if (i % 5 == 0) 
+		{
+			glLineWidth(2.2f);
+		}
+		else 
+		{
+			glLineWidth(1.0f);
+		}
+			
 		glBegin(GL_LINES);
+		
 		glVertex2f(xPt1, 1.0);
 		glVertex2f(xPt1, -1.0);
 		
@@ -334,18 +339,15 @@ void VerticalLines()
 	glEnd();
 
 	glColor3f(0.0, 0.0, 1.0);
-	for (int j = 1; j <= 40; j++) 
+	for (int j = 0; j <= 40; j++) 
 	{
 		if (j % 5 == 0) 
 		{
 			glLineWidth(2.2);
-			fprintf(gpFILE, "j if count = %d\n", j);
 		}
 		else
 		{
 			glLineWidth(1.0);
-			fprintf(gpFILE, "j else count = %d\n", j);
-
 		}
 			
 		glBegin(GL_LINES);
@@ -365,8 +367,9 @@ void display(void)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	
-	glTranslatef(0.0, 0.0, -1.0);
+	//glTranslatef(0.0, 0.0, -1.0);
 //	glEnable(GL_LINE_SMOOTH);
+	
 	glLineWidth(3.2);
 	glBegin(GL_LINES);
 	glColor3f(0.0, 1.0, 0.0);
@@ -374,6 +377,8 @@ void display(void)
 	glVertex3f(0.0, -1.0, 0.0);
 	//glDisable(GL_LINE_SMOOTH);
 	glEnd();
+	
+
 
 	VerticalLines();
 	
