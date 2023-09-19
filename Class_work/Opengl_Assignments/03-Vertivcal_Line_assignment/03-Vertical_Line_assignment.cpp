@@ -308,7 +308,7 @@ void resize(int width, int height)
 	glViewport(0, 0, (GLsizei)width, (GLsizei)height);
 	glMatrixMode(GL_PROJECTION);//use GL_Projection from Matrix maths from OpenGL math lib
 	glLoadIdentity();
-	gluPerspective(45.0f, (GLfloat)width / (GLfloat)height, 0.1f, 100.0f);
+//	gluPerspective(45.0f, (GLfloat)width / (GLfloat)height, 0.1f, 100.0f);
 
 }
 
@@ -319,15 +319,13 @@ void display(void)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	
-	glTranslatef(0.0f, 0.0f, -0.5f);
+	glTranslatef(0.0f, 0.0f, -1.0f);
 
-	glEnable(GL_LINE_SMOOTH);
-	glLineWidth(1.5);
+	glLineWidth(3.2);
 	glBegin(GL_LINES);
 	glColor3f(0.0, 1.0, 0.0);
 	glVertex3f(0.0, 1.0, 0.0);
 	glVertex3f(0.0, -1.0, 0.0);
-	glDisable(GL_LINE_SMOOTH);
 	glEnd();
 
 	SwapBuffers(ghdc);

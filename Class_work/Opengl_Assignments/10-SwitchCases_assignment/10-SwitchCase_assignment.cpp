@@ -5,8 +5,10 @@
 #include<windows.h>//win32
 #include"Window.h" //or OGL.h (if rename)
 #include<stdio.h>///for file IO
-#include<stdlib.h>//for exit() 
+#include<stdlib.h>//for exit()
 
+#define _USE_MATH_DEFINES 1
+#include<math.h>
 //OpenGL Header files
 #include<GL/GL.h>
 #include<GL/GLU.h>
@@ -154,6 +156,12 @@ LRESULT CALLBACK WndProg(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 	//Function declaration
 	void ToogleFullScreen(void);
 	void resize(int, int);
+	void VerticalLines();
+	void HorizontalLines();
+	void GraphLines();
+	void Circle(float, float, float, int);
+	void Square();
+	void Triangle();
 
 	//code
 	switch (iMsg)
@@ -177,6 +185,8 @@ LRESULT CALLBACK WndProg(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 			break;
 		}
 		break;
+	case WM_PAINT:
+
 	case WM_CHAR:
 		switch (LOWORD(wParam))
 		{
@@ -184,6 +194,23 @@ LRESULT CALLBACK WndProg(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 		case 'f':
 			ToogleFullScreen();
 			break;
+		case 'G':
+		case 'g':
+			GraphLines();
+			break;
+		case 'T':
+		case 't':
+			Triangle();
+			break;
+		case 'S':
+		case 's':
+			Square();
+			break;
+		case 'C':
+		case 'c':
+			Circle(0.0, 0.0, 0.5, 100);
+			break;
+
 		}
 		break;
 	case WM_CLOSE:
@@ -308,7 +335,7 @@ void resize(int width, int height)
 	glViewport(0, 0, (GLsizei)width, (GLsizei)height);
 	glMatrixMode(GL_PROJECTION);//use GL_Projection from Matrix maths from OpenGL math lib
 	glLoadIdentity();
-	//gluPerspective(45.0f, (GLfloat)width / (GLfloat)height, 0.1f, 100.0f);
+	//gluPerspective(40.0f, (GLfloat)width / (GLfloat)height, 0.1f, 100.0f);
 
 }
 
@@ -316,8 +343,16 @@ void VerticalLines()
 {
 	float xPt1 = 0.025f;
 	float xPt2 = -0.025f;
+
+	glLineWidth(3.2);
+	glBegin(GL_LINES);
+	glColor3f(0.0, 1.0, 0.0);
+	glVertex3f(0.0, 1.0, 0.0);
+	glVertex3f(0.0, -1.0, 0.0);
+	glEnd();
+
 	glColor3f(0.0, 0.0, 1.0);
-	for (int i = 1; i <= 40; i++) 
+	for (int i = 0; i < 40; i++) 
 	{
 		if (i % 5 == 0) 
 		{
@@ -327,7 +362,7 @@ void VerticalLines()
 		{
 			glLineWidth(1.0f);
 		}
-			
+
 		glBegin(GL_LINES);
 		
 		glVertex2f(xPt1, 1.0);
@@ -338,7 +373,7 @@ void VerticalLines()
 	}
 
 	glColor3f(0.0, 0.0, 1.0);
-	for (int j = 1; j <= 40; j++) 
+	for (int j = 0; j < 40; j++) 
 	{
 		if (j % 5 == 0) 
 		{
@@ -358,6 +393,97 @@ void VerticalLines()
 	}
 }
 
+void HorizontalLines()
+{
+	float yPt1 = 0.025f;
+	float yPt2 = -0.025f;
+
+	glLineWidth(3.2);
+	glBegin(GL_LINES);
+	glColor3f(1.0, 0.0, 0.0);
+	glVertex3f(-1.0, 0.0, 0.0);
+	glVertex3f(1.0, 0.0, 0.0);
+	glColor3f(0.0, 0.0, 1.0);
+	glEnd();
+
+	glColor3f(0.0, 0.0, 1.0);
+	for (int i = 0; i < 40; i++)
+	{
+		if (i % 5 == 0)
+			glLineWidth(2.2);
+		else
+			glLineWidth(1.0);
+
+		glBegin(GL_LINES);
+		glVertex2f(-1.0f, yPt1);
+		glVertex2f(1.0f, yPt1);
+
+		yPt1 += 0.025;
+		glEnd();
+	}
+	
+
+	glColor3f(0.0, 0.0, 1.0);
+	for (int j = 0; j < 40; j++)
+	{
+		if (j % 5 == 0)
+			glLineWidth(2.2);
+		else
+			glLineWidth(1.0);
+		glBegin(GL_LINES);
+		glVertex2f(-1.0f, yPt2);
+		glVertex2f(1.0f, yPt2);
+
+		yPt2 -= 0.025f;
+		glEnd();
+	}
+}
+
+void GraphLines()
+{
+	VerticalLines();
+	HorizontalLines();
+
+}
+
+void Circle(float xCenter, float yCenter, float radius, int count)
+{
+	float x, y,angle;
+	glColor3f(1.0, 1.0, 0.0);
+	glBegin(GL_LINE_LOOP);
+	for (int i = 0;i < count; i++)
+	{
+		angle = 2.0f * M_PI * (float)i / float(count);
+		x = radius * cos(angle);
+		y = radius * sin(angle);
+		glVertex2f(x + xCenter, y + yCenter);
+	}
+	glEnd();
+}
+
+void Triangle()
+{
+	glLineWidth(1.3);
+	glBegin(GL_LINE_LOOP);
+	glColor3f(1.0, 1.0, 0.0);
+	glVertex3f(0.0, 0.5, 0.0);
+	glVertex3f(-0.5, -0.5, 0.0);
+	glVertex3f(0.5, -0.5, 0.0);
+	glEnd();
+}
+
+void Square()
+{
+	glLineWidth(1.3);
+	glBegin(GL_LINE_LOOP);
+	glColor3f(1.0, 1.0, 0.0);
+	glVertex3f(0.5, 0.5, 0.0);
+	glVertex3f(-0.5, 0.5, 0.0);
+	glVertex3f(-0.5, -0.5, 0.0);
+	glVertex3f(0.5, -0.5, 0.0);
+	glEnd();
+}
+
 void display(void)
 {
 	//code
@@ -367,15 +493,6 @@ void display(void)
 	
 	glTranslatef(0.0, 0.0, -1.0);
 //	glEnable(GL_LINE_SMOOTH);
-	
-	glLineWidth(3.2);
-	glBegin(GL_LINES);
-	glColor3f(0.0, 1.0, 0.0);
-	glVertex3f(0.0, 1.0, 0.0);
-	glVertex3f(0.0, -1.0, 0.0);
-	//glDisable(GL_LINE_SMOOTH);
-	glEnd();
-	VerticalLines();
 	
 	SwapBuffers(ghdc);
 }

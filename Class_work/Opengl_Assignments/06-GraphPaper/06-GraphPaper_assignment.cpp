@@ -308,14 +308,22 @@ void resize(int width, int height)
 	glViewport(0, 0, (GLsizei)width, (GLsizei)height);
 	glMatrixMode(GL_PROJECTION);//use GL_Projection from Matrix maths from OpenGL math lib
 	glLoadIdentity();
-	//gluPerspective(45.0f, (GLfloat)width / (GLfloat)height, 0.1f, 100.0f);
+	//gluPerspective(40.0f, (GLfloat)width / (GLfloat)height, 0.1f, 100.0f);
 
 }
 
 void VerticalLines()
 {
-	float xPt1 = 0.025f;
-	float xPt2 = -0.025f;
+	float xPt1=0.025f;
+	float xPt2=-0.025f;
+
+	glLineWidth(3.2);
+	glBegin(GL_LINES);
+	glColor3f(0.0, 1.0, 0.0);
+	glVertex3f(0.0, 1.0, 0.0);
+	glVertex3f(0.0, -1.0, 0.0);
+	glEnd();
+
 	glColor3f(0.0, 0.0, 1.0);
 	for (int i = 1; i <= 40; i++) 
 	{
@@ -327,7 +335,7 @@ void VerticalLines()
 		{
 			glLineWidth(1.0f);
 		}
-			
+
 		glBegin(GL_LINES);
 		
 		glVertex2f(xPt1, 1.0);
@@ -358,6 +366,52 @@ void VerticalLines()
 	}
 }
 
+void HorizontalLines()
+{
+	float yPt1 = 0.025f;
+	float yPt2 = -0.025f;
+
+	glLineWidth(3.2);
+	glBegin(GL_LINES);
+	glColor3f(1.0, 0.0, 0.0);
+	glVertex3f(-1.0, 0.0, 0.0);
+	glVertex3f(1.0, 0.0, 0.0);
+	glColor3f(0.0, 0.0, 1.0);
+	glEnd();
+
+	glColor3f(0.0, 0.0, 1.0);
+	for (int i = 1; i <= 40; i++)
+	{
+		if (i % 5 == 0)
+			glLineWidth(2.2);
+		else
+			glLineWidth(1.0);
+
+		glBegin(GL_LINES);
+		glVertex2f(-1.0f, yPt1);
+		glVertex2f(1.0f, yPt1);
+
+		yPt1 += 0.025;
+		glEnd();
+	}
+	
+
+	glColor3f(0.0, 0.0, 1.0);
+	for (int j = 1; j <= 40; j++)
+	{
+		if (j % 5 == 0)
+			glLineWidth(2.2);
+		else
+			glLineWidth(1.0);
+		glBegin(GL_LINES);
+		glVertex2f(-1.0f, yPt2);
+		glVertex2f(1.0f, yPt2);
+
+		yPt2 -= 0.025f;
+		glEnd();
+	}
+}
+
 void display(void)
 {
 	//code
@@ -367,14 +421,7 @@ void display(void)
 	
 	glTranslatef(0.0, 0.0, -1.0);
 //	glEnable(GL_LINE_SMOOTH);
-	
-	glLineWidth(3.2);
-	glBegin(GL_LINES);
-	glColor3f(0.0, 1.0, 0.0);
-	glVertex3f(0.0, 1.0, 0.0);
-	glVertex3f(0.0, -1.0, 0.0);
-	//glDisable(GL_LINE_SMOOTH);
-	glEnd();
+	HorizontalLines();
 	VerticalLines();
 	
 	SwapBuffers(ghdc);

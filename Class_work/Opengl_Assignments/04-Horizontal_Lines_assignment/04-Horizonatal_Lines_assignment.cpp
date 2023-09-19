@@ -308,19 +308,19 @@ void resize(int width, int height)
 	glViewport(0, 0, (GLsizei)width, (GLsizei)height);
 	glMatrixMode(GL_PROJECTION);//use GL_Projection from Matrix maths from OpenGL math lib
 	glLoadIdentity();
-	gluPerspective(45.0f, (GLfloat)width / (GLfloat)height, 0.1f, 100.0f);
+	//gluPerspective(45.0f, (GLfloat)width / (GLfloat)height, 0.1f, 100.0f);
 
 }
 
 void HorizontalLines()
 {
-	float yPt1=0.025f;
-	float yPt2=-0.025f;
+	float yPt1 = 0.025f;
+	float yPt2 = -0.025f;
 	glColor3f(0.0, 0.0, 1.0);
-	for (int i = 0; i < 20; i++) 
+	for (int i = 1; i <= 40; i++) 
 	{
 		if (i % 5 == 0)
-			glLineWidth(1.5);
+			glLineWidth(2.2);
 		else
 			glLineWidth(1.0);
 		
@@ -329,15 +329,14 @@ void HorizontalLines()
 		glVertex2f(1.0f, yPt1);
 		
 		yPt1 += 0.025;
-		
+		glEnd();
 	}
-	glEnd();
-
+	
 	glColor3f(0.0, 0.0, 1.0);
-	for (int j = 0; j < 20; j++) 
+	for (int j = 1; j <= 40; j++) 
 	{
 		if (j % 5 == 0)
-			glLineWidth(1.5);
+			glLineWidth(2.2);
 		else
 			glLineWidth(1.0);
 		glBegin(GL_LINES);
@@ -345,9 +344,8 @@ void HorizontalLines()
 		glVertex2f(1.0f, yPt2);
 		
 		yPt2 -= 0.025f;
+		glEnd();
 	}
-	glEnd();
-
 }
 
 void display(void)
@@ -360,7 +358,7 @@ void display(void)
 	glTranslatef(0.0f, 0.0f, -1.0f);
 	
 //	glEnable(GL_LINE_SMOOTH);
-	glLineWidth(2.5);
+	glLineWidth(3.2);
 	glBegin(GL_LINES);
 	glColor3f(1.0, 0.0, 0.0);
 	glVertex3f(-1.0, 0.0, 0.0);
@@ -384,8 +382,6 @@ void uninitialize(void)
 {
 	//function declarations
 	void ToogleFullScreen(void);
-
-	
 	//code
 	//If application is exiting in fullscreen:
 	if (gbFullScreen == TRUE)
