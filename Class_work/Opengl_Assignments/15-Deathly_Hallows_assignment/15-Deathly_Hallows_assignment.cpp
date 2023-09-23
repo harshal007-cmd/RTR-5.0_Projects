@@ -339,13 +339,11 @@ void Triangle_And_Line()
 	float x, y, xc, yc;
 	x = 0.5f;
 	y = 0.5f;
-	
 	length = sqrt(pow((-x) - x, 2) + pow((y) - y, 2));
-
 	height = sqrt((3 * length) / 2);
 	fprintf(gpFILE, "Length = %f\nHeight = %f", length, height);
 
-	glLineWidth(4.0);
+	glLineWidth(4.0);//Triangle
 	glBegin(GL_LINE_LOOP);
 	glVertex2f(0.0, height - y);
 	glVertex2f(-x, -y);
@@ -356,14 +354,11 @@ void Triangle_And_Line()
 	glVertex2f(0.0, height - y);
 	glVertex2f(0.0, - y);
 	glEnd();
-
 	//radius = (length / 2) * sqrt(3);
-	//xc = (0.0 + (-1) * x + x) / 3;
-	yc = ((height - y) + (-1) * y + (-1) * y) / 3;
-
+	//yc = ((height - y) + (-1) * y + (-1) * y) / 3;
+	yc = ((height - y) - y - y) / 3;
 	radius = yc - (-y);
 	fprintf(gpFILE, "XC = %f\nYC = %f\nRadius = %f", xc, yc, radius);
-
 	Circle(0.0, yc, radius, 100);
 }
 
@@ -376,12 +371,14 @@ void display(void)
 	glLoadIdentity();
 	
 	glTranslatef(0.0f, 0.0f, -1.0f);
+/*
 	glBegin(GL_LINES);
 	glVertex2f(-1.0, 0.0);
 	glVertex2f(1.0, 0.0);
 	glVertex2f(0.0, 1.0);
 	glVertex2f(0.0, -1.0);
 	glEnd();
+	*/
 	Triangle_And_Line();
 	
 	SwapBuffers(ghdc);

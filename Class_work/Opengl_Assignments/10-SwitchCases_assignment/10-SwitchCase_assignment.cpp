@@ -25,6 +25,8 @@ HGLRC ghrc = NULL; //handle to GL Rendering Contex
 #pragma comment(lib,"openGL32.lib")
 #pragma comment(lib,"glu32.lib")
 
+char c;
+
 //global function declaration
 LRESULT CALLBACK WndProg(HWND, UINT, WPARAM, LPARAM);
 
@@ -196,19 +198,27 @@ LRESULT CALLBACK WndProg(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 			break;
 		case 'G':
 		case 'g':
-			GraphLines();
+			c = 'g';
 			break;
 		case 'T':
 		case 't':
-			Triangle();
+			c = 't';
 			break;
 		case 'S':
 		case 's':
-			Square();
+			c = 's';
 			break;
 		case 'C':
 		case 'c':
-			Circle(0.0, 0.0, 0.5, 100);
+			c = 'c';
+			break;
+		case 'V':
+		case 'v':
+			c = 'v';
+			break;
+		case 'H':
+		case 'h':
+			c = 'h';
 			break;
 
 		}
@@ -493,6 +503,37 @@ void display(void)
 	
 	glTranslatef(0.0, 0.0, -1.0);
 //	glEnable(GL_LINE_SMOOTH);
+		switch (c)
+		{
+		case 'G':
+		case 'g':
+			GraphLines();
+			break;
+		case 'V':
+		case 'v':
+			VerticalLines();
+			break;
+		case 'H':
+		case 'h':
+			HorizontalLines();
+			break;
+		case 'T':
+		case 't':
+			Triangle();
+			break;
+		case 'S':
+		case 's':
+			Square();
+			break;
+		case 'C':
+		case 'c':
+			Circle(0.0, 0.0, 0.5, 100);
+			break;
+		default:
+			i = 0;
+			break;		
+	}
+		
 	
 	SwapBuffers(ghdc);
 }
