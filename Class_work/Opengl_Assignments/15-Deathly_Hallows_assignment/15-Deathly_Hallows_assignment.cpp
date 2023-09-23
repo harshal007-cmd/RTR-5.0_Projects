@@ -333,30 +333,38 @@ void Circle(float xc, float yc, float radius, int count)
 	
 }
 
-void Triangle_And_Line(float x, float y )
+void Triangle_And_Line()
 {
-	float xc, yc, length, radius;
-	glLineWidth(3.0);
+	float length, radius, height;
+	float x, y, xc, yc;
+	x = 0.5f;
+	y = 0.5f;
+	
+	length = sqrt(pow((-x) - x, 2) + pow((y) - y, 2));
+
+	height = sqrt((3 * length) / 2);
+	fprintf(gpFILE, "Length = %f\nHeight = %f", length, height);
+
+	glLineWidth(4.0);
 	glBegin(GL_LINE_LOOP);
-	glVertex2f(0.0, y);
-	glVertex2f((-1) * x, (-1) * y);
-	glVertex2f(x, (-1) * y);
+	glVertex2f(0.0, height - y);
+	glVertex2f(-x, -y);
+	glVertex2f(x, -y);
 	glEnd();
 
 	glBegin(GL_LINES);
-	glVertex2f(0.0, y);
-	glVertex2f(0.0, (-1) * y);
+	glVertex2f(0.0, height - y);
+	glVertex2f(0.0, - y);
 	glEnd();
 
-	xc = (0.0 + (-0.5) + (0.5)) / 3;
-	yc = (0.5 + (-0.5) + (-0.5)) / 3;
-	
-	length = sqrt(pow((-x) - 0.0, 2) + pow((y) - y, 2));
+	//radius = (length / 2) * sqrt(3);
+	//xc = (0.0 + (-1) * x + x) / 3;
+	yc = ((height - y) + (-1) * y + (-1) * y) / 3;
 
-	radius = (length / 2) * sqrt(3);
+	radius = yc - (-y);
+	fprintf(gpFILE, "XC = %f\nYC = %f\nRadius = %f", xc, yc, radius);
 
-	fprintf(gpFILE, "Radius = %f\nLenght = %f\n", radius, length);
-	Circle(xc, yc - 0.027, 0.307, 100);
+	Circle(0.0, yc, radius, 100);
 }
 
 
@@ -368,7 +376,13 @@ void display(void)
 	glLoadIdentity();
 	
 	glTranslatef(0.0f, 0.0f, -1.0f);
-	Triangle_And_Line(0.5, 0.5);
+	glBegin(GL_LINES);
+	glVertex2f(-1.0, 0.0);
+	glVertex2f(1.0, 0.0);
+	glVertex2f(0.0, 1.0);
+	glVertex2f(0.0, -1.0);
+	glEnd();
+	Triangle_And_Line();
 	
 	SwapBuffers(ghdc);
 }
