@@ -5,8 +5,13 @@
 #include<windows.h>//win32
 #include"Window.h" //or OGL.h (if rename)
 #include<stdio.h>///for file IO
-#include<stdlib.h>//for exit() 
+#include<stdlib.h>//for exit()
+#include<mmsystem.h>//for sound
 #define ARRAY_LENGTH(arr) (sizeof(arr) / sizeof(arr[0]))
+
+//sound file path
+//const wchar_t* soundFile = L"C:\\Users\\gs-3228\\Desktop\\RTR-5.0_Projects\\RTR-5.0_Projects\\Ganesh-song.wav";
+
 
 //OpenGL Header files
 #include<GL/GL.h>
@@ -23,6 +28,8 @@ HGLRC ghrc = NULL; //handle to GL Rendering Contex
 //Link with OpenGL Lib
 #pragma comment(lib,"openGL32.lib")
 #pragma comment(lib,"glu32.lib")
+#pragma comment(lib, "winmm.lib")
+
 //File io
 FILE* gpFILE = NULL;
 
@@ -262,6 +269,15 @@ GLfloat Laddu[] = {
 
 };
 
+GLfloat LeftFrame[] = {
+669,63,
+493,63,
+493,743,
+669,743
+
+
+};
+
 void ConvertToOpenGLSpace(GLfloat* array, int len, GLfloat width, GLfloat height)
 {
 	GLfloat oldleft = 0;
@@ -289,6 +305,11 @@ void ConvertToOpenGLSpace(GLfloat* array, int len, GLfloat width, GLfloat height
 		array[i + 1] = newy;
 	}
 	
+}
+
+void playSound()
+{
+	PlaySoundA(TEXT("C:\\Users\\gs-3228\\Desktop\\Ganesh_song.wav"), NULL, SND_FILENAME | SND_ASYNC);
 }
 
 //global function declaration
@@ -440,6 +461,9 @@ LRESULT CALLBACK WndProg(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 		case VK_ESCAPE:
 			DestroyWindow(hwnd);
 			break;
+		case VK_SPACE:
+			PlaySoundA(TEXT("C:\\Users\\gs-3228\\Desktop\\Ganesh_song.wav"), NULL, SND_FILENAME | SND_ASYNC);
+			break;
 		}
 		break;
 	case WM_CHAR:
@@ -569,6 +593,7 @@ int initialize(void)
 	ConvertToOpenGLSpace(str2Pt, ARRAY_LENGTH(str2Pt), 256, 256);
 	ConvertToOpenGLSpace(DamruString2, ARRAY_LENGTH(DamruString2), 256, 256);
 	ConvertToOpenGLSpace(Laddu, ARRAY_LENGTH(Laddu), 256, 256);
+	ConvertToOpenGLSpace(LeftFrame, ARRAY_LENGTH(LeftFrame), 256, 256);
 
 	//Set the Clear color of Window to Blue
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f); //here OpenGL starts
@@ -611,9 +636,10 @@ void BackGround()
 void Trishul_Ganesh()
 {
 	glLoadIdentity();
-	glLineWidth(2.8);
+	glLineWidth(1.8);
 	glTranslatef(-1.3f, 0.5f, -3.0f);
-	glScalef(0.3f, 0.3f, 0.3f);
+	glScalef(0.1f, 0.1f, 0.1f);
+
 
 	// glDrawArrays(GL_TRIANGLES, 0, 3);
 	glColor3f(0.0, 0.0, 0.0);
@@ -623,7 +649,7 @@ void Trishul_Ganesh()
 		glVertex2f(Trishul[i], Trishul[i + 1]);
 	}
 	glEnd();
-
+	
 	glBegin(GL_LINE_LOOP);
 	for (int i = 0; i < ARRAY_LENGTH(Face); i = i + 2)
 	{
@@ -704,7 +730,7 @@ void Trishul_Ganesh()
 
 	//	glLoadIdentity();
 	glEnable(GL_POINT_SMOOTH);
-	glPointSize(10.0);
+	glPointSize(3.0);
 	glBegin(GL_POINTS);
 	for (int i = 0; i < ARRAY_LENGTH(str1Pt); i = i + 2)
 	{
@@ -712,8 +738,7 @@ void Trishul_Ganesh()
 	}
 	glEnd();
 
-	//glEnable(GL_POINT_SMOOTH);
-	//glPointSize(10.0);
+	
 	glBegin(GL_POINTS);
 	for (int i = 0; i < ARRAY_LENGTH(str1Pt); i = i + 2)
 	{
@@ -721,7 +746,7 @@ void Trishul_Ganesh()
 	}
 	glEnd();
 
-	glPointSize(16.5);
+	glPointSize(7.0);
 	glBegin(GL_POINTS);
 	for (int i = 0; i < ARRAY_LENGTH(Laddu); i = i + 2)
 	{
@@ -731,6 +756,30 @@ void Trishul_Ganesh()
 
 }
 
+void Board()
+{
+	glLoadIdentity();
+	glTranslatef(-0.29f, 0.1f, -1.0f);
+	glScalef(0.2, 0.2, 0.2);
+	glColor3f(0.8, 0.5, 0.0);
+	glBegin(GL_POLYGON);
+	glVertex2f(0.4, 0.6);
+	glVertex2f(-0.4, 0.6);
+	glVertex2f(-0.4, -0.6);
+	glVertex2f(0.4, -0.6);
+	glEnd();
+
+
+	glLineWidth(2.5);
+	glColor3f(0.0, 0.0, 0.0);
+	glBegin(GL_LINE_LOOP);
+	glVertex2f(0.4, 0.6);
+	glVertex2f(-0.4, 0.6);
+	glVertex2f(-0.4, -0.6);
+	glVertex2f(0.4, -0.6);
+	glEnd();
+}
+
 void display(void)
 {
 	//code
@@ -738,11 +787,12 @@ void display(void)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
+
 	//glLoadIdentity();
 	glTranslatef(0.0f, 0.0f, -1.0f);
 	//	glScalef(0.3f, 0.3f, 0.3f);
 	BackGround();
-
+	Board();
 	Trishul_Ganesh();
 	
 	SwapBuffers(ghdc);
