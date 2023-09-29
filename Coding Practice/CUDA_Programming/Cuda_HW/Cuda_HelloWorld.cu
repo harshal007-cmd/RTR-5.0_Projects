@@ -8,11 +8,11 @@ int main()
 
 	cudaGetDeviceCount(&cnt);
 
-	for(int i;i < cnt; ++i)
+	for(int i=0;i < cnt; ++i)
 	{
 		cudaGetDeviceProperties(&pCuda, i);
 		printf("Name = %s\n",pCuda.name);
-		printf("Compute Capability = %d.%d\n", pCuda.major, pCude.minor);
+		printf("Compute Capability = %d.%d\n", pCuda.major, pCuda.minor);
 	}
 	return 0;
 }
