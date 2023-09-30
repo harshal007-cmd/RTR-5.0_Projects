@@ -8,12 +8,13 @@ int main()
 	cl_uint cnt;
 	char info[512];
 
-	clGetPlatformIds(1, &cid, NULL);
-	clGetDeviceIds(cid, CL_DEVICE_TYPE_GPU, 0, NULL, &cnt);
-	clGetPlatformInfo(cid, CL_PLATFROM_NAME, 500, &info);
+	clGetPlatformIDs(1, &cid, NULL);
+	clGetDeviceIDs(cid, CL_DEVICE_TYPE_GPU, 0, NULL, &cnt);
+	
+	clGetPlatformInfo(cid, CL_PLATFORM_NAME, 500, &info, NULL);
 	printf("OpenCL supporting GPU platform name :- %s\n", info);
 
-	clGetPlatformInfo(cid, CL_PLATFROM_VERSION, 500, &info);
+	clGetPlatformInfo(cid, CL_PLATFORM_VERSION, 500, &info, NULL);
 	printf("OpenCL supporting GPU platform version :- %s\n", info);
 
 	printf("Number of OpenCL devices :- %d\n", cnt);
