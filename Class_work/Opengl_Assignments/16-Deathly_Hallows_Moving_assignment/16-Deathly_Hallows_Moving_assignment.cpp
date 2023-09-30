@@ -409,13 +409,11 @@ void update(void)
 	{
 		pAngle = pAngle - 360.0f;
 	}
-
 	cAngle += 0.8f;
 	if (pAngle <= 360.0f)
 	{
 		pAngle = pAngle - 360.0f;
 	}
-
 	if (xT != 0.0)
 	{
 		tDistace += 0.001f;
@@ -425,15 +423,12 @@ void update(void)
 	{
 		tDistace = 0.0;
 	}
-	
 }
 
 void uninitialize(void)
 {
 	//function declarations
 	void ToogleFullScreen(void);
-
-	
 	//code
 	//If application is exiting in fullscreen:
 	if (gbFullScreen == TRUE)

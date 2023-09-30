@@ -40,6 +40,9 @@ DWORD dwstyle = 0;
 WINDOWPLACEMENT wpPrev = { sizeof(WINDOWPLACEMENT) };
 BOOL gbFullScreen = FALSE;
 
+float xc, yc, radius, height, x, y;
+float xT, yT;
+
 //Entry point function
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLine, int iCmdShow)
 {
@@ -311,7 +314,7 @@ void resize(int width, int height)
 	glViewport(0, 0, (GLsizei)width, (GLsizei)height);
 	glMatrixMode(GL_PROJECTION);//use GL_Projection from Matrix maths from OpenGL math lib
 	glLoadIdentity();
-//	gluPerspective(45.0f, (GLfloat)width / (GLfloat)height, 0.1f, 100.0f);
+	//gluPerspective(45.0f, (GLfloat)width / (GLfloat)height, 0.1f, 100.0f);
 
 }
 
@@ -319,7 +322,7 @@ void Circle(float xc, float yc, float radius, int count)
 {
 	float x, y, angle;
 	glLineWidth(3.0);
-		
+
 	glBegin(GL_LINE_LOOP);
 	for (int j = 0;j < count; j++)
 	{
@@ -329,17 +332,26 @@ void Circle(float xc, float yc, float radius, int count)
 		glVertex2f(x + xc, y + yc);
 	}
 	glEnd();
-	
-	
+
+
 }
 
-void Triangle_And_Line()
+void Line()
 {
-	float length, radius, height;
-	float x, y, xc, yc;
+	glBegin(GL_LINES);
+	glVertex2f(0.0, height - y);
+	glVertex2f(0.0, -y);
+	glEnd();
+
+}
+
+void Triangle()
+{
+	float length;
+	//float x, y;
 	x = 0.5f;
 	y = 0.5f;
-	length = sqrt(pow((-x) - x, 2) + pow((y) - y, 2));
+	length = sqrt(pow((-x) - x, 2) + pow((y)-y, 2));
 	height = sqrt((3 * length) / 2);
 	fprintf(gpFILE, "Length = %f\nHeight = %f", length, height);
 
@@ -350,28 +362,26 @@ void Triangle_And_Line()
 	glVertex2f(x, -y);
 	glEnd();
 
-	glBegin(GL_LINES);
-	glVertex2f(0.0, height - y);
-	glVertex2f(0.0, - y);
-	glEnd();
 	//radius = (length / 2) * sqrt(3);
 	//yc = ((height - y) + (-1) * y + (-1) * y) / 3;
 	yc = ((height - y) - y - y) / 3;
 	radius = yc - (-y);
 	fprintf(gpFILE, "XC = %f\nYC = %f\nRadius = %f", xc, yc, radius);
-	Circle(0.0, yc, radius, 100);
+	//Circle(0.0, yc, radius, 100);
 }
 
 
 void display(void)
 {
+	xT = 0.8;
+	yT = 0.8;
 	//code
 	glClear(GL_COLOR_BUFFER_BIT);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	
 	glTranslatef(0.0f, 0.0f, -1.0f);
-/*
+	/*
 	glBegin(GL_LINES);
 	glVertex2f(-1.0, 0.0);
 	glVertex2f(1.0, 0.0);
@@ -379,8 +389,9 @@ void display(void)
 	glVertex2f(0.0, -1.0);
 	glEnd();
 	*/
-	Triangle_And_Line();
-	
+	Line();
+	Triangle();
+	Circle(xc, yc, radius, 100);
 	SwapBuffers(ghdc);
 }
 
