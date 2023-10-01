@@ -355,7 +355,7 @@ void Triangle_And_Line()
 	x = 0.5f;
 	y = 0.5f;
 	length = sqrt(pow((-x) - x, 2) + pow((y) - y, 2));
-	height = sqrt((3 * length) / 2);
+	height = sqrt(3 * length) / 2;
 	fprintf(gpFILE, "Length = %f\nHeight = %f", length, height);
 
 	glLineWidth(4.0);//Triangle
@@ -383,18 +383,18 @@ void display(void)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	glTranslatef(0.0, 0.0, -3.0);
-	//glTranslatef(0.0, yT - tDistace, -4.0f);
+	//glTranslatef(0.0, 0.0, -3.0);
+	glTranslatef(0.0, yT - tDistace, -4.0f);
 	Line();
 
-	//glLoadIdentity();
-//	glTranslatef(tDistace + (-xT), tDistace + (-yT), -4.0f);
-//	glRotatef(pAngle, 0.0, 1.0, 0.0);
+	glLoadIdentity();
+	glTranslatef(tDistace + (-xT), tDistace + (-yT), -4.0f);
+	glRotatef(pAngle, 0.0, 1.0, 0.0);
 	Triangle_And_Line();
 	
-//	glLoadIdentity();
-//	glTranslatef(xT - tDistace, tDistace + (-yT), -4.0);
-	//glRotatef(cAngle, 0.0, 1.0, 0.0);
+	glLoadIdentity();
+	glTranslatef(xT - tDistace, tDistace + (-yT), -4.0);
+	glRotatef(cAngle, 0.0, 1.0, 0.0);
 
 	Circle(xc, yc, radius, 100);
 
@@ -404,19 +404,19 @@ void display(void)
 void update(void)
 {
 	//code
-	pAngle += 0.8f;
+	pAngle += 0.05f;
 	if (pAngle >= 360.0f)
 	{
 		pAngle = pAngle - 360.0f;
 	}
-	cAngle += 0.8f;
+	cAngle += 0.05f;
 	if (pAngle <= 360.0f)
 	{
-		pAngle = pAngle - 360.0f;
+		cAngle = cAngle + 360.0f;
 	}
 	if (xT != 0.0)
 	{
-		tDistace += 0.001f;
+		tDistace += 0.00001f;
 		xT = xT - tDistace;
 	}
 	else

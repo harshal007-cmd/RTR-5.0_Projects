@@ -25,11 +25,11 @@ int main(void)
 {
 	void cleanup(void);
 
-	int size = iNumElement * sizeof(flaot);
-	cudaError_t result_t = cudaSuccess;
+	int size = iNumElement * sizeof(float);
+	cudaError_t result = cudaSuccess;
 
 	hostInput1 = (float*)malloc(size);
-	if (hostInput1 = NULL)
+	if (hostInput1 == NULL)
 	{
 		printf("Host memory allocation is falied for hostInput1 array.\n");
 		cleanup();
@@ -37,7 +37,7 @@ int main(void)
 	}
 
 	hostInput2 = (float*)malloc(size);
-	if (hostInput2 = NULL)
+	if (hostInput2 == NULL)
 	{
 		printf("Host memory allocation is falied for hostInput2 array.\n");
 		cleanup();
@@ -45,7 +45,7 @@ int main(void)
 	}
 
 	hostInput = (float*)malloc(size);
-	if (hostInput = NULL)
+	if (hostInput == NULL)
 	{
 		printf("Host memory allocation is falied for hostInput array.\n");
 		cleanup();
@@ -90,7 +90,7 @@ int main(void)
 	}
 
 	//copy data from host array to device array
-	result cudaMemcpy(deviceInput1, hostInput1, size, cudaMemcpyHostToDevice);
+	result = cudaMemcpy(deviceInput1, hostInput1, size, cudaMemcpyHostToDevice);
 	if (result != cudaSuccess)
 	{
 		printf("Host to device data is failed for dev1 array\n");
@@ -98,7 +98,7 @@ int main(void)
 		exit(EXIT_FAILURE);
 	}
 
-	result cudaMemcpy(deviceInput2, hostInput2, size, cudaMemcpyHostToDevice);
+	result = cudaMemcpy(deviceInput2, hostInput2, size, cudaMemcpyHostToDevice);
 	if (result != cudaSuccess)
 	{
 		printf("Host to device data is failed for dev2 array\n");
@@ -122,7 +122,7 @@ int main(void)
 		exit(EXIT_FAILURE);
 	}
 	
-	for(int i=0,i<iNumElement;++i)
+	for(int i=0; i < iNumElement;++i)
 	{
 		printf("%f + %f = %f\n",hostInput1[i],hostInput2[i],hostInput[i]);
 	}

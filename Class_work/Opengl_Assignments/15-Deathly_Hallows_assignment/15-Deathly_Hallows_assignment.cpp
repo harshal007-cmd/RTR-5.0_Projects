@@ -352,7 +352,7 @@ void Triangle()
 	x = 0.5f;
 	y = 0.5f;
 	length = sqrt(pow((-x) - x, 2) + pow((y)-y, 2));
-	height = sqrt((3 * length) / 2);
+	height = sqrt(3 * length) / 2;
 	fprintf(gpFILE, "Length = %f\nHeight = %f", length, height);
 
 	glLineWidth(4.0);//Triangle
