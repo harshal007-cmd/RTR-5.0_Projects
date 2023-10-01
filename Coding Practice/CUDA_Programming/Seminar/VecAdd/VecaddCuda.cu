@@ -1,15 +1,20 @@
 #include<stdio.h>
 #include<cuda.h>
+#include"helper_timer.h"
 
 const int iNumElement = 5;
 
 float* hostInput1 = NULL;
 float* hostInput2 = NULL;
 float* hostInput  = NULL;
+float* gold = NULL;
 
 float* deviceInput1 = NULL;
 float* deviceInput2 = NULL;
 float* deviceInput = NULL;
+
+float timeOnCPU = 0.0;
+float timeOnGPU = 0.0;
 
 __global__ void vecAddGPU(float* in1, float* in2, float* out, int len)
 {
@@ -24,6 +29,8 @@ __global__ void vecAddGPU(float* in1, float* in2, float* out, int len)
 int main(void)
 {
 	void cleanup(void);
+	void fillFloatArrayWithRandomNumber(float*, int);
+	void vecAddCPU(const float*, const float*, float*, int);
 
 	int size = iNumElement * sizeof(flaot);
 	cudaError_t result_t = cudaSuccess;
@@ -106,11 +113,21 @@ int main(void)
 		exit(EXIT_FAILURE);
 	}
 
-	dim3 dimGrid = dim3(iNumElement, 1, 1);
-	dim3 dimBlock = dim3(1, 1, 1);
+	dim3 dimGrid = dim3((int)ceil((float)iNumElement/256.0), 1, 1);
+	dim3 dimBlock = dim3(256, 1, 1);
+
+	StopWatchInterface* timer = NULL;
+	sdkCreateTimer(&timer);
+	sdkStartTimer(&timer);
+
 
 	//CUDA karnel for vector addition
 	vecAddGPU <<< dimGrid,dimBlock >>> (deviceInput1, deviceInput2, deviceInput, iNumElement);
+	
+	sdkStopTimer(&timer);
+	timeOnGPU = sdkGetTimerValue(&timer);
+	sdkDeleteTimer(&timer);
+	timer = NULL;
 	
 	//copy data to array
 	result = cudaMemcpy(hostInput,deviceInput,size,cudaMemcpyHostToDevice);
@@ -122,6 +139,24 @@ int main(void)
 		exit(EXIT_FAILURE);
 	}
 	
+	vecAddCPU(hostInput1, hostInput2, gold, iNumElement);
+
+	//comparison
+	const float epsilon = 0.000001f;
+	int breakValue = -1;
+	bool bAccuracy = true;
+	for (int i = 0; i < iNumElement; ++i)
+	{
+		float val1 = gold[i];
+		float val2 = hostInput[i];
+		if (fabs(val1 - val2) > epsilon)
+		{
+			bAccuracy = false;
+			breakValue = i;
+			break;
+		}
+	}
+
 	for(int i=0,i<iNumElement;++i)
 	{
 		printf("%f + %f = %f\n",hostInput1[i],hostInput2[i],hostInput[i]);
