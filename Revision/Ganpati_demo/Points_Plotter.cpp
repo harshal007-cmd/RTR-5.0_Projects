@@ -462,7 +462,7 @@ LRESULT CALLBACK WndProg(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 			DestroyWindow(hwnd);
 			break;
 		case VK_SPACE:
-			PlaySound("Ganesh_song.wav", NULL, SND_FILENAME | SND_ASYNC);
+			PlaySound("DeshMere2.wav", NULL, SND_FILENAME | SND_ASYNC);
 			break;
 		}
 		break;
