@@ -40,11 +40,24 @@ DWORD dwstyle = 0;
 WINDOWPLACEMENT wpPrev = { sizeof(WINDOWPLACEMENT) };
 BOOL gbFullScreen = FALSE;
 
-GLfloat pAngle = 0.0;
+GLfloat tAngle = 0.0;
 GLfloat cAngle = 0.0;
 GLfloat tDistace = 0.0;
 float xc, yc, radius, height, x, y;
-float xT, yT;
+GLfloat tx = 1.0f;
+GLfloat ty = 1.0f;
+GLfloat tl = 1.0f;
+GLfloat cx = 1.0f;
+GLfloat cy = 1.0f;
+GLfloat t = 0.0f;
+GLfloat rot = 0.0f;
+
+
+float lerp(float start, float end, float t)
+{
+	return start + t * (end - start);
+}
+
 
 //Entry point function
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLine, int iCmdShow)
@@ -376,24 +389,25 @@ void Triangle_And_Line()
 
 void display(void)
 {
-	xT = 0.8;
-	yT = 0.8;
+	
 	//code
 	glClear(GL_COLOR_BUFFER_BIT);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
 	//glTranslatef(0.0, 0.0, -3.0);
-	glTranslatef(0.0, yT - tDistace, -4.0f);
+	//glTranslatef(0.0, yT - tDistace, -4.0f);
+	glTranslatef(0.0, tl, -3.0);
 	Line();
 
 	glLoadIdentity();
-	glTranslatef(tDistace + (-xT), tDistace + (-yT), -4.0f);
-	glRotatef(pAngle, 0.0, 1.0, 0.0);
+	glTranslatef(tx, ty, -3.0);
+	glRotatef(tAngle, 0.0, 1.0, 0.0);
 	Triangle_And_Line();
 	
+
 	glLoadIdentity();
-	glTranslatef(xT - tDistace, tDistace + (-yT), -4.0);
+	glTranslatef(cx, cy, -3.0);
 	glRotatef(cAngle, 0.0, 1.0, 0.0);
 
 	Circle(xc, yc, radius, 100);
@@ -404,25 +418,38 @@ void display(void)
 void update(void)
 {
 	//code
-	pAngle += 0.05f;
-	if (pAngle >= 360.0f)
+	tAngle += 0.05f;
+	if (tAngle >= 360.0f)
 	{
-		pAngle = pAngle - 360.0f;
+		tAngle = tAngle - 360.0f;
 	}
 	cAngle += 0.05f;
-	if (pAngle <= 360.0f)
+	if (tAngle >= 360.0f)
 	{
-		cAngle = cAngle + 360.0f;
+		cAngle = cAngle - 360.0f;
 	}
+	if (t <= 1.0)
+	{
+		t += 0.00004;
+	}
+	tx = lerp(-1.0, 0.0, t);
+	ty = lerp(-1.0, 0.0, t);
+	cx = lerp(1.0, 0.0, t);
+	cy = lerp(-1.0, 0.0, t);
+	tl = lerp(1.0, 0.0, t);
+	
+	/*
 	if (xT != 0.0)
 	{
-		tDistace += 0.00001f;
+		tDistace += 0.0001f;
 		xT = xT - tDistace;
 	}
 	else
 	{
 		tDistace = 0.0;
 	}
+	*/
+	
 }
 
 void uninitialize(void)
