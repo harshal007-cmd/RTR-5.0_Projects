@@ -6,6 +6,7 @@
 #include"Window.h" //or OGL.h (if rename)
 #include<stdio.h>///for file IO
 #include<stdlib.h>//for exit() 
+#include<mmsystem.h>//for sound
 
 #define _USE_MATH_DEFINES 1
 #include<math.h>
@@ -25,6 +26,8 @@ HGLRC ghrc = NULL; //handle to GL Rendering Contex
 //Link with OpenGL Lib
 #pragma comment(lib,"openGL32.lib")
 #pragma comment(lib,"glu32.lib")
+#pragma comment(lib, "winmm.lib")
+
 
 //global function declaration
 LRESULT CALLBACK WndProg(HWND, UINT, WPARAM, LPARAM);
@@ -33,6 +36,7 @@ LRESULT CALLBACK WndProg(HWND, UINT, WPARAM, LPARAM);
 //File io
 FILE* gpFILE = NULL;
 
+char a;
 //global variable declaration
 HWND ghwnd = NULL;
 BOOL gbActive = FALSE;
@@ -40,8 +44,7 @@ DWORD dwstyle = 0;
 WINDOWPLACEMENT wpPrev = { sizeof(WINDOWPLACEMENT) };
 BOOL gbFullScreen = FALSE;
 
-GLfloat tAngle = 0.0;
-GLfloat cAngle = 0.0;
+GLfloat Angle = 0.0;
 GLfloat tDistace = 0.0;
 float xc, yc, radius, height, x, y;
 GLfloat tx = 1.0f;
@@ -51,6 +54,11 @@ GLfloat cx = 1.0f;
 GLfloat cy = 1.0f;
 GLfloat t = 0.0f;
 GLfloat rot = 0.0f;
+
+LARGE_INTEGER frequency;
+LARGE_INTEGER frameStart;
+LARGE_INTEGER previousTime;
+GLfloat deltaTime = 0.0;
 
 
 float lerp(float start, float end, float t)
@@ -155,8 +163,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLi
 		{
 			if (gbActive == TRUE)
 			{
+				LARGE_INTEGER currentTime;
+				QueryPerformanceCounter(&currentTime);
 				//Render
 				display();
+				deltaTime = (double)(currentTime.QuadPart - previousTime.QuadPart);
+				previousTime = currentTime;
 
 				//Update
 				update();
@@ -176,6 +188,7 @@ LRESULT CALLBACK WndProg(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 	//Function declaration
 	void ToogleFullScreen(void);
 	void resize(int, int);
+	void display();
 
 	//code
 	switch (iMsg)
@@ -194,6 +207,10 @@ LRESULT CALLBACK WndProg(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 	case WM_KEYDOWN:
 		switch (LOWORD(wParam))
 		{
+		case VK_SPACE:
+			a = 'a';
+			PlaySoundA("song.wav", NULL, SND_FILENAME | SND_ASYNC);
+			break;
 		case VK_ESCAPE:
 			DestroyWindow(hwnd);
 			break;
@@ -310,9 +327,14 @@ int initialize(void)
 		fprintf(gpFILE, "wglMakeCurrent() Failed !!\n");
 		return -5;
 	}
-
 	//Set the Clear color of Window to Blue
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f); //here OpenGL starts
+
+	QueryPerformanceFrequency(&frequency);
+	QueryPerformanceCounter(&previousTime);
+
+	//PlaySoundA("song.wav", NULL, SND_FILENAME | SND_ASYNC);
+//	ToogleFullScreen();
 
 	resize(WIDTH, HEIGHT);
 	return 0;
@@ -397,58 +419,67 @@ void display(void)
 
 	//glTranslatef(0.0, 0.0, -3.0);
 	//glTranslatef(0.0, yT - tDistace, -4.0f);
+
+	switch (a)
+	{
+	case 'a':
+		glTranslatef(0.0, tl, -3.0);
+		Line();
+
+		glLoadIdentity();
+		glTranslatef(tx, ty, -3.0);
+		glRotatef(Angle, 0.0, 1.0, 0.0);
+		Triangle_And_Line();
+
+
+		glLoadIdentity();
+		glTranslatef(cx, cy, -3.0);
+		glRotatef(Angle, 0.0, -1.0, 0.0);
+
+		Circle(xc, yc, radius, 100);
+		break;
+
+	}
+	/*
 	glTranslatef(0.0, tl, -3.0);
 	Line();
 
 	glLoadIdentity();
 	glTranslatef(tx, ty, -3.0);
-	glRotatef(tAngle, 0.0, 1.0, 0.0);
+	glRotatef(Angle, 0.0, 1.0, 0.0);
 	Triangle_And_Line();
 	
 
 	glLoadIdentity();
 	glTranslatef(cx, cy, -3.0);
-	glRotatef(cAngle, 0.0, 1.0, 0.0);
+	glRotatef(Angle, 0.0, -1.0, 0.0);
 
 	Circle(xc, yc, radius, 100);
-
+	*/
 	SwapBuffers(ghdc);
 }
 
 void update(void)
 {
 	//code
-	tAngle += 0.05f;
-	if (tAngle >= 360.0f)
+	if (Angle >= 360.0f)
 	{
-		tAngle = tAngle - 360.0f;
+		Angle = Angle - 360.0f;
 	}
-	cAngle += 0.05f;
-	if (tAngle >= 360.0f)
-	{
-		cAngle = cAngle - 360.0f;
-	}
+	Angle += 1.0f;
+	
+	Angle = lerp(0.0f, 360.0, t);
+
+	
 	if (t <= 1.0)
 	{
-		t += 0.00004;
+		t += 0.00005;
 	}
 	tx = lerp(-1.0, 0.0, t);
 	ty = lerp(-1.0, 0.0, t);
 	cx = lerp(1.0, 0.0, t);
 	cy = lerp(-1.0, 0.0, t);
 	tl = lerp(1.0, 0.0, t);
-	
-	/*
-	if (xT != 0.0)
-	{
-		tDistace += 0.0001f;
-		xT = xT - tDistace;
-	}
-	else
-	{
-		tDistace = 0.0;
-	}
-	*/
 	
 }
 
