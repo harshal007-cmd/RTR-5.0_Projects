@@ -319,9 +319,14 @@ void display(void)
 	glClear(GL_COLOR_BUFFER_BIT);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();	
-	glTranslatef(0.0, 0.0, -2.1);
-	//glScalef(0.7, 0.7, 0.0);
-	mainScreen();
+	//glTranslatef(0.0, 0.0, -2.1);
+	glTranslatef(0.0, 0.0, -2.0);
+	//glScalef(0.0, 0.0, 0.0);
+	//mainScreen();
+	Hall();
+	//VerticalLines();
+	//HorizontalLines();
+	
 
 	SwapBuffers(ghdc);
 }
