@@ -296,6 +296,7 @@ int initialize(void)
 	return 0;
 }
 
+/*
 void resize(int width, int height)
 {
 	//code
@@ -306,9 +307,27 @@ void resize(int width, int height)
 	}
 	
 	glViewport(0, 0, (GLsizei)width, (GLsizei)height);
-	glMatrixMode(GL_PROJECTION);//use GL_Projection from Matrix maths from OpenGL math lib
+	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(45.0f, (GLfloat)width / (GLfloat)height, 0.1f, 100.0f);
+
+}
+*/
+void resize(int width, int height)
+{
+	//code
+	glViewport(0, 0, (GLsizei)width, (GLsizei)height);
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+
+	if (width > height)
+	{
+		glOrtho((GLfloat)width / (GLfloat)height * -1.0f, (GLfloat)width / (GLfloat)height * 1.0f, -1.0f, 1.0f, -1.0f, 1.0f);
+	}
+	else
+	{
+		glOrtho(-1.0f, 1.0f, (GLfloat)height / (GLfloat)width * -1.0f, (GLfloat)height / (GLfloat)width * 1.0f, -1.0f, 1.0f);
+	}
 
 }
 
@@ -319,9 +338,7 @@ void display(void)
 	glClear(GL_COLOR_BUFFER_BIT);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();	
-	//glTranslatef(0.0, 0.0, -2.1);
-	glTranslatef(0.0, 0.0, -2.0);
-	//glScalef(0.0, 0.0, 0.0);
+	glScalef(1.0, 1.0, 0.0);
 	//mainScreen();
 	Hall();
 	//VerticalLines();

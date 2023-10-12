@@ -110,23 +110,23 @@ void Hall()
 	glBegin(GL_POLYGON);
 		glVertex2f(1.0, 0.0);
 		glVertex2f(-1.0, 0.0);
-		glVertex2f(-1.0, -0.5);
-		glVertex2f(1.0, -0.5);
+		glVertex2f(-1.0, -0.7);
+		glVertex2f(1.0, -0.7);
 	glEnd();
 
 	//Base
 	glColor3f(0.3, 0.3, 0.3);
 	glBegin(GL_POLYGON);
-		glVertex2f(0.75, -0.250);
-		glVertex2f(-0.75, -0.250);
-		glVertex2f(-0.75, -0.34);
-		glVertex2f(0.75, -0.34);
+		glVertex2f(0.75, -0.450);
+		glVertex2f(-0.75, -0.450);
+		glVertex2f(-0.75, -0.625);
+		glVertex2f(0.75, -0.625);
 	glEnd();
 	glColor3f(0.2, 0.2, 0.2);
-	glLineWidth(1.0);
+	glLineWidth(2.0);
 	glBegin(GL_LINES);
-		glVertex2f(1.0, -0.292);
-		glVertex2f(-1.0, -0.292);
+	glVertex2f(1.0, -0.577);
+	glVertex2f(-1.0, -0.577);
 	glEnd();
 
 	
@@ -140,33 +140,58 @@ void Hall()
 		glVertex2f(-1.0, 0.65);
 		glVertex2f(-0.625, 0.525);
 	glEnd();
+	glLineWidth(2.0);
+	glColor3f(0.8, 0.4, 0.0);
+	glBegin(GL_LINES);
+		glVertex2f(0.125, 0.525);
+		glVertex2f(0.5, 1.0);
+
+		glVertex2f(0.5, 0.525);
+		//glVertex2f(0.875, 1.0);
+		glVertex2f(1.0, 1.0);
+
+		glVertex2f(-0.125, 0.525);
+		glVertex2f(-0.5, 1.0);
+
+		glVertex2f(-0.5, 0.525);
+		glVertex2f(-1.0, 1.0);
+
+	glEnd();
+
 	
 	//Left wall
 	glColor3f(0.4, 0.4, 0.4);
 	glBegin(GL_POLYGON);
 		glVertex2f(-0.625, 0.525);
-		glVertex2f(-1.0, 0.65);
-		glVertex2f(-1.0, -0.375);
-		glVertex2f(-0.625, -0.250);
+		glVertex2f(-1.0, 0.650);
+		glVertex2f(-1.0, -0.750);
+		glVertex2f(-0.625, -0.500);
 	glEnd();
 	glColor3f(1.0, 0.0, 0.0);///lines
 	glLineWidth(5.0);
 	glBegin(GL_LINES);
 		glVertex2f(-0.625, 0.375);
 		glVertex2f(-1.0, 0.5);
-
+		
 		glVertex2f(-0.625, 0.25);
 		glVertex2f(-1.0, 0.375);
+
+		glVertex2f(-0.625, 0.0);
+		glVertex2f(-1.0, -0.125);
+
+		glVertex2f(-0.625, -0.125);
+		glVertex2f(-1.0, -0.250);
+
 	glEnd();
 
 
 	//Right wall
 	glColor3f(0.4, 0.4, 0.4);
 	glBegin(GL_POLYGON);
-		glVertex2f(1.0, 0.65);
 		glVertex2f(0.625, 0.525);
-		glVertex2f(0.625, -0.250);
-		glVertex2f(1.0, -0.375);
+		glVertex2f(1.0, 0.650);
+		glVertex2f(1.0, -0.750);
+		glVertex2f(0.625, -0.500);
 	glEnd();
 	glColor3f(1.0, 0.0, 0.0);///lines
 	glLineWidth(5.0);
@@ -177,6 +202,12 @@ void Hall()
 		glVertex2f(0.625, 0.25);
 		glVertex2f(1.0, 0.375);
 
+		glVertex2f(0.625, 0.0);
+		glVertex2f(1.0, -0.125);
+
+		glVertex2f(0.625, -0.125);
+		glVertex2f(1.0, -0.250);
+
 	glEnd();
 
 
@@ -185,11 +216,22 @@ void Hall()
 	glBegin(GL_POLYGON);
 		glVertex2f(0.625, 0.525);
 		glVertex2f(-0.625, 0.525);
-		glVertex2f(-0.625, -0.150);
-		glVertex2f(0.625, -0.150);
+		glVertex2f(-0.625, -0.500);
+		glVertex2f(0.625, -0.500);
 	glEnd();
 
-	
+	//White Screen
+	glColor3f(0.7, 0.7, 0.7);
+	glBegin(GL_POLYGON);
+		glVertex2f(0.6, 0.5);
+		glVertex2f(-0.6, 0.5);
+		glVertex2f(-0.6, -0.460);
+		glVertex2f(0.6, -0.460);
+		glEnd();
+
+
+		
+
 }
 void mainScreen()
 {
