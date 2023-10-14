@@ -3,6 +3,8 @@
 #include<stdio.h>
 #include<GL/GL.h>
 
+
+
 void VerticalLines()
 {
 	float xPt1 = 0.025f;
@@ -277,4 +279,5 @@ void mainScreen()
 	glEnd();
 		
 }
+
 
