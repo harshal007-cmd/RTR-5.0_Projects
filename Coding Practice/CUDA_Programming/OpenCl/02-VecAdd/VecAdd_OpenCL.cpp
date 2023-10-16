@@ -40,7 +40,7 @@ const char* oclSourceCode =
 
 int main()
 {
-	void fillArrayWithRndNumbers(float*, int);
+	void fillFloatArrayWithRandomeNumbers(float*, int);
 	size_t roundGlobalSizeToNearestMulOfLocalSize(int, unsigned int);
 	void vecAddCPU(const float*, const float*, float*, int);
 	void cleanup(void);
@@ -74,6 +74,60 @@ int main()
 		cleanup();
 		exit(EXIT_FAILURE);
 	}
+
+	gold = (float*)malloc(size);
+	if (gold == NULL)
+	{
+		printf("Host memo allocation failed for gold array.\n");
+		cleanup();
+		exit(EXIT_FAILURE);
+	}
+
+	//filling values in host array
+	fillFloatArrayWithRandomeNumbers(hostInput1, iNumberOfArrayElements);
+	fillFloatArrayWithRandomeNumbers(hostInput2, iNumberOfArrayElements);
+
+	//get opencl supporting platform ids
+	result = clGetPlatformIDs(1, &oclPlatformID, NULL);
+	if (result != CL_SUCCESS)
+	{
+		printf("clGetPlatformIDs() failed : %d\n", result);
+		cleanup();
+		exit(EXIT_FAILURE);
+	}
+
+	//get opencl supporting CPU device ids
+	result clGetDeviceIDs(oclPlatform, CL_DEVICE_TYPE_GPU, 1, &oclDeviceID, NULL);
+	if (result != CL_SUCCESS)
+	{
+		printf("clGetDeviceIDs() failed : %d\n", result);
+		cleanup();
+		exit(EXIT_FAILURE);
+
+	}
+
+	//create opencl compute context
+	oclCOntext = clCreateContex(NULL, 1, &oclDeviceID, NULL, NULL, &result);
+	if (result != CL_SUCCESS)
+	{
+		printf("clCreateContex() failed : %d\n", result);
+		cleanup();
+		exit(EXIT_FAILURE);
+
+	}
+
+	//create command queue
+	oclCommandQueue = clCreateCommandQueue(oclContext, oclDeviceID, 0, &result);
+	if (result != CL_SUCCESS)
+	{
+		printf("clCreateContex() failed : %d\n", result);
+		cleanup();
+		exit(EXIT_FAILURE);
+	}
+
+	//create OpenCL program from .cl
+
+
 
 	return 0;
 }
