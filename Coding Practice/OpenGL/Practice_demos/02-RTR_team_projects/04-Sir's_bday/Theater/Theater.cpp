@@ -43,7 +43,7 @@ BOOL gbFullScreen = FALSE;
 //Entry point function
 
 //points Array
-float Harry1[] = {
+float h1[] = {
 9,45,
 23,45,
 21,47,
@@ -54,7 +54,7 @@ float Harry1[] = {
 11,50
 
 };
-float Harry2[] = {
+float h2[] = {
 29,41,
 40,41,
 42,99,
@@ -64,13 +64,22 @@ float Harry2[] = {
 32,44
 
 };
-float Harry3[] = {
+float h3[] = {
 20,74,
-34,68,
+37,68,
 46,65,
 20,79
 
 };
+float h4[] = {
+20,85,
+4,77,
+1,72,
+4,71,
+13,78
+
+};
+
 
 float a1[] = {
 69,59,
@@ -276,6 +285,40 @@ float t5[] = {
 
 };
 
+float e1[] = {
+267,61,
+275,53,
+283,57,
+286,66,
+284,71,
+274,69,
+273,81,
+265,82
+
+};
+float e2[] = {
+265,81,
+273,81,
+277,87,
+278,89,
+270,87
+
+};
+float e3[] = {
+276,87,
+280,79,
+283,82,
+278,89
+
+};
+float e4[] = {
+274,58,
+276,58,
+280,67,
+273,66
+
+};
+
 void ConvertToOpenGLSpace(GLfloat* array, int len, GLfloat width, GLfloat height)
 {
 	GLfloat oldleft = 0;
@@ -287,7 +330,6 @@ void ConvertToOpenGLSpace(GLfloat* array, int len, GLfloat width, GLfloat height
 	GLfloat newTop = 1.0f;
 	GLfloat newBottom = -1.0f;
 	GLfloat newRight = 1.0f;
-	fprintf(gpFILE, "%lld", ARRAY_LENGTH(Harry1));
 	
 	for (int i = 0; i < len; i += 2)
 	{
@@ -558,9 +600,10 @@ int initialize(void)
 	//Set the Clear color of Window to Blue
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f); //here OpenGL starts
 
-	ConvertToOpenGLSpace(Harry1, ARRAY_LENGTH(Harry1), 256, 256);
-	ConvertToOpenGLSpace(Harry2, ARRAY_LENGTH(Harry2), 256, 256);
-	ConvertToOpenGLSpace(Harry3, ARRAY_LENGTH(Harry3), 256, 256);
+	ConvertToOpenGLSpace(h1, ARRAY_LENGTH(h1), 256, 256);
+	ConvertToOpenGLSpace(h2, ARRAY_LENGTH(h2), 256, 256);
+	ConvertToOpenGLSpace(h3, ARRAY_LENGTH(h3), 256, 256);
+	ConvertToOpenGLSpace(h4, ARRAY_LENGTH(h4), 256, 256);
 	
 	ConvertToOpenGLSpace(a1, ARRAY_LENGTH(a1), 256, 256);
 	ConvertToOpenGLSpace(a2, ARRAY_LENGTH(a2), 256, 256);
@@ -591,6 +634,11 @@ int initialize(void)
 	ConvertToOpenGLSpace(t3, ARRAY_LENGTH(t3), 256, 256); 
 	ConvertToOpenGLSpace(t4, ARRAY_LENGTH(t4), 256, 256); 
 	ConvertToOpenGLSpace(t5, ARRAY_LENGTH(t5), 256, 256); 
+	
+	ConvertToOpenGLSpace(e1, ARRAY_LENGTH(e1), 256, 256); 
+	ConvertToOpenGLSpace(e2, ARRAY_LENGTH(e2), 256, 256); 
+	ConvertToOpenGLSpace(e3, ARRAY_LENGTH(e3), 256, 256); 
+	ConvertToOpenGLSpace(e4, ARRAY_LENGTH(e4), 256, 256); 
 
 	resize(WIDTH, HEIGHT);
 	return 0;
@@ -637,24 +685,31 @@ void movie_name()
 {
 	glColor3f(1.0, 1.0, 1.0);
 	glBegin(GL_POLYGON);
-	for (int i = 0; i < ARRAY_LENGTH(Harry1); i = i + 2)
+	for (int i = 0; i < ARRAY_LENGTH(h1); i = i + 2)
 	{
-		glVertex2f(Harry1[i], Harry1[i + 1]);
+		glVertex2f(h1[i], h1[i + 1]);
 	}
 	glEnd();
 
 
 	glBegin(GL_POLYGON);
-	for (int i = 0; i < ARRAY_LENGTH(Harry2); i = i + 2)
+	for (int i = 0; i < ARRAY_LENGTH(h2); i = i + 2)
 	{
-		glVertex2f(Harry2[i], Harry2[i + 1]);
+		glVertex2f(h2[i], h2[i + 1]);
 	}
 	glEnd();
 
 	glBegin(GL_POLYGON);
-	for (int i = 0; i < ARRAY_LENGTH(Harry3); i = i + 2)
+	for (int i = 0; i < ARRAY_LENGTH(h3); i = i + 2)
 	{
-		glVertex2f(Harry3[i], Harry3[i + 1]);
+		glVertex2f(h3[i], h3[i + 1]);
+	}
+	glEnd();
+
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < ARRAY_LENGTH(h4); i = i + 2)
+	{
+		glVertex2f(h4[i], h4[i + 1]);
 	}
 	glEnd();
 
@@ -834,6 +889,53 @@ void movie_name()
 	for (int i = 0; i < ARRAY_LENGTH(t5); i = i + 2)
 	{
 		glVertex2f(t5[i], t5[i + 1]);
+	}
+	glEnd();
+
+	//----------------- E --------------
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < ARRAY_LENGTH(e1); i = i + 2)
+	{
+		glVertex2f(e1[i], e1[i + 1]);
+	}
+	glEnd();
+
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < ARRAY_LENGTH(e2); i = i + 2)
+	{
+		glVertex2f(e2[i], e2[i + 1]);
+	}
+	glEnd();
+
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < ARRAY_LENGTH(e3); i = i + 2)
+	{
+		glVertex2f(e3[i], e3[i + 1]);
+	}
+	glEnd();
+
+	glColor3f(0.0, 0.0, 0.0);
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < ARRAY_LENGTH(e4); i = i + 2)
+	{
+		glVertex2f(e4[i], e4[i + 1]);
+	}
+	glEnd();
+
+	//------------ R
+	glTranslatef(1.7, -0.065, 0.0);
+	glColor3f(1.0, 1.0, 1.0);
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < ARRAY_LENGTH(r1); i = i + 2)
+	{
+		glVertex2f(r1[i], r1[i + 1]);
+	}
+	glEnd();
+
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < ARRAY_LENGTH(r2); i = i + 2)
+	{
+		glVertex2f(r2[i], r2[i + 1]);
 	}
 	glEnd();
 
