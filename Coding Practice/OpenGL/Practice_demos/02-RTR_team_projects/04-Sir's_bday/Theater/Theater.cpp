@@ -319,6 +319,49 @@ float e4[] = {
 
 };
 
+float pNum1[] = {
+88,125,
+102,120,
+111,115,
+121,110,
+125,105,
+131,99,
+136,93,
+142,87,
+147,83,
+169,71,
+186,61,
+201,53
+
+};
+
+float pNum2[] = {
+86,117,
+92,128,
+78,140,
+65,152,
+44,163,
+25,166,
+15,169,
+12,164,
+23,154,
+36,141,
+53,131,
+70,126,
+
+
+};
+float pNum3[] = {
+197,56,
+205,54,
+215,52,
+222,46,
+217,40,
+205,47,
+195,54
+
+};
+
 void ConvertToOpenGLSpace(GLfloat* array, int len, GLfloat width, GLfloat height)
 {
 	GLfloat oldleft = 0;
@@ -639,6 +682,10 @@ int initialize(void)
 	ConvertToOpenGLSpace(e2, ARRAY_LENGTH(e2), 256, 256); 
 	ConvertToOpenGLSpace(e3, ARRAY_LENGTH(e3), 256, 256); 
 	ConvertToOpenGLSpace(e4, ARRAY_LENGTH(e4), 256, 256); 
+	
+	ConvertToOpenGLSpace(pNum1, ARRAY_LENGTH(pNum1), 256, 256); 
+	ConvertToOpenGLSpace(pNum2, ARRAY_LENGTH(pNum2), 256, 256); 
+	ConvertToOpenGLSpace(pNum3, ARRAY_LENGTH(pNum3), 256, 256); 
 
 	resize(WIDTH, HEIGHT);
 	return 0;
@@ -941,6 +988,35 @@ void movie_name()
 
 }
 
+void platform_num()
+{
+	glLineWidth(10.0);
+	glColor3f(0.521, 0.368, 0.2558);
+	glBegin(GL_LINE_STRIP);
+	for (int i = 0; i < ARRAY_LENGTH(pNum1); i = i + 2)
+	{
+		glVertex2f(pNum1[i], pNum1[i + 1]);
+	}
+	glEnd();
+
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < ARRAY_LENGTH(pNum3); i = i + 2)
+	{
+		glVertex2f(pNum3[i], pNum3[i + 1]);
+	}
+	glEnd();
+
+	//glLineWidth(1.0);
+	glColor3f(0.540, 0.411, 0.078);
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < ARRAY_LENGTH(pNum2); i = i + 2)
+	{
+		glVertex2f(pNum2[i], pNum2[i + 1]);
+	}
+	glEnd();
+
+	
+}
 
 void display(void)
 {
@@ -951,8 +1027,8 @@ void display(void)
 	//glScalef(1.0, 1.0, 0.0);
 	//mainScreen();
 	//Hall();
-	movie_name();
-	
+	//movie_name();
+	platform_num();
 	
 	//VerticalLines();
 	//HorizontalLines();

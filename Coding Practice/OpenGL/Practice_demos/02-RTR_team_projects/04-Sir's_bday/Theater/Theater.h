@@ -8,3 +8,4 @@ void VerticalLines();
 void mainScreen();
 void Hall();
 void movie_name();
+void platform_num();
