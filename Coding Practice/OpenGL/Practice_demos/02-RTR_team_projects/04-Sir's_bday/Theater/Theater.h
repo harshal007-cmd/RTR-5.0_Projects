@@ -7,4 +7,4 @@ void HorizontalLines();
 void VerticalLines();
 void Hall();
 void movie_name();
-void platform_num();
+void broomStick();
