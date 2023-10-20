@@ -34,6 +34,21 @@ LRESULT CALLBACK WndProg(HWND, UINT, WPARAM, LPARAM);
 //File io
 FILE* gpFILE = NULL;
 
+//Scale and translate variables
+float s;
+float tX = -2.5;
+float mr1 = 0.3;
+float mg1;
+float mb1;
+
+float mr2 = 0.627;
+float mg2 = 0.527;
+float mb2;
+
+float bR;
+float bG;
+float bB;
+
 //global variable declaration
 HWND ghwnd = NULL;
 BOOL gbActive = FALSE;
@@ -664,8 +679,8 @@ int initialize(void)
 	}
 
 	//Set the Clear color of Window to Blue
-	//glClearColor(0.0f, 0.0f, 0.0f, 1.0f); //here OpenGL starts
-	glClearColor(0.623f, 0.0f, 0.0f, 1.0f); //here OpenGL starts
+	//glClearColor(0.623f, 0.0f, 0.0f, 1.0f); //here OpenGL starts
+	glClearColor(bR, bG, bB, 1.0f); //here OpenGL starts
 
 	ConvertToOpenGLSpace(h1, ARRAY_LENGTH(h1), 256, 256);
 	ConvertToOpenGLSpace(h2, ARRAY_LENGTH(h2), 256, 256);
@@ -755,14 +770,14 @@ void resize(int width, int height)
 }
 
 
-void movie_name()
-{
-	glTranslatef(-0.12, -0.6, 0.0);
-	glScalef(0.7, 0.7, 0.0);
 
+void movie_name1()
+{
+	glTranslatef(-0.121, -0.59, 0.0);
+	//glScalef(0.9, 0.9, 0.0);
+	glScalef(s, s, 0.0);
 	//glColor3f(1.0, 1.0, 1.0);
-	//glColor3f(0.62, 0.63137, 0.63137);
-	glColor3f(0.627, 0.547, 0.0);
+	glColor3f(mr1, mg1, mb1);
 	glBegin(GL_POLYGON);
 	for (int i = 0; i < ARRAY_LENGTH(h1); i = i + 2)
 	{
@@ -907,7 +922,7 @@ void movie_name()
 	}
 	glEnd();
 
-	glColor3f(0.623, 0.0, 0.0);
+	glColor3f(bR, bG, bB);
 	glBegin(GL_POLYGON);
 	for (int i = 0; i < ARRAY_LENGTH(p5); i = i + 2)
 	{
@@ -916,7 +931,7 @@ void movie_name()
 	glEnd();
 
 	//----------- O ----
-	glColor3f(0.627, 0.547, 0.0);
+	glColor3f(mr1, mg1, mb1);
 
 	glBegin(GL_POLYGON);
 	for (int i = 0; i < ARRAY_LENGTH(o1); i = i + 2)
@@ -925,7 +940,7 @@ void movie_name()
 	}
 	glEnd();
 
-	glColor3f(0.623, 0.0, 0.0);
+	glColor3f(bR, bG, bB);
 	glBegin(GL_POLYGON);
 	for (int i = 0; i < ARRAY_LENGTH(o2); i = i + 2)
 	{
@@ -935,7 +950,7 @@ void movie_name()
 
 
 	//---------- T -----
-	glColor3f(0.627, 0.547, 0.0);
+	glColor3f(mr1, mg1, mb1);
 
 	glBegin(GL_POLYGON);
 	for (int i = 0; i < ARRAY_LENGTH(t1); i = i + 2)
@@ -994,7 +1009,7 @@ void movie_name()
 	}
 	glEnd();
 
-	glColor3f(0.623, 0.0, 0.0);
+	glColor3f(bR, bG, bB);
 	glBegin(GL_POLYGON);
 	for (int i = 0; i < ARRAY_LENGTH(e4); i = i + 2)
 	{
@@ -1004,7 +1019,273 @@ void movie_name()
 
 	//------------ R ----------
 	glTranslatef(1.7, -0.065, 0.0);
-	glColor3f(0.627, 0.547, 0.0);
+	glColor3f(mr1, mg1, mb1);
+
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < ARRAY_LENGTH(r1); i = i + 2)
+	{
+		glVertex2f(r1[i], r1[i + 1]);
+	}
+	glEnd();
+
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < ARRAY_LENGTH(r2); i = i + 2)
+	{
+		glVertex2f(r2[i], r2[i + 1]);
+	}
+	glEnd();
+
+}
+void movie_name2()
+{
+	glTranslatef(-0.12, -0.6, 0.0);
+	//glScalef(0.9, 0.9, 0.0);
+	glScalef(s, s, 0.0);
+	//glColor3f(1.0, 1.0, 1.0);
+	//glColor3f(0.627, 0.547, 0.0);
+	glColor3f(mr2, mg2, mb2);
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < ARRAY_LENGTH(h1); i = i + 2)
+	{
+		glVertex2f(h1[i], h1[i + 1]);
+	}
+	glEnd();
+
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < ARRAY_LENGTH(h2); i = i + 2)
+	{
+		glVertex2f(h2[i], h2[i + 1]);
+	}
+	glEnd();
+
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < ARRAY_LENGTH(h3); i = i + 2)
+	{
+		glVertex2f(h3[i], h3[i + 1]);
+	}
+	glEnd();
+
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < ARRAY_LENGTH(h4); i = i + 2)
+	{
+		glVertex2f(h4[i], h4[i + 1]);
+	}
+	glEnd();
+
+	//---------------A---
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < ARRAY_LENGTH(a1); i = i + 2)
+	{
+		glVertex2f(a1[i], a1[i + 1]);
+	}
+	glEnd();
+
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < ARRAY_LENGTH(a2); i = i + 2)
+	{
+		glVertex2f(a2[i], a2[i + 1]);
+	}
+	glEnd();
+
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < ARRAY_LENGTH(a3); i = i + 2)
+	{
+		glVertex2f(a3[i], a3[i + 1]);
+	}
+	glEnd();
+
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < ARRAY_LENGTH(a4); i = i + 2)
+	{
+		glVertex2f(a4[i], a4[i + 1]);
+	}
+	glEnd();
+
+	//-----------R----------
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < ARRAY_LENGTH(r1); i = i + 2)
+	{
+		glVertex2f(r1[i], r1[i + 1]);
+	}
+	glEnd();
+
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < ARRAY_LENGTH(r2); i = i + 2)
+	{
+		glVertex2f(r2[i], r2[i + 1]);
+	}
+	glEnd();
+
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < ARRAY_LENGTH(r3); i = i + 2)
+	{
+		glVertex2f(r3[i], r3[i + 1]);
+	}
+	glEnd();
+
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < ARRAY_LENGTH(r4); i = i + 2)
+	{
+		glVertex2f(r4[i], r4[i + 1]);
+	}
+	glEnd();
+
+	//------------------Y -------------
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < ARRAY_LENGTH(y1); i = i + 2)
+	{
+		glVertex2f(y1[i], y1[i + 1]);
+	}
+	glEnd();
+
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < ARRAY_LENGTH(y2); i = i + 2)
+	{
+		glVertex2f(y2[i], y2[i + 1]);
+	}
+	glEnd();
+
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < ARRAY_LENGTH(y3); i = i + 2)
+	{
+		glVertex2f(y3[i], y3[i + 1]);
+	}
+	glEnd();
+
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < ARRAY_LENGTH(y4); i = i + 2)
+	{
+		glVertex2f(y4[i], y4[i + 1]);
+	}
+	glEnd();
+
+	//-------------P --------
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < ARRAY_LENGTH(p1); i = i + 2)
+	{
+		glVertex2f(p1[i], p1[i + 1]);
+	}
+	glEnd();
+
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < ARRAY_LENGTH(p2); i = i + 2)
+	{
+		glVertex2f(p2[i], p2[i + 1]);
+	}
+	glEnd();
+
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < ARRAY_LENGTH(p3); i = i + 2)
+	{
+		glVertex2f(p3[i], p3[i + 1]);
+	}
+	glEnd();
+
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < ARRAY_LENGTH(p4); i = i + 2)
+	{
+		glVertex2f(p4[i], p4[i + 1]);
+	}
+	glEnd();
+
+	glColor3f(bR, bG, bB);
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < ARRAY_LENGTH(p5); i = i + 2)
+	{
+		glVertex2f(p5[i], p5[i + 1]);
+	}
+	glEnd();
+
+	//----------- O ----
+	glColor3f(mr2, mg2, mb2);
+
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < ARRAY_LENGTH(o1); i = i + 2)
+	{
+		glVertex2f(o1[i], o1[i + 1]);
+	}
+	glEnd();
+
+	glColor3f(bR, bG, bB);
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < ARRAY_LENGTH(o2); i = i + 2)
+	{
+		glVertex2f(o2[i], o2[i + 1]);
+	}
+	glEnd();
+
+
+	//---------- T -----
+	glColor3f(mr2, mg2, mb2);
+
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < ARRAY_LENGTH(t1); i = i + 2)
+	{
+		glVertex2f(t1[i], t1[i + 1]);
+	}
+	glEnd();
+
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < ARRAY_LENGTH(t2); i = i + 2)
+	{
+		glVertex2f(t2[i], t2[i + 1]);
+	}
+	glEnd();
+
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < ARRAY_LENGTH(t3); i = i + 2)
+	{
+		glVertex2f(t3[i], t3[i + 1]);
+	}
+	glEnd();
+
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < ARRAY_LENGTH(t4); i = i + 2)
+	{
+		glVertex2f(t4[i], t4[i + 1]);
+	}
+	glEnd();
+
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < ARRAY_LENGTH(t5); i = i + 2)
+	{
+		glVertex2f(t5[i], t5[i + 1]);
+	}
+	glEnd();
+
+	//----------------- E --------------
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < ARRAY_LENGTH(e1); i = i + 2)
+	{
+		glVertex2f(e1[i], e1[i + 1]);
+	}
+	glEnd();
+
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < ARRAY_LENGTH(e2); i = i + 2)
+	{
+		glVertex2f(e2[i], e2[i + 1]);
+	}
+	glEnd();
+
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < ARRAY_LENGTH(e3); i = i + 2)
+	{
+		glVertex2f(e3[i], e3[i + 1]);
+	}
+	glEnd();
+
+	glColor3f(bR, bG, bB);
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < ARRAY_LENGTH(e4); i = i + 2)
+	{
+		glVertex2f(e4[i], e4[i + 1]);
+	}
+	glEnd();
+
+	//------------ R ----------
+	glTranslatef(1.7, -0.065, 0.0);
+	glColor3f(mr2, mg2, mb2);
 
 	glBegin(GL_POLYGON);
 	for (int i = 0; i < ARRAY_LENGTH(r1); i = i + 2)
@@ -1024,12 +1305,14 @@ void movie_name()
 
 void broomStick()
 {
+	//glTranslatef(0.0, 0.2, 0.0);
+	glTranslatef(tX, 0.23, 0.0);
 	glScalef(0.7, 0.7, 0.0);
 	glRotatef(20.0, 0.0, 0.0, -1.0);
 	//Sitting stick
 	glEnable(GL_LINE_SMOOTH);//stick
 	glLineWidth(10.0);
-//	glColor3f(0.521, 0.368, 0.2558);
+	//	glColor3f(0.521, 0.368, 0.2558);
 	glColor3f(0.64, 0.454, 0.247);
 	glBegin(GL_LINE_STRIP);
 	for (int i = 0; i < ARRAY_LENGTH(bST1); i = i + 2)
@@ -1046,7 +1329,7 @@ void broomStick()
 	}
 	glEnd();
 
-	
+
 	//Swipper
 	glColor3f(0.2, 0.141, 0.129);
 	glBegin(GL_POLYGON);
@@ -1084,7 +1367,7 @@ void broomStick()
 		glVertex2f(bST6[i], bST6[i + 1]);
 	}
 	glEnd();
-	
+
 	glLoadIdentity();
 }
 
@@ -1093,12 +1376,16 @@ void display(void)
 	//code
 	glClear(GL_COLOR_BUFFER_BIT);
 	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();	
+	glLoadIdentity();
+
 	broomStick();
 	//Hall();
-	movie_name();
-	
+
+	movie_name1();
 	glLoadIdentity();
+	movie_name2();
+
+	//glLoadIdentity();
 	//VerticalLines();
 	//HorizontalLines();
 	SwapBuffers(ghdc);
@@ -1107,6 +1394,17 @@ void display(void)
 void update(void)
 {
 	//code
+	if (s < 1.0)
+	{
+		s += 0.00004;
+
+	}
+
+	if ((tX < 0.0) && (s >= 1.0))
+	{
+		tX += 0.0006;
+	}
+	
 
 }
 

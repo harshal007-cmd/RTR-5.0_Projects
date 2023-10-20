@@ -6,5 +6,3 @@
 void HorizontalLines();
 void VerticalLines();
 void Hall();
-void movie_name();
-void broomStick();

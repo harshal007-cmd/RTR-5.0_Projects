@@ -319,7 +319,7 @@ float e4[] = {
 
 };
 
-float pNum1[] = {
+float bST1[] = {
 88,125,
 102,120,
 111,115,
@@ -334,8 +334,7 @@ float pNum1[] = {
 201,53
 
 };
-
-float pNum2[] = {
+float bST2[] = {
 86,117,
 92,128,
 78,140,
@@ -351,7 +350,7 @@ float pNum2[] = {
 
 
 };
-float pNum3[] = {
+float bST3[] = {
 197,56,
 205,54,
 215,52,
@@ -359,6 +358,30 @@ float pNum3[] = {
 217,40,
 205,47,
 195,54
+
+};
+float bST4[] = {
+78,120,
+84,134.5,
+71,123,
+78,139.5
+
+};
+float bST5[] = {
+25,158,
+35,148,
+45,139,
+56,136,
+68,131
+
+};
+float bST6[] = {
+32,161,
+42,157,
+50,155,
+58,149,
+65,143,
+69,140
 
 };
 
@@ -641,7 +664,8 @@ int initialize(void)
 	}
 
 	//Set the Clear color of Window to Blue
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f); //here OpenGL starts
+	//glClearColor(0.0f, 0.0f, 0.0f, 1.0f); //here OpenGL starts
+	glClearColor(0.623f, 0.0f, 0.0f, 1.0f); //here OpenGL starts
 
 	ConvertToOpenGLSpace(h1, ARRAY_LENGTH(h1), 256, 256);
 	ConvertToOpenGLSpace(h2, ARRAY_LENGTH(h2), 256, 256);
@@ -683,9 +707,12 @@ int initialize(void)
 	ConvertToOpenGLSpace(e3, ARRAY_LENGTH(e3), 256, 256); 
 	ConvertToOpenGLSpace(e4, ARRAY_LENGTH(e4), 256, 256); 
 	
-	ConvertToOpenGLSpace(pNum1, ARRAY_LENGTH(pNum1), 256, 256); 
-	ConvertToOpenGLSpace(pNum2, ARRAY_LENGTH(pNum2), 256, 256); 
-	ConvertToOpenGLSpace(pNum3, ARRAY_LENGTH(pNum3), 256, 256); 
+	ConvertToOpenGLSpace(bST1, ARRAY_LENGTH(bST1), 256, 256); 
+	ConvertToOpenGLSpace(bST2, ARRAY_LENGTH(bST2), 256, 256); 
+	ConvertToOpenGLSpace(bST3, ARRAY_LENGTH(bST3), 256, 256); 
+	ConvertToOpenGLSpace(bST4, ARRAY_LENGTH(bST4), 256, 256); 
+	ConvertToOpenGLSpace(bST5, ARRAY_LENGTH(bST5), 256, 256); 
+	ConvertToOpenGLSpace(bST6, ARRAY_LENGTH(bST6), 256, 256); 
 
 	resize(WIDTH, HEIGHT);
 	return 0;
@@ -730,14 +757,18 @@ void resize(int width, int height)
 
 void movie_name()
 {
-	glColor3f(1.0, 1.0, 1.0);
+	glTranslatef(-0.12, -0.6, 0.0);
+	glScalef(0.9, 0.9, 0.0);
+
+	//glColor3f(1.0, 1.0, 1.0);
+	//glColor3f(0.62, 0.63137, 0.63137);
+	glColor3f(0.627, 0.547, 0.0);
 	glBegin(GL_POLYGON);
 	for (int i = 0; i < ARRAY_LENGTH(h1); i = i + 2)
 	{
 		glVertex2f(h1[i], h1[i + 1]);
 	}
 	glEnd();
-
 
 	glBegin(GL_POLYGON);
 	for (int i = 0; i < ARRAY_LENGTH(h2); i = i + 2)
@@ -876,7 +907,7 @@ void movie_name()
 	}
 	glEnd();
 
-	glColor3f(0.0, 0.0, 0.0);
+	glColor3f(0.623, 0.0, 0.0);
 	glBegin(GL_POLYGON);
 	for (int i = 0; i < ARRAY_LENGTH(p5); i = i + 2)
 	{
@@ -885,7 +916,8 @@ void movie_name()
 	glEnd();
 
 	//----------- O ----
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3f(0.627, 0.547, 0.0);
+
 	glBegin(GL_POLYGON);
 	for (int i = 0; i < ARRAY_LENGTH(o1); i = i + 2)
 	{
@@ -893,7 +925,7 @@ void movie_name()
 	}
 	glEnd();
 
-	glColor3f(0.0, 0.0, 0.0);
+	glColor3f(0.623, 0.0, 0.0);
 	glBegin(GL_POLYGON);
 	for (int i = 0; i < ARRAY_LENGTH(o2); i = i + 2)
 	{
@@ -903,7 +935,8 @@ void movie_name()
 
 
 	//---------- T -----
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3f(0.627, 0.547, 0.0);
+
 	glBegin(GL_POLYGON);
 	for (int i = 0; i < ARRAY_LENGTH(t1); i = i + 2)
 	{
@@ -961,7 +994,7 @@ void movie_name()
 	}
 	glEnd();
 
-	glColor3f(0.0, 0.0, 0.0);
+	glColor3f(0.623, 0.0, 0.0);
 	glBegin(GL_POLYGON);
 	for (int i = 0; i < ARRAY_LENGTH(e4); i = i + 2)
 	{
@@ -969,9 +1002,10 @@ void movie_name()
 	}
 	glEnd();
 
-	//------------ R
+	//------------ R ----------
 	glTranslatef(1.7, -0.065, 0.0);
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3f(0.627, 0.547, 0.0);
+
 	glBegin(GL_POLYGON);
 	for (int i = 0; i < ARRAY_LENGTH(r1); i = i + 2)
 	{
@@ -988,34 +1022,71 @@ void movie_name()
 
 }
 
-void platform_num()
+void broomStick()
 {
+	glTranslatef(0.0, 0.2, 0.0);
+	glScalef(0.7, 0.7, 0.0);
+	glRotatef(20.0, 0.0, 0.0, -1.0);
+	//Sitting stick
+	glEnable(GL_LINE_SMOOTH);//stick
 	glLineWidth(10.0);
-	glColor3f(0.521, 0.368, 0.2558);
+//	glColor3f(0.521, 0.368, 0.2558);
+	glColor3f(0.64, 0.454, 0.247);
 	glBegin(GL_LINE_STRIP);
-	for (int i = 0; i < ARRAY_LENGTH(pNum1); i = i + 2)
+	for (int i = 0; i < ARRAY_LENGTH(bST1); i = i + 2)
 	{
-		glVertex2f(pNum1[i], pNum1[i + 1]);
+		glVertex2f(bST1[i], bST1[i + 1]);
 	}
+	glDisable(GL_LINE_SMOOTH);
 	glEnd();
 
 	glBegin(GL_POLYGON);
-	for (int i = 0; i < ARRAY_LENGTH(pNum3); i = i + 2)
+	for (int i = 0; i < ARRAY_LENGTH(bST3); i = i + 2)
 	{
-		glVertex2f(pNum3[i], pNum3[i + 1]);
-	}
-	glEnd();
-
-	//glLineWidth(1.0);
-	glColor3f(0.540, 0.411, 0.078);
-	glBegin(GL_POLYGON);
-	for (int i = 0; i < ARRAY_LENGTH(pNum2); i = i + 2)
-	{
-		glVertex2f(pNum2[i], pNum2[i + 1]);
+		glVertex2f(bST3[i], bST3[i + 1]);
 	}
 	glEnd();
 
 	
+	//Swipper
+	glColor3f(0.2, 0.141, 0.129);
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < ARRAY_LENGTH(bST2); i = i + 2)
+	{
+		glVertex2f(bST2[i], bST2[i + 1]);
+	}
+	glEnd();
+
+	//two gold strips
+	glColor3f(0.831, 0.686, 0.215);//golden 
+	glLineWidth(5.0);
+	glBegin(GL_LINES);
+	for (int i = 0; i < ARRAY_LENGTH(bST4); i = i + 2)
+	{
+		glVertex2f(bST4[i], bST4[i + 1]);
+	}
+	glEnd();
+
+	//Strips on swipper
+	glColor3f(0.26, 0.140, 0.1);
+	glLineWidth(3.0);
+	glBegin(GL_LINE_STRIP);
+	for (int i = 0; i < ARRAY_LENGTH(bST5); i = i + 2)
+	{
+		glVertex2f(bST5[i], bST5[i + 1]);
+	}
+	glEnd();
+
+	glColor3f(0.26, 0.140, 0.1);
+	glLineWidth(3.0);
+	glBegin(GL_LINE_STRIP);
+	for (int i = 0; i < ARRAY_LENGTH(bST6); i = i + 2)
+	{
+		glVertex2f(bST6[i], bST6[i + 1]);
+	}
+	glEnd();
+	
+	glLoadIdentity();
 }
 
 void display(void)
@@ -1023,13 +1094,14 @@ void display(void)
 	//code
 	glClear(GL_COLOR_BUFFER_BIT);
 	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();	
-	//glScalef(1.0, 1.0, 0.0);
-	//mainScreen();
-	Hall();
-	//movie_name();
-	//platform_num();
+	glLoadIdentity();
+
+	broomStick();
+	//Hall();
+
+	movie_name();
 	
+	glLoadIdentity();
 	//VerticalLines();
 	//HorizontalLines();
 	SwapBuffers(ghdc);
