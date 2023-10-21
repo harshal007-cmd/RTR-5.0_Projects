@@ -7,7 +7,8 @@
 #include<stdio.h>///for file IO
 #include<stdlib.h>//for exit() 
 #include"Theater.h"
-//#include"Poster.h"
+#include<mmsystem.h>//for sound
+
 
 #define ARRAY_LENGTH(arr) (sizeof(arr) / sizeof(arr[0]))
 
@@ -26,6 +27,8 @@ HGLRC ghrc = NULL; //handle to GL Rendering Contex
 //Link with OpenGL Lib
 #pragma comment(lib,"openGL32.lib")
 #pragma comment(lib,"glu32.lib")
+#pragma comment(lib, "winmm.lib")
+
 
 //global function declaration
 LRESULT CALLBACK WndProg(HWND, UINT, WPARAM, LPARAM);
@@ -37,17 +40,17 @@ FILE* gpFILE = NULL;
 //Scale and translate variables
 float s;
 float tX = -2.5;
-float mr1 = 0.3;
-float mg1;
-float mb1;
+float mr1 = 0.0;
+float mg1 = 0.0;
+float mb1 = 0.0;
 
 float mr2 = 0.627;
 float mg2 = 0.527;
 float mb2;
 
-float bR;
-float bG;
-float bB;
+float bR = 0.0549;
+float bG = 0.298;
+float bB = 0.560;
 
 //global variable declaration
 HWND ghwnd = NULL;
@@ -56,6 +59,11 @@ DWORD dwstyle = 0;
 WINDOWPLACEMENT wpPrev = { sizeof(WINDOWPLACEMENT) };
 BOOL gbFullScreen = FALSE;
 //Entry point function
+
+void playSound() 
+{
+	PlaySoundA("song.wav", NULL, SND_FILENAME | SND_ASYNC);
+}
 
 //points Array
 float h1[] = {
@@ -729,6 +737,7 @@ int initialize(void)
 	ConvertToOpenGLSpace(bST5, ARRAY_LENGTH(bST5), 256, 256); 
 	ConvertToOpenGLSpace(bST6, ARRAY_LENGTH(bST6), 256, 256); 
 
+	playSound();
 	resize(WIDTH, HEIGHT);
 	return 0;
 }
@@ -1396,13 +1405,13 @@ void update(void)
 	//code
 	if (s < 1.0)
 	{
-		s += 0.00004;
+		s += 0.00008;
 
 	}
 
 	if ((tX < 0.0) && (s >= 1.0))
 	{
-		tX += 0.0006;
+		tX += 0.0007;
 	}
 	
 
