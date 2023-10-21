@@ -40,14 +40,18 @@ FILE* gpFILE = NULL;
 //Scale and translate variables
 float s;
 float tX = -2.5;
+
+//move name 1 colors
 float mr1 = 0.0;
 float mg1 = 0.0;
 float mb1 = 0.0;
 
+//movie name 2 colors
 float mr2 = 0.627;
 float mg2 = 0.527;
 float mb2;
 
+//background cololr,in initialze
 float bR = 0.0549;
 float bG = 0.298;
 float bB = 0.560;
@@ -65,7 +69,7 @@ void playSound()
 	PlaySoundA("song.wav", NULL, SND_FILENAME | SND_ASYNC);
 }
 
-//points Array
+//points Array, 
 float h1[] = {
 9,45,
 23,45,
@@ -1388,15 +1392,12 @@ void display(void)
 	glLoadIdentity();
 
 	broomStick();
-	//Hall();
-
+	
 	movie_name1();
 	glLoadIdentity();
 	movie_name2();
 
-	//glLoadIdentity();
-	//VerticalLines();
-	//HorizontalLines();
+	
 	SwapBuffers(ghdc);
 }
 
@@ -1411,7 +1412,7 @@ void update(void)
 
 	if ((tX < 0.0) && (s >= 1.0))
 	{
-		tX += 0.0007;
+		tX += 0.0008;
 	}
 	
 
