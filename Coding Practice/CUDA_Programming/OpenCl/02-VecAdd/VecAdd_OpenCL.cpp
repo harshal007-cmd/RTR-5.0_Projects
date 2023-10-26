@@ -126,8 +126,87 @@ int main()
 	}
 
 	//create OpenCL program from .cl
+	oclProgram = clCreateProgramWithSource(oclContext, 1, (const char**)&oclSourceCode, NULL, &result);
+	if (result != CL_SUCCESS)
+	{
+		printf("clCreateProgramWithSource() Failed : %d\n", result);
+		cleanup();
+		exit(EXIT_FAILURE);
+	}
 
+	//build opencl program
+	result = clBuildProgram(oclProgram, 0, NULL, NULL, NULL, NULL);
+	if (result != CL_SUCCESS)
+	{
+		size_t len;
+		char buffer[2048];
+		clGetProgramBuildInfo(oclProgram, oclDeviceID, CL_PROGRAM_BUILD_LOG, sizeof(buffer), buffer, &len);
+		printf("Program build log %s\n", buffer);
+		printf("clBuildProgram() Failed: %d\n", result);
+		cleanup();
+		exit(EXIT_FAILURE);
 
+	}
+	
+	//create Opencl kernel by passing kernel fun name that we used .cl file
+	oclkernel = clCreateKernel(oclProgram, "vedAddGPU", &result);
+	if (result != CL_SUCCESS)
+	{
+		printf("clCreateKernel() failed : %d\n", result);
+		cleanup();
+		exit(EXIT_FAILURE);
+	}
+
+	//device memory allocation
+	deviceInput1 = clCreateBuffer(oclContext, CL_MEM_READ_ONLY, size, NULL, &result);
+	if (result != CL_SUCCESS)
+	{
+		printf("clCreateBuffer() failed for 1st input array : %d\n", result);
+		cleanup();
+		exit(EXIT_FAILURE);
+	}
+
+	deviceInput2 = clCreateBuffer(oclContext, CL_MEM_READ_ONLY, size, NULL, &result);
+	if (result != CL_SUCCESS)
+	{
+		printf("clCreateBuffer() failed for 2nd input array : %d\n", result);
+		cleanup();
+		exit(EXIT_FAILURE);
+	}
+
+	deviceInput = clCreateBuffer(oclContext, CL_MEM_WRITE_ONLY, size, NULL, &result);
+	if (result != CL_SUCCESS)
+	{
+		printf("clCreateBuffer() failed for output array : %d\n", result);
+		cleanup();
+		exit(EXIT_FAILURE);
+	}
+
+	//SET 0 based 0th argument dev1
+	result = clSetKernelArg(oclKernel, 1, sizeof(cl_mem), (void*)&deviceInput1);
+	if (result != CL_SUCCESS)
+	{
+		printf("clSetKernelArg() faild for 1st Argument : %d\n", result);
+		cleanup();
+		exit(EXIT_FAILURE);
+	}
+
+	//dev2
+	result = clSetKernelArg(oclKernel, 1, sizeof(cl_mem), (void*)&deviceInput2);
+	if (result != CL_SUCCESS)
+	{
+		printf("clSetKernelArg() faild for 1st Argument : %d\n", result);
+		cleanup();
+		exit(EXIT_FAILURE);
+	}
+	//dev output
+	result = clSetKernelArg(oclKernel, 1, sizeof(cl_mem), (void*)&deviceOutput);
+	if (result != CL_SUCCESS)
+	{
+		printf("clSetKernelArg() faild for 1st Argument : %d\n", result);
+		cleanup();
+		exit(EXIT_FAILURE);
+	}
 
 	return 0;
 }
@@ -138,3 +217,15 @@ void cleanup()
 }
 
 //cl.exe filename.cpp /I "C:/NVDIA toolkit/include" /Link /LIBPATH: "LIB/x64.../lib" OpenCL.lib /OUT:"filename.exe"
+
+
+
+
+
+
+
+
+
+
+
+
