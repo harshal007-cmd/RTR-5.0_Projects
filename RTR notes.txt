@@ -762,7 +762,7 @@ c) OpenGL FFP
 	3.OpenGL programming for X-Windows system - Mark Killgard (green book)
 	4.Advance OpenGL graphics programming - McReynolds, Blythe
 	#5.Begining OpenGL game programming - Dave astel
-
+    6.Texuring and Modeling - musgrave, ken perlien, Don peachy, Worli, Ebert
 
 
 
