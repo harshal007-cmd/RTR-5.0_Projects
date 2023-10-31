@@ -195,7 +195,7 @@ int main()
 	result = clSetKernelArg(oclKernel, 1, sizeof(cl_mem), (void*)&deviceInput2);
 	if (result != CL_SUCCESS)
 	{
-		printf("clSetKernelArg() faild for 1st Argument : %d\n", result);
+		printf("clSetKernelArg() faild for 2nd Argument : %d\n", result);
 		cleanup();
 		exit(EXIT_FAILURE);
 	}
@@ -203,10 +203,108 @@ int main()
 	result = clSetKernelArg(oclKernel, 1, sizeof(cl_mem), (void*)&deviceOutput);
 	if (result != CL_SUCCESS)
 	{
-		printf("clSetKernelArg() faild for 1st Argument : %d\n", result);
+		printf("clSetKernelArg() faild for 3rd Argument : %d\n", result);
 		cleanup();
 		exit(EXIT_FAILURE);
 	}
+
+	result = clSetKarnelArg(oclKernel, 3, sizeof(cl_int), (void*)&iNumberOfArrayElements);
+	if (result != CL_SUCCESS)
+	{
+		printf("clSetKernelArg() failed for 4th Argument : %d\n", result);
+		cleanup();
+		exit(EXIT_FAILURE);
+	}
+
+	//write abve intput device buffer to device memo
+	result = clEnqueueWriteBuffer(oclCommandQueue, deviceInput1, CL_FALSE, 0, size, hostInput1, 0, NULL, NULL);
+	if (result != CL_SUCCESS)
+	{
+		printf("clEnqueueBuffer() failed for 1st input buffer : %d\n", result);
+	}
+
+	result = clEnqueueWriteBuffer(oclCommandQueue, deviceInput2, CL_FALSE, 0, size, hostInput2, 0, NULL, NULL);
+	if (result != CL_SUCCESS)
+	{
+		printf("clEnqueueWriteBuffer() failed for 2nd Input Device buffer : %d\n", result);
+		cleanup();
+		exit(EXIT_FAILURE);
+	}
+
+	size_t localWorkSize = 256;
+	size_t globalWorkSize;
+
+	globalWorkSize = roundGlobalSizeToNearestMulOfLocalSize(localWorkSize, iNumberOfArrayElements);
+
+	//start timer
+	StopWatchInterface* timer = NULL;
+	sdkCreateTimer(&timer);
+	sdkStartTimer(&timer);
+
+	result = clEnqueueNDRangeKernel(oclCommandQueue, 1, NULL, &globalWorkSize, &localWorkSize, 0, NULL, NULL);
+	if (result != CL_SUCCESS)
+	{
+		printf("clEnqueueNDRangeKernel() failed : %d\n", result);
+		cleanup();
+		exit(EXIT_FAILURE);
+	}
+
+	//finish OpenCL command
+	clFinish(oclCommandQueue);
+
+	//stop timer
+	sdkStopTimer(&timer);
+	timeOnGPU = sdkGetTimerValue(&timer);
+	sdkDeleteTimer(&timer);
+
+	//read back result from device into cpu var ie hostOutput
+	result = clEnqueueReadBuffer(oclCommandQueue, CL_TRUE, 0, size, hostOutput, 0, NULL, NULL);
+	if (result != CL_SUCCESS)
+	{
+		printf("clEnqueueReadBuffer() failed : %d\n", result);
+		cleanup();
+		exit(EXIT_FAILURE);
+	}
+
+	//vector addition on host
+	vecAddCPU(hostInput1, hostInput2, gold, iNumberOfArrayElements);
+
+	//comparison
+	const float epsilon = 0.000001f;
+	int breakValue = -1;
+	bool bAccuracy = true;
+	
+	for (int i = 0;i < iNumberOfArrayElements;++i)
+	{
+		float val1 = gold[i];
+		float val2 = hostOutput[i];
+		if (fabs(val1 - val2) > epsilon)
+		{
+			bAccuracy = false;
+			breakValue = i;
+			break;
+		}
+	}
+
+	char str[128];
+	if (bAccuracy == false)
+		sprintf(str, "Comparison of CPU and GPU vector addition is not within accuracy of 0.000001 at array index %d", breakValue);
+	else
+		sprintf(str, "Comparison of CPu and GPU vector addtion is within accuracy of 0.000001");
+
+	
+	//output
+	printf("Array1 begins from 0th index %.6f to %dth index %.6f\n", hostInput1[0], iNumberOfArrayElements - 1, hostInput1[iNumberOfArrayElements - 1]);
+	printf("Array1 begins from 0th index %.6f to %dth index %.6f\n", hostInput2[0], iNumberOfArrayElements - 1, hostInput2[iNumberOfArrayElements - 1]);
+	
+	printf("OpenCL kernel global work size = %lu and local work size = %ln\n", globalWorkSize, localWorkSize);
+	printf("Output array begins from 0th index %.6f to %dth index %.6f\n", hostOutput[0], iNumberOfArrayElements - 1, hostOutput[iNumberOfArrayElements - 1]);
+
+	printf("Time taken for Vector additional on CPU = %.6f\n", timeOnCPU);
+	printf("Time taken for Vector additional on GPU = %.6f\n", timeOnGPU);
+	printf("%s\n", str);
+
+	cleanup();
 
 	return 0;
 }
