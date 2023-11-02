@@ -97,7 +97,7 @@ int main()
 	}
 
 	//get opencl supporting CPU device ids
-	result clGetDeviceIDs(oclPlatform, CL_DEVICE_TYPE_GPU, 1, &oclDeviceID, NULL);
+	result = clGetDeviceIDs(oclPlatformID, CL_DEVICE_TYPE_GPU, 1, &oclDeviceID, NULL);
 	if (result != CL_SUCCESS)
 	{
 		printf("clGetDeviceIDs() failed : %d\n", result);
@@ -107,7 +107,7 @@ int main()
 	}
 
 	//create opencl compute context
-	oclCOntext = clCreateContex(NULL, 1, &oclDeviceID, NULL, NULL, &result);
+	oclContext = clCreateContex(NULL, 1, &oclDeviceID, NULL, NULL, &result);
 	if (result != CL_SUCCESS)
 	{
 		printf("clCreateContex() failed : %d\n", result);
@@ -309,8 +309,109 @@ int main()
 	return 0;
 }
 
+void fillFloatArrayWithRandomNumbers(float* arr, int len)
+{
+	const float fscale = 1.0 / (flaot)RAND_MAX;
+	for (int i = 0;i < len;++i)
+	{
+		arr[i] = fscale * rand();
+	}
+
+}
+
+void vecAddCPU(const float* arr1, const float* arr2, float* out, float* out, int len)
+{
+	StopWatchInterface* timer = NULL;
+	sdkCreateTimer(&timer);
+	sdkStartTimer(&timer);
+
+	for (int i = 0;i < len;++i)
+	{
+		out[i] = arr1[i] + arr2[i];
+	}
+
+	sdkStopTimer(&timer);
+	timeOnCPU = sdkGetTimerValue(&timer);
+	sdkDeleteTimer(&timer);
+	timer = NULL;
+
+}
+
+size_t roundGlobalSizeToNearestMultipleOfLocalSize(int local_size, unsigned int global_size)
+{
+	unsigned int r = global_size % local_size;
+	if (r == 0)
+	{
+		return global_size;
+	}
+	else
+	{
+		return (global_size + local_size - r);
+	}
+
+}
+
 void cleanup()
 {
+	if (deviceOutput)
+	{
+		clReleaseMemObject(deviceOutput);
+		deviceOutput = NULL;
+	}
+
+	if (deviceInput2)
+	{
+		clReleaseMemObject(deviceInput2);
+		deviceInput2 = NULL;
+	}
+
+	if (deviceInput1)
+	{
+		clReleaseMemObject(deviceInput1);
+		deviceInput1 = NULL;
+	}
+
+	if (oclKernel1)
+	{
+		clReleasekernel(oclKernel);
+		oclKernel = NULL;
+	}
+
+	if (oclProgram)
+	{
+		clReleasekernel(oclProgram);
+		oclProgram = NULL;
+	}
+
+	if (oclCommadQueue)
+	{
+		clReleaseCommandQueue(oclCommandQueue);
+		oclCommandQueue = NULL;
+	}
+
+	if (oclContext)
+	{
+		clReleaseContext(oclContext);
+		oclContext = NULL;
+	}
+
+	if (hostOutput)
+	{
+		free(hostOutput);
+		hostOutput = NULL;
+	}
+
+	if (hostInput2)
+	{
+		free(hostInput2);
+		hostOutput2 = NULL;
+	}
+
+	if (hostInput1)
+	{
+		free(hostInput1);
+		hostInput = NULL;
+	}
 
 }
 
