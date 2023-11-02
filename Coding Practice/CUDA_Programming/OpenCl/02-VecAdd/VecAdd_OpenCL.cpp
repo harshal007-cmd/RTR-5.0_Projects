@@ -1,6 +1,6 @@
 #include<stdio.h>
 #include<math.h>
-
+#define CL_TARGET_OPENCL_VERSION 120
 #include<CL/opencl.h>
 #include"helper_timer.h"
 
@@ -149,7 +149,7 @@ int main()
 	}
 	
 	//create Opencl kernel by passing kernel fun name that we used .cl file
-	oclKernel = clCreateKernel(oclProgram, "vedAddGPU", &result);
+	oclKernel = clCreateKernel(oclProgram, "vecAddGPU", &result);
 	if (result != CL_SUCCESS)
 	{
 		printf("clCreateKernel() failed : %d\n", result);
