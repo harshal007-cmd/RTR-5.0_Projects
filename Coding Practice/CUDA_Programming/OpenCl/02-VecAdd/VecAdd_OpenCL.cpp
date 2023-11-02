@@ -1,7 +1,7 @@
 #include<stdio.h>
-#include<stdlib.h>
-#include<CL/opencl.h>
 #include<math.h>
+
+#include<CL/opencl.h>
 #include"helper_timer.h"
 
 //global ver
@@ -40,8 +40,8 @@ const char* oclSourceCode =
 
 int main()
 {
-	void fillFloatArrayWithRandomeNumbers(float*, int);
-	size_t roundGlobalSizeToNearestMulOfLocalSize(int, unsigned int);
+	void fillFloatArrayWithRandomNumbers(float*, int);
+	size_t roundGlobalSizeToNearestMultipleOfLocalSize(int, unsigned int);
 	void vecAddCPU(const float*, const float*, float*, int);
 	void cleanup(void);
 
@@ -84,8 +84,8 @@ int main()
 	}
 
 	//filling values in host array
-	fillFloatArrayWithRandomeNumbers(hostInput1, iNumberOfArrayElements);
-	fillFloatArrayWithRandomeNumbers(hostInput2, iNumberOfArrayElements);
+	fillFloatArrayWithRandomNumbers(hostInput1, iNumberOfArrayElements);
+	fillFloatArrayWithRandomNumbers(hostInput2, iNumberOfArrayElements);
 
 	//get opencl supporting platform ids
 	result = clGetPlatformIDs(1, &oclPlatformID, NULL);
@@ -107,7 +107,7 @@ int main()
 	}
 
 	//create opencl compute context
-	oclContext = clCreateContex(NULL, 1, &oclDeviceID, NULL, NULL, &result);
+	oclContext = clCreateContext(NULL, 1, &oclDeviceID, NULL, NULL, &result);
 	if (result != CL_SUCCESS)
 	{
 		printf("clCreateContex() failed : %d\n", result);
@@ -149,7 +149,7 @@ int main()
 	}
 	
 	//create Opencl kernel by passing kernel fun name that we used .cl file
-	oclkernel = clCreateKernel(oclProgram, "vedAddGPU", &result);
+	oclKernel = clCreateKernel(oclProgram, "vedAddGPU", &result);
 	if (result != CL_SUCCESS)
 	{
 		printf("clCreateKernel() failed : %d\n", result);
@@ -174,7 +174,7 @@ int main()
 		exit(EXIT_FAILURE);
 	}
 
-	deviceInput = clCreateBuffer(oclContext, CL_MEM_WRITE_ONLY, size, NULL, &result);
+	deviceOutput = clCreateBuffer(oclContext, CL_MEM_WRITE_ONLY, size, NULL, &result);
 	if (result != CL_SUCCESS)
 	{
 		printf("clCreateBuffer() failed for output array : %d\n", result);
@@ -208,7 +208,7 @@ int main()
 		exit(EXIT_FAILURE);
 	}
 
-	result = clSetKarnelArg(oclKernel, 3, sizeof(cl_int), (void*)&iNumberOfArrayElements);
+	result = clSetKernelArg(oclKernel, 3, sizeof(cl_int), (void*)&iNumberOfArrayElements);
 	if (result != CL_SUCCESS)
 	{
 		printf("clSetKernelArg() failed for 4th Argument : %d\n", result);
@@ -234,14 +234,14 @@ int main()
 	size_t localWorkSize = 256;
 	size_t globalWorkSize;
 
-	globalWorkSize = roundGlobalSizeToNearestMulOfLocalSize(localWorkSize, iNumberOfArrayElements);
+	globalWorkSize = roundGlobalSizeToNearestMultipleOfLocalSize(localWorkSize, iNumberOfArrayElements);
 
 	//start timer
 	StopWatchInterface* timer = NULL;
 	sdkCreateTimer(&timer);
 	sdkStartTimer(&timer);
 
-	result = clEnqueueNDRangeKernel(oclCommandQueue, 1, NULL, &globalWorkSize, &localWorkSize, 0, NULL, NULL);
+	result = clEnqueueNDRangeKernel(oclCommandQueue, oclKernel,1, NULL, &globalWorkSize, &localWorkSize, 0, NULL, NULL);
 	if (result != CL_SUCCESS)
 	{
 		printf("clEnqueueNDRangeKernel() failed : %d\n", result);
@@ -258,7 +258,7 @@ int main()
 	sdkDeleteTimer(&timer);
 
 	//read back result from device into cpu var ie hostOutput
-	result = clEnqueueReadBuffer(oclCommandQueue, CL_TRUE, 0, size, hostOutput, 0, NULL, NULL);
+	result = clEnqueueReadBuffer(oclCommandQueue, deviceOutput, CL_TRUE, 0, size, hostOutput, 0, NULL, NULL);
 	if (result != CL_SUCCESS)
 	{
 		printf("clEnqueueReadBuffer() failed : %d\n", result);
@@ -297,7 +297,7 @@ int main()
 	printf("Array1 begins from 0th index %.6f to %dth index %.6f\n", hostInput1[0], iNumberOfArrayElements - 1, hostInput1[iNumberOfArrayElements - 1]);
 	printf("Array1 begins from 0th index %.6f to %dth index %.6f\n", hostInput2[0], iNumberOfArrayElements - 1, hostInput2[iNumberOfArrayElements - 1]);
 	
-	printf("OpenCL kernel global work size = %lu and local work size = %ln\n", globalWorkSize, localWorkSize);
+	printf("OpenCL kernel global work size = %zu and local work size = %zu\n", globalWorkSize, localWorkSize);
 	printf("Output array begins from 0th index %.6f to %dth index %.6f\n", hostOutput[0], iNumberOfArrayElements - 1, hostOutput[iNumberOfArrayElements - 1]);
 
 	printf("Time taken for Vector additional on CPU = %.6f\n", timeOnCPU);
@@ -311,15 +311,15 @@ int main()
 
 void fillFloatArrayWithRandomNumbers(float* arr, int len)
 {
-	const float fscale = 1.0 / (flaot)RAND_MAX;
-	for (int i = 0;i < len;++i)
+	const float fscale = 1.0f / (float)RAND_MAX;
+	for (int i = 0;i < len;i++)
 	{
 		arr[i] = fscale * rand();
 	}
 
 }
 
-void vecAddCPU(const float* arr1, const float* arr2, float* out, float* out, int len)
+void vecAddCPU(const float* arr1, const float* arr2, float* out, int len)
 {
 	StopWatchInterface* timer = NULL;
 	sdkCreateTimer(&timer);
@@ -371,19 +371,19 @@ void cleanup()
 		deviceInput1 = NULL;
 	}
 
-	if (oclKernel1)
+	if (oclKernel)
 	{
-		clReleasekernel(oclKernel);
+		clReleaseKernel(oclKernel);
 		oclKernel = NULL;
 	}
 
 	if (oclProgram)
 	{
-		clReleasekernel(oclProgram);
+		clReleaseProgram(oclProgram);
 		oclProgram = NULL;
 	}
 
-	if (oclCommadQueue)
+	if (oclCommandQueue)
 	{
 		clReleaseCommandQueue(oclCommandQueue);
 		oclCommandQueue = NULL;
@@ -404,13 +404,13 @@ void cleanup()
 	if (hostInput2)
 	{
 		free(hostInput2);
-		hostOutput2 = NULL;
+		hostInput2 = NULL;
 	}
 
 	if (hostInput1)
 	{
 		free(hostInput1);
-		hostInput = NULL;
+		hostInput1 = NULL;
 	}
 
 }
