@@ -183,7 +183,7 @@ int main()
 	}
 
 	//SET 0 based 0th argument dev1
-	result = clSetKernelArg(oclKernel, 1, sizeof(cl_mem), (void*)&deviceInput1);
+	result = clSetKernelArg(oclKernel, 0, sizeof(cl_mem), (void*)&deviceInput1);
 	if (result != CL_SUCCESS)
 	{
 		printf("clSetKernelArg() faild for 1st Argument : %d\n", result);
@@ -200,7 +200,7 @@ int main()
 		exit(EXIT_FAILURE);
 	}
 	//dev output
-	result = clSetKernelArg(oclKernel, 1, sizeof(cl_mem), (void*)&deviceOutput);
+	result = clSetKernelArg(oclKernel, 2, sizeof(cl_mem), (void*)&deviceOutput);
 	if (result != CL_SUCCESS)
 	{
 		printf("clSetKernelArg() faild for 3rd Argument : %d\n", result);
