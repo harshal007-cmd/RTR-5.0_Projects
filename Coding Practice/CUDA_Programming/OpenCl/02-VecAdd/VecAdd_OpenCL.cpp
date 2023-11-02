@@ -5,7 +5,7 @@
 #include"helper_timer.h"
 
 //global ver
-const int iNumberOfArrayElements = 11444777;
+const int iNumberOfArrayElements = 211444777;
 
 cl_platform_id oclPlatformID;
 cl_device_id oclDeviceID;
