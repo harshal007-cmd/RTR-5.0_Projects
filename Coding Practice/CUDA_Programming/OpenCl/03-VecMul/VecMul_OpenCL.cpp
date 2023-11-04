@@ -4,6 +4,8 @@
 #include<CL/opencl.h>
 #include"helper_timer.h"
 
+#define BLOCK_WIDTH 64
+
 //global ver
 const int iNumberOfArrayElements = 211444777;
 
@@ -16,10 +18,10 @@ cl_command_queue oclCommandQueue;
 cl_program oclProgram;
 cl_kernel oclKernel;
 
-float* hostInput1 = NULL;
-float* hostInput2 = NULL;
-float* hostOutput = NULL;
-float* gold = NULL;
+int* hostInput1 = NULL;
+int* hostInput2 = NULL;
+int* hostOutput = NULL;
+int* gold = NULL;
 
 cl_mem deviceInput1 = NULL;
 cl_mem deviceInput2 = NULL;
@@ -29,10 +31,10 @@ float timeOnGPU = 0.0f;
 float timeOnCPU = 0.0f;
 
 const char* oclSourceCode =
-"__kernel void vecMulGPU(__global int *in1, __global int *in2, __global int *out, int numRows, int numAColumns, int numBColumns, int numCColumns)"\
+"__kernel void matMulGPU(__global int *A, __global int *B, __global int *C, int numARows, int numAColumns, int numBColumns, int numCColumns)"\
 "{"\
 "int row=get_global_id(0);"\
-"int column=get_global_id(1)"\
+"int column=get_global_id(1);"\
 "if((row < numARows) && (column < numBColumns))"\
 "{"\
 "int value=0;"\
@@ -57,7 +59,7 @@ int main()
 	//var declare
 	int numARows = BLOCK_WIDTH;
 	int numAColumns = BLOCK_WIDTH;
-	int numBRows = BLOCK_WIDHT;		
+	int numBRows = BLOCK_WIDTH;		
 	int numBColumns = BLOCK_WIDTH;
 
 	int numCRows = numARows;
@@ -278,13 +280,15 @@ int main()
 
 
 	//write abve intput device buffer to device memo
-	result = clEnqueueWriteBuffer(oclCommandQueue, deviceInput1, CL_FALSE, 0, size, hostInput1, 0, NULL, NULL);
+	result = clEnqueueWriteBuffer(oclCommandQueue, deviceInput1, CL_FALSE, 0, sizeA, hostInput1, 0, NULL, NULL);
 	if (result != CL_SUCCESS)
 	{
 		printf("clEnqueueBuffer() failed for 1st input buffer : %d\n", result);
+		cleanup();
+		exit(EXIT_FAILURE);
 	}
 
-	result = clEnqueueWriteBuffer(oclCommandQueue, deviceInput2, CL_FALSE, 0, size, hostInput2, 0, NULL, NULL);
+	result = clEnqueueWriteBuffer(oclCommandQueue, deviceInput2, CL_FALSE, 0, sizeB, hostInput2, 0, NULL, NULL);
 	if (result != CL_SUCCESS)
 	{
 		printf("clEnqueueWriteBuffer() failed for 2nd Input Device buffer : %d\n", result);
@@ -292,17 +296,17 @@ int main()
 		exit(EXIT_FAILURE);
 	}
 
-	size_t localWorkSize = 256;
-	size_t globalWorkSize;
 
-	globalWorkSize = roundGlobalSizeToNearestMultipleOfLocalSize(localWorkSize, iNumberOfArrayElements);
+	size_t globalWorkSize[2];
+	globalWorkSize[0] = BLOCK_WIDTH;
+	globalWorkSize[1] = BLOCK_WIDTH;
 
 	//start timer
 	StopWatchInterface* timer = NULL;
 	sdkCreateTimer(&timer);
 	sdkStartTimer(&timer);
 
-	result = clEnqueueNDRangeKernel(oclCommandQueue, oclKernel,1, NULL, &globalWorkSize, &localWorkSize, 0, NULL, NULL);
+	result = clEnqueueNDRangeKernel(oclCommandQueue, oclKernel, 2, NULL, globalWorkSize, NULL, 0, NULL, NULL);
 	if (result != CL_SUCCESS)
 	{
 		printf("clEnqueueNDRangeKernel() failed : %d\n", result);
@@ -319,7 +323,7 @@ int main()
 	sdkDeleteTimer(&timer);
 
 	//read back result from device into cpu var ie hostOutput
-	result = clEnqueueReadBuffer(oclCommandQueue, deviceOutput, CL_TRUE, 0, size, hostOutput, 0, NULL, NULL);
+	result = clEnqueueReadBuffer(oclCommandQueue, deviceOutput, CL_TRUE, 0, sizeC, hostOutput, 0, NULL, NULL);
 	if (result != CL_SUCCESS)
 	{
 		printf("clEnqueueReadBuffer() failed : %d\n", result);
@@ -328,18 +332,17 @@ int main()
 	}
 
 	//vector addition on host
-	vecAddCPU(hostInput1, hostInput2, gold, iNumberOfArrayElements);
+	matMulCPU(hostInput1, hostInput2, gold, numARows, numAColumns, numBColumns, numCColumns);
 
 	//comparison
-	const float epsilon = 0.000001f;
 	int breakValue = -1;
 	bool bAccuracy = true;
 	
-	for (int i = 0;i < iNumberOfArrayElements;++i)
+	for (int i = 0;i < numCRows * numCColumns;++i)
 	{
 		float val1 = gold[i];
 		float val2 = hostOutput[i];
-		if (fabs(val1 - val2) > epsilon)
+		if (val1 != val2)
 		{
 			bAccuracy = false;
 			breakValue = i;
@@ -347,70 +350,80 @@ int main()
 		}
 	}
 
+
 	char str[128];
 	if (bAccuracy == false)
-		sprintf(str, "Comparison of CPU and GPU vector addition is not within accuracy of 0.000001 at array index %d", breakValue);
+		sprintf(str, "Comparison of CPU and GPU Matrix Multiplication is not within accuracy of 0.000001 at array index %d", breakValue);
 	else
-		sprintf(str, "Comparison of CPu and GPU vector addtion is within accuracy of 0.000001");
+		sprintf(str, "Comparison of CPU and GPU Matrix Multiplication is within accuracy of 0.000001");
 
 	
-	//output
-	printf("Array1 begins from 0th index %.6f to %dth index %.6f\n", hostInput1[0], iNumberOfArrayElements - 1, hostInput1[iNumberOfArrayElements - 1]);
-	printf("Array1 begins from 0th index %.6f to %dth index %.6f\n", hostInput2[0], iNumberOfArrayElements - 1, hostInput2[iNumberOfArrayElements - 1]);
-	
-	printf("OpenCL kernel global work size = %zu and local work size = %zu\n", globalWorkSize, localWorkSize);
-	printf("Output array begins from 0th index %.6f to %dth index %.6f\n", hostOutput[0], iNumberOfArrayElements - 1, hostOutput[iNumberOfArrayElements - 1]);
-
-	printf("Time taken for Vector additional on CPU = %.6f\n", timeOnCPU);
-	printf("Time taken for Vector additional on GPU = %.6f\n", timeOnGPU);
+	printf("Time taken for Matrix Multiplication on CPU = %.6f\n", timeOnCPU);
+	printf("Time taken for Matrix Multiplication on GPU = %.6f\n", timeOnGPU);
 	printf("%s\n", str);
-
 	cleanup();
 
 	return 0;
 }
 
-void fillFloatArrayWithRandomNumbers(float* arr, int len)
+void InitA(int* data, int row, int col)
 {
-	const float fscale = 1.0f / (float)RAND_MAX;
-	for (int i = 0;i < len;i++)
-	{
-		arr[i] = fscale * rand();
-	}
+	int num = 1;
 
+	for (int i = 0;i < row;++i)
+	{
+		for (int j = 0;j < col;++j)
+		{
+			*(data + i * col + j) = num;
+			num++;
+		}
+	}
 }
 
-void vecAddCPU(const float* arr1, const float* arr2, float* out, int len)
+
+void InitB(int* data, int row, int col)
+{
+	int num = BLOCK_WIDTH;
+
+	for (int i = 0;i < row;++i)
+	{
+		for (int j = 0;j < col;++j)
+		{
+			*(data + i * col + j) = num;
+			num--;
+		}
+	}
+}
+
+void matMulCPU(int* A, int* B, int* C, int numARows, int numAColumns, int numBColumns, int numCColumns)
 {
 	StopWatchInterface* timer = NULL;
 	sdkCreateTimer(&timer);
 	sdkStartTimer(&timer);
 
-	for (int i = 0;i < len;++i)
+	for (int i = 0;i < numARows;++i)
 	{
-		out[i] = arr1[i] + arr2[i];
+		for (int j = 0;j < numBColumns;++j)
+		{
+			int value = 0.0f;
+			for (int k = 0;k < numAColumns;++k)
+			{
+				int a = A[i * numAColumns + k];
+				int b = B[k * numBColumns + j];
+				value += a * b;
+			}
+			C[i * numCColumns + j] = value;
+		}
 	}
 
 	sdkStopTimer(&timer);
-	timeOnCPU = sdkGetTimerValue(&timer);
+	timeOnCPU = sdkGetAverageTimerValue(&timer);
 	sdkDeleteTimer(&timer);
 	timer = NULL;
 
-}
-
-size_t roundGlobalSizeToNearestMultipleOfLocalSize(int local_size, unsigned int global_size)
-{
-	unsigned int r = global_size % local_size;
-	if (r == 0)
-	{
-		return global_size;
-	}
-	else
-	{
-		return (global_size + local_size - r);
-	}
 
 }
+
 
 void cleanup()
 {
@@ -454,6 +467,12 @@ void cleanup()
 	{
 		clReleaseContext(oclContext);
 		oclContext = NULL;
+	}
+
+	if (gold)
+	{
+		free(gold);
+		gold = NULL;
 	}
 
 	if (hostOutput)
