@@ -1,6 +1,6 @@
 #include<stdio.h>
 #define CL_TARGET_OPENCL_VERSION 120
-#include"cuda.h"
+#include<cuda.h>
 #include"helper_timer.h"
 
 //global ver
@@ -105,7 +105,7 @@ int main()
 	}
 
 	//copy data from host array to device arrays
-	result = cudaMemcpy(deviceInput1, hostInput1, size, cudaMemCpyHostToDevice);
+	result = cudaMemcpy(deviceInput1, hostInput1, size, cudaMemcpyHostToDevice);
 	if (result != cudaSuccess)
 	{
 		printf("Host to Device data copy is failed for deviceInput1 array\n");
@@ -114,7 +114,7 @@ int main()
 	}
 
 
-	result = cudaMemcpy(deviceInput2, hostInput2, size, cudaMemCpyHostToDevice);
+	result = cudaMemcpy(deviceInput2, hostInput2, size, cudaMemcpyHostToDevice);
 	if (result  != cudaSuccess)
 	{
 		printf("Host to Device data copy is failed for deviceInput2 array\n");
@@ -125,20 +125,15 @@ int main()
 
 	//CUDA kernel conf
 	dim3 dimGrid = dim3((int)ceil((float)iNumberOfArrayElements / 1));
-	dim dimBlock = dim3(256, 1, 1);
+	dim3 dimBlock = dim3(256, 1, 1);
 
-	//CUDA kerne for vector addition
-	size_t localWorkSize = 256;
-	size_t globalWorkSize;
-
-	globalWorkSize = roundGlobalSizeToNearestMultipleOfLocalSize(localWorkSize, iNumberOfArrayElements);
-
+	
 	//start timer
 	StopWatchInterface* timer = NULL;
 	sdkCreateTimer(&timer);
 	sdkStartTimer(&timer);
 
-	vecAddGPU << <dimGrid, dimBlock >> > (deviceInput1, deviceInput2, deviceOutPut, iNumberOfArrayElements);
+	vecAddGPU << <dimGrid, dimBlock >> > (deviceInput1, deviceInput2, deviceOutput, iNumberOfArrayElements);
 
 	//stop timer
 	sdkStopTimer(&timer);
@@ -179,7 +174,6 @@ int main()
 	printf("Array1 begins from 0th index %.6f to %dth index %.6f\n", hostInput1[0], iNumberOfArrayElements - 1, hostInput1[iNumberOfArrayElements - 1]);
 	printf("Array1 begins from 0th index %.6f to %dth index %.6f\n", hostInput2[0], iNumberOfArrayElements - 1, hostInput2[iNumberOfArrayElements - 1]);
 	
-	printf("OpenCL kernel global work size = %zu and local work size = %zu\n", globalWorkSize, localWorkSize);
 	printf("Output array begins from 0th index %.6f to %dth index %.6f\n", hostOutput[0], iNumberOfArrayElements - 1, hostOutput[iNumberOfArrayElements - 1]);
 
 	printf("Time taken for Vector additional on CPU = %.6f\n", timeOnCPU);
@@ -237,46 +231,23 @@ void cleanup()
 {
 	if (deviceOutput)
 	{
-		clReleaseMemObject(deviceOutput);
+		cudaFree(deviceOutput);
 		deviceOutput = NULL;
 	}
 
 	if (deviceInput2)
 	{
-		clReleaseMemObject(deviceInput2);
+		cudaFree(deviceInput2);
 		deviceInput2 = NULL;
 	}
 
 	if (deviceInput1)
 	{
-		clReleaseMemObject(deviceInput1);
+		cudaFree(deviceInput1);
 		deviceInput1 = NULL;
 	}
 
-	if (oclKernel)
-	{
-		clReleaseKernel(oclKernel);
-		oclKernel = NULL;
-	}
-
-	if (oclProgram)
-	{
-		clReleaseProgram(oclProgram);
-		oclProgram = NULL;
-	}
-
-	if (oclCommandQueue)
-	{
-		clReleaseCommandQueue(oclCommandQueue);
-		oclCommandQueue = NULL;
-	}
-
-	if (oclContext)
-	{
-		clReleaseContext(oclContext);
-		oclContext = NULL;
-	}
-
+	
 	if (hostOutput)
 	{
 		free(hostOutput);
