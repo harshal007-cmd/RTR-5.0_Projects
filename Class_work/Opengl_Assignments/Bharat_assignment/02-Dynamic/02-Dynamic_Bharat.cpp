@@ -1,4 +1,4 @@
-//xxxxxx OpenGL Starts.... 
+//xxxxxx OpenGL Starts.... First Code xxxxxx// 30th July
 // Blue Screen code
 
 //Common header files
@@ -36,6 +36,31 @@ BOOL gbActive = FALSE;
 DWORD dwstyle = 0;
 WINDOWPLACEMENT wpPrev = { sizeof(WINDOWPLACEMENT) };
 BOOL gbFullScreen = FALSE;
+
+//color veriables
+float r = 0.82;
+float g = 0.82;
+float b = 0.82;
+
+//lerp values
+float tBx = -1.0;
+float tHx = 1.6;
+float tHy = 1.6;
+float tA1x = -1.6;
+float tA1y = -1.6;
+float tRx = 1.6;
+float tRy = 1.6;
+float tA2x = 1.6;
+float tA2y = -1.6;
+float tTx = 1.4;
+float t = 0.0;
+int flag = 0;
+
+float lerp(float start, float end, float t)
+{
+	return start + t * (end - start);
+}
+
 
 //Entry point function
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLine, int iCmdShow)
@@ -165,7 +190,7 @@ LRESULT CALLBACK WndProg(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 		gbActive = FALSE;
 		break;
 	case WM_SIZE:
-		resize(LOWORD(lParam),HIWORD(lParam));
+		resize(LOWORD(lParam), HIWORD(lParam));
 		break;
 	case WM_ERASEBKGND:
 		return 0;
@@ -217,7 +242,7 @@ void ToogleFullScreen(void)
 			}
 		}
 		ShowCursor(FALSE);
-		gbFullScreen=TRUE;
+		gbFullScreen = TRUE;
 	}
 	else
 	{
@@ -225,9 +250,10 @@ void ToogleFullScreen(void)
 		SetWindowLong(ghwnd, GWL_STYLE, dwstyle | WS_OVERLAPPEDWINDOW);
 		SetWindowPos(ghwnd, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOOWNERZORDER | SWP_NOZORDER | SWP_FRAMECHANGED);
 		ShowCursor(TRUE);
-		gbFullScreen=FALSE;
+		gbFullScreen = FALSE;
 	}
 }
+
 
 int initialize(void)
 {
@@ -238,7 +264,7 @@ int initialize(void)
 	int iPixelFormatIndex = 0;
 
 	ZeroMemory(&pFd, sizeof(PIXELFORMATDESCRIPTOR));//init to 0
-	
+
 	//init of pFd..using only 9 other put 0 using ZeroMemory..to create small image on memory (chota Bacchan)
 	pFd.nSize = sizeof(PIXELFORMATDESCRIPTOR);
 	pFd.nVersion = 1;  //conventionally version is 1, to block OpenGL to this version
@@ -281,7 +307,7 @@ int initialize(void)
 		fprintf(gpFILE, "wglCreateContext() Failed !!\n");
 		return -4;
 	}
-	
+
 	//Make Rendaring contex current
 	if (wglMakeCurrent(ghdc, ghrc) == FALSE)
 	{
@@ -291,20 +317,20 @@ int initialize(void)
 
 	//Set the Clear color of Window to Blue
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f); //here OpenGL starts
-	
 	resize(WIDTH, HEIGHT);
 	return 0;
 }
 
-void resize(int width, int height)
+
+void resize1(int width, int height)
 {
 	//code
 	if (height <= 0)
 	{
 		height = 1;
-		
+
 	}
-	
+
 	glViewport(0, 0, (GLsizei)width, (GLsizei)height);
 	glMatrixMode(GL_PROJECTION);//use GL_Projection from Matrix maths from OpenGL math lib
 	glLoadIdentity();
@@ -312,10 +338,332 @@ void resize(int width, int height)
 
 }
 
+
+void resize(int width, int height)
+{
+	//code
+	glViewport(0, 0, (GLsizei)width, (GLsizei)height);
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+
+	if (width > height)
+	{
+		glOrtho((GLfloat)width / (GLfloat)height * -1.0f, (GLfloat)width / (GLfloat)height * 1.0f, -1.0f, 1.0f, -1.0f, 1.0f);
+	}
+	else
+	{
+		glOrtho(-1.0f, 1.0f, (GLfloat)height / (GLfloat)width * -1.0f, (GLfloat)height / (GLfloat)width * 1.0f, -1.0f, 1.0f);
+	}
+
+
+}
+
+
+void B()
+{
+	glLoadIdentity();
+	glTranslatef(tBx, 0.0f, -1.0f);
+	glScalef(0.7, 0.7, 0.0);
+	glBegin(GL_POLYGON);
+	glColor3f(r, g, b);
+		glVertex2f(0.25, 0.175);
+		glVertex2f(0.175, 0.25);
+		glVertex2f(-0.25, 0.25);
+		glVertex2f(-0.25, 0.0);
+		glVertex2f(0.25, 0.0);
+	
+	glEnd();
+	glBegin(GL_POLYGON);
+		glVertex2f(0.25, 0.00);
+		glVertex2f(-0.25, 0.00);
+		glVertex2f(-0.25, -0.25);
+		glVertex2f(0.175, -0.25);
+		glVertex2f(0.25, -0.175);
+	glEnd();
+
+	//black part
+	glColor3f(0.0, 0.0, 0.0);
+	glBegin(GL_POLYGON); //upper
+	glVertex2f(0.175, 0.125);
+	glVertex2f(0.125, 0.175);
+	glVertex2f(-0.175, 0.175);
+	glVertex2f(-0.175, 0.0325);
+	glVertex2f(0.175, 0.0325);
+	glEnd();
+
+	glColor3f(0.0, 0.0, 0.0);
+	glBegin(GL_POLYGON); //upper
+	glVertex2f(0.175, -0.0325);
+	glVertex2f(-0.175, -0.0325);
+	glVertex2f(-0.175, -0.175);
+	glVertex2f(0.125, -0.175);
+	glVertex2f(0.175, -0.125);
+	glEnd();
+
+	//------------
+
+}
+
+void H()
+{
+	glLoadIdentity();
+	glTranslatef(tHx, tHy, -1.0f);
+	glScalef(0.7, 0.7, 0.0);
+	glBegin(GL_POLYGON);
+	glColor3f(r, g, b);
+	glVertex2f(0.25, 0.25);
+		glVertex2f(-0.25, 0.25);
+		glVertex2f(-0.25, 0.0);
+		glVertex2f(0.25, 0.0);
+
+	glEnd();
+	glBegin(GL_POLYGON);
+		glVertex2f(0.25, 0.00);
+		glVertex2f(-0.25, 0.00);
+		glVertex2f(-0.25, -0.25);
+		glVertex2f(0.25, -0.25);
+	glEnd();
+
+	//black box
+	//black part
+	glColor3f(0.0, 0.0, 0.0);
+	glBegin(GL_POLYGON); //upper
+		glVertex2f(0.175, 0.25);
+		glVertex2f(-0.175, 0.25);
+		glVertex2f(-0.175, 0.0325);
+		glVertex2f(0.175, 0.0325);
+	glEnd();
+
+	glColor3f(0.0, 0.0, 0.0);
+	glBegin(GL_POLYGON); //upper
+		glVertex2f(0.175, -0.0325);
+		glVertex2f(-0.175, -0.0325);
+		glVertex2f(-0.175, -0.25);
+		glVertex2f(0.175, -0.25);
+	glEnd();
+
+
+}
+
+void A1()
+{
+	glLoadIdentity();
+	glTranslatef(tA1x, tA1y, -1.0f);
+	glScalef(0.7, 0.7, 0.0);
+
+	glBegin(GL_POLYGON);
+	glColor3f(r, g, b);
+	glVertex2f(0.25, 0.25);
+	glVertex2f(-0.25, 0.25);
+	glVertex2f(-0.25, 0.0);
+	glVertex2f(0.25, 0.0);
+
+	glEnd();
+	glBegin(GL_POLYGON);
+	glVertex2f(0.25, 0.00);
+	glVertex2f(-0.25, 0.00);
+	glVertex2f(-0.25, -0.25);
+	glVertex2f(0.25, -0.25);
+	glEnd();
+
+	//black part
+	glColor3f(0.0, 0.0, 0.0);
+	glBegin(GL_POLYGON);//left
+		glVertex2f(0.25, 0.25);
+		glVertex2f(0.025, 0.25);
+		glVertex2f(0.25, -0.25);
+	glEnd();
+
+	glColor3f(0.0, 0.0, 0.0);
+	glBegin(GL_POLYGON);//right
+		glVertex2f(-0.25, 0.25);
+		glVertex2f(-0.025, 0.25);
+		glVertex2f(-0.25, -0.25);
+	glEnd();
+
+	glColor3f(0.0, 0.0, 0.0);
+	glBegin(GL_POLYGON);//lower part
+		glVertex2f(0.075, -0.0325);
+		glVertex2f(-0.075, -0.0325);
+		glVertex2f(-0.175, -0.25);
+		glVertex2f(0.175, -0.25);
+	glEnd();
+	
+	glColor3f(0.0, 0.0, 0.0);
+	glBegin(GL_POLYGON);//upper part
+		glVertex2f(0.01, 0.150);
+		glVertex2f(-0.01, 0.150);
+		glVertex2f(-0.05, 0.0325);
+		glVertex2f(0.05, 0.0325);
+		//glVertex2f(0.175, -0.25);
+	glEnd();
+
+}
+
+void R()
+{
+	glLoadIdentity();
+	glTranslatef(tRx, tRy, -1.0f);
+	glScalef(0.7, 0.7, 0.0);
+
+	glBegin(GL_POLYGON);
+	glColor3f(r, g, b);
+		glVertex2f(0.25, 0.175);
+		glVertex2f(0.175, 0.25);
+		glVertex2f(-0.25, 0.25);
+		glVertex2f(-0.25, 0.0);
+		glVertex2f(0.25, 0.0);
+	glEnd();
+
+	glColor3f(r, g, b);
+	glBegin(GL_POLYGON);
+		glVertex2f(0.25, 0.00);
+		glVertex2f(-0.25, 0.00);
+		glVertex2f(-0.25, -0.25);
+		glVertex2f(0.25, -0.25);
+	glEnd();
+
+	//black part
+	glColor3f(0.0, 0.0, 0.0);
+	glBegin(GL_POLYGON); //upper
+	glVertex2f(0.175, 0.125);
+	glVertex2f(0.125, 0.175);
+	glVertex2f(-0.175, 0.175);
+	glVertex2f(-0.175, 0.0325);
+	glVertex2f(0.125, 0.0325);
+	glVertex2f(0.175, 0.075);
+	glEnd();
+
+	glColor3f(0.0, 0.0, 0.0);
+	glBegin(GL_POLYGON);
+		glVertex2f(0.175, -0.25);
+		glVertex2f(-0.175, -0.0325);
+		glVertex2f(-0.175, -0.25);
+	glEnd();
+
+	glColor3f(0.0, 0.0, 0.0);
+	glBegin(GL_POLYGON);
+	glVertex2f(0.25, -0.25);
+	glVertex2f(0.25, -0.0325);
+	glVertex2f(-0.075, -0.0325);
+	glEnd();
+
+	glColor3f(0.0, 0.0, 0.0);
+	glBegin(GL_POLYGON);
+	glVertex2f(0.25, -0.0325);
+	glVertex2f(0.25, 0.025);
+	glVertex2f(0.175, -0.0325);
+	glEnd();
+
+
+}
+
+void A2()
+{
+	glLoadIdentity();
+	glTranslatef(tA2x, tA2y, -1.0f);
+	glScalef(0.7, 0.7, 0.0);
+
+	glBegin(GL_POLYGON);
+	glColor3f(r, g, b);
+		glVertex2f(0.25, 0.25);
+		glVertex2f(-0.25, 0.25);
+		glVertex2f(-0.25, 0.0);
+		glVertex2f(0.25, 0.0);
+	glEnd();
+
+	glColor3f(r, g, b);
+	glBegin(GL_POLYGON);
+	glVertex2f(0.25, 0.00);
+	glVertex2f(-0.25, 0.00);
+	glVertex2f(-0.25, -0.25);
+	glVertex2f(0.25, -0.25);
+	glEnd();
+
+	//black part
+	glColor3f(0.0, 0.0, 0.0);
+	glBegin(GL_POLYGON);//left
+	glVertex2f(0.25, 0.25);
+	glVertex2f(0.025, 0.25);
+	glVertex2f(0.25, -0.25);
+	glEnd();
+
+	glColor3f(0.0, 0.0, 0.0);
+	glBegin(GL_POLYGON);//right
+	glVertex2f(-0.25, 0.25);
+	glVertex2f(-0.025, 0.25);
+	glVertex2f(-0.25, -0.25);
+	glEnd();
+
+	glColor3f(0.0, 0.0, 0.0);
+	glBegin(GL_POLYGON);//lower part
+	glVertex2f(0.075, -0.0325);
+	glVertex2f(-0.075, -0.0325);
+	glVertex2f(-0.175, -0.25);
+	glVertex2f(0.175, -0.25);
+	glEnd();
+
+	glColor3f(0.0, 0.0, 0.0);
+	glBegin(GL_POLYGON);//upper part
+	glVertex2f(0.01, 0.150);
+	glVertex2f(-0.01, 0.150);
+	glVertex2f(-0.05, 0.0325);
+	glVertex2f(0.05, 0.0325);
+	//glVertex2f(0.175, -0.25);
+	glEnd();
+
+}
+
+void T()
+{
+	glLoadIdentity();
+	glTranslatef(tTx, 0.0f, -1.0f);
+	glScalef(0.7, 0.7, 0.0);
+
+	glBegin(GL_POLYGON);
+	glColor3f(r, g, b);
+		glVertex2f(0.25, 0.25);
+		glVertex2f(-0.25, 0.25);
+		glVertex2f(-0.25, 0.0);
+		glVertex2f(0.25, 0.0);
+	glEnd();
+
+
+	glColor3f(r, g, b);
+	glBegin(GL_POLYGON);
+		glVertex2f(0.25, 0.00);
+		glVertex2f(-0.25, 0.00);
+		glVertex2f(-0.25, -0.25);
+		glVertex2f(0.25, -0.25);
+	glEnd();
+
+
+	//black part
+	glColor3f(0.0, 0.0, 0.0);
+	glBegin(GL_POLYGON);
+		glVertex2f(0.25, 0.175);
+		glVertex2f(0.0325, 0.175);
+		glVertex2f(0.0325, -0.250);
+		glVertex2f(0.25, -0.250);
+	glEnd();
+
+	glColor3f(0.0, 0.0, 0.0);
+	glBegin(GL_POLYGON);
+		glVertex2f(-0.0325, 0.175);
+		glVertex2f(-0.25, 0.175);
+		glVertex2f(-0.25, -0.250);
+		glVertex2f(-0.0325, -0.250);
+
+	glEnd();
+
+
+}
+
 void VerticalLines()
 {
-	float xPt1=0.025f;
-	float xPt2=-0.025f;
+	float xPt1 = 0.025f;
+	float xPt2 = -0.025f;
 
 	glLineWidth(3.2);
 	glBegin(GL_LINES);
@@ -325,30 +673,30 @@ void VerticalLines()
 	glEnd();
 
 	glColor3f(0.0, 0.0, 1.0);
-	for (int i = 1; i <= 40; i++) 
+	for (int i = 1; i <= 40; i++)
 	{
-		if (i % 5 == 0) 
+		if (i % 5 == 0)
 		{
 			glLineWidth(2.2f);
 		}
-		else 
+		else
 		{
 			glLineWidth(1.0f);
 		}
 
 		glBegin(GL_LINES);
-		
+
 		glVertex2f(xPt1, 1.0);
 		glVertex2f(xPt1, -1.0);
-		
+
 		xPt1 += 0.025;
 		glEnd();
 	}
 
 	glColor3f(0.0, 0.0, 1.0);
-	for (int j = 1; j <= 40; j++) 
+	for (int j = 1; j <= 40; j++)
 	{
-		if (j % 5 == 0) 
+		if (j % 5 == 0)
 		{
 			glLineWidth(2.2);
 		}
@@ -356,11 +704,11 @@ void VerticalLines()
 		{
 			glLineWidth(1.0);
 		}
-			
+
 		glBegin(GL_LINES);
 		glVertex2f(xPt2, 1.0);
 		glVertex2f(xPt2, -1.0);
-		
+
 		xPt2 -= 0.025f;
 		glEnd();
 	}
@@ -394,7 +742,7 @@ void HorizontalLines()
 		yPt1 += 0.025;
 		glEnd();
 	}
-	
+
 
 	glColor3f(0.0, 0.0, 1.0);
 	for (int j = 1; j <= 40; j++)
@@ -412,6 +760,10 @@ void HorizontalLines()
 	}
 }
 
+void plane()
+{
+	
+}
 
 void display(void)
 {
@@ -419,19 +771,72 @@ void display(void)
 	glClear(GL_COLOR_BUFFER_BIT);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+
 	
-	glTranslatef(0.0, 0.0, -1.0);
-//	glEnable(GL_LINE_SMOOTH);
-	HorizontalLines();
-	VerticalLines();
+	//VerticalLines();
+	//HorizontalLines();
+
+	B();
+	H();
+	A1();
+	R();
+	A2();
+	T();
 	
+
 	SwapBuffers(ghdc);
 }
 
 void update(void)
 {
 	//code
-
+	if (t <= 1.0)
+	{
+	 	t += 0.0005;
+	}
+	
+	if (flag == 0)
+	{
+		tBx = lerp(-1.5, -1.0, t);
+		t = 0.0;
+     
+	}
+	else if (flag == 1)
+	{
+		tHx = lerp(-1.5, -0.6, t);
+		tHy = lerp(1.5, 0.0, t);
+		flag += 1;
+		t = 0.0;
+	}
+	else if (flag == 2)
+	{
+		tA1x = lerp(1.5, -0.2, t);
+		tA1y = lerp(-1.5, 0.0, t);
+		flag += 1;
+		t = 0.0;
+	}
+	else if (flag == 3)
+	{
+		tRx = lerp(1.6, 0.2, t);
+		tRy = lerp(1.6, 0.0, t);
+		flag += 1;
+		t = 0.0;
+	}
+	else if (flag == 4)
+	{
+		tA2x = lerp(1.6, 0.6, t);
+		tA2y = lerp(1.6, 0.0, t);
+		flag += 1;
+		t = 0.0;
+	}
+	else if (flag == 5)
+	{
+		tTx = lerp(1.9, 1.0, t);
+		flag += 1;
+		//t = 0.0;
+	}
+	
+	
 }
 
 void uninitialize(void)
@@ -439,7 +844,7 @@ void uninitialize(void)
 	//function declarations
 	void ToogleFullScreen(void);
 
-	
+
 	//code
 	//If application is exiting in fullscreen:
 	if (gbFullScreen == TRUE)

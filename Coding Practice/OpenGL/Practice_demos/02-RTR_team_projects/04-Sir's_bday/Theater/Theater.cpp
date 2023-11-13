@@ -1391,6 +1391,7 @@ void display(void)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
+
 	broomStick();
 	
 	movie_name1();
