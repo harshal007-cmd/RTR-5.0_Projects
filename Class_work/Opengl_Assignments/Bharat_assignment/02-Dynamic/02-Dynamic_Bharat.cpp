@@ -54,13 +54,16 @@ float tA2x = 1.6;
 float tA2y = -1.6;
 float tTx = 1.4;
 float t = 0.0;
+
 int flag = 0;
+float year = 0.0;
 
 float lerp(float start, float end, float t)
 {
 	return start + t * (end - start);
 }
 
+GLUquadric* quadric = NULL;
 
 //Entry point function
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLine, int iCmdShow)
@@ -254,7 +257,6 @@ void ToogleFullScreen(void)
 	}
 }
 
-
 int initialize(void)
 {
 	//function declarations
@@ -317,10 +319,13 @@ int initialize(void)
 
 	//Set the Clear color of Window to Blue
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f); //here OpenGL starts
+	
+	//init quadric
+	//quadric = gluNewQuadric();
+
 	resize(WIDTH, HEIGHT);
 	return 0;
 }
-
 
 void resize1(int width, int height)
 {
@@ -760,11 +765,221 @@ void HorizontalLines()
 	}
 }
 
-void plane()
+void plane1()
 {
+	glScalef(0.45, 0.45, 0.45);
+	glRotatef(year, 0.0, 0.0, 1.0);
+	//exaust
+	glColor3f(0.5, 0.5, 0.5);
+	glBegin(GL_POLYGON);
+		glVertex2f(0.025, -0.25);
+		glVertex2f(-0.025, -0.25);
+		glVertex2f(-0.025, -0.275);
+		glVertex2f(0.025, -0.275);
+	glEnd();
+	//exaust fire
+	glColor3f(1.0, 0.5, 0.0);
+	glBegin(GL_TRIANGLES);
+		glVertex2f(-0.025, -0.275);
+		glVertex2f(0.025, -0.275);
+		glVertex2f(0.0, -0.375);
+	glEnd();
+
+
+
+	glBegin(GL_POLYGON);//front
+	glColor3f(0.3, 0.3, 0.3);
+		glVertex2f(0.0, 0.45);
+	glColor3f(0.5, 0.5, 0.5);
+		glVertex2f(-0.075, 0.0);
+		glVertex2f(0.075, 0.0);
+	glEnd();
+
+	glColor3f(0.5, 0.5, 0.5);
+	glBegin(GL_POLYGON);//left wing
+		glVertex2f(0.0, 0.125);
+	glColor3f(0.3, 0.3, 0.3);
+		glVertex2f(0.0, -0.125);
+	glColor3f(0.5, 0.5, 0.5);
+		glVertex2f(0.375, -0.175);
+		glVertex2f(0.375, -0.125);
+	glEnd();
+
+	glColor3f(0.5, 0.5, 0.5);
+	glBegin(GL_POLYGON);//right wing
+		glVertex2f(0.0, 0.125);
+	glColor3f(0.3, 0.3, 0.3);
+		glVertex2f(0.0, -0.125);
+		glVertex2f(-0.375, -0.175);
+	glColor3f(0.5, 0.5, 0.5);
+		glVertex2f(-0.375, -0.125);
+	glEnd();
+
+
+	glBegin(GL_POLYGON);//lower right
+	glColor3f(0.3, 0.3, 0.3);
+		glVertex2f(0.0, -0.110);
+		glVertex2f(0.0, -0.25);
+	glColor3f(0.5, 0.5, 0.5);
+		glVertex2f(0.25, -0.275);
+		glVertex2f(0.25, -0.25);
+	glEnd();
+
+	glBegin(GL_POLYGON);//lower left
+	glColor3f(0.3, 0.3, 0.3);
+		glVertex2f(0.0, -0.110);
+		glVertex2f(0.0, -0.25);
+	glColor3f(0.5, 0.5, 0.5);
+		glVertex2f(-0.25, -0.275);
+		glVertex2f(-0.25, -0.25);
+	glEnd();
+
+	
 	
 }
+/*
+void plane2()
+{
+	glScalef(0.45, 0.45, 0.45);
+	//exaust
+	glColor3f(0.5, 0.5, 0.5);
+	glBegin(GL_POLYGON);
+	glVertex2f(0.025, -0.25);
+	glVertex2f(-0.025, -0.25);
+	glVertex2f(-0.025, -0.275);
+	glVertex2f(0.025, -0.275);
+	glEnd();
+	//exaust fire
+	glColor3f(1.0, 1.0, 1.0);
+	glBegin(GL_TRIANGLES);
+	glVertex2f(-0.025, -0.275);
+	glVertex2f(0.025, -0.275);
+	glVertex2f(0.0, -0.375);
+	glEnd();
 
+
+
+	glBegin(GL_POLYGON);//front
+	glColor3f(0.3, 0.3, 0.3);
+	glVertex2f(0.0, 0.45);
+	glColor3f(0.5, 0.5, 0.5);
+	glVertex2f(-0.075, 0.0);
+	glVertex2f(0.075, 0.0);
+	glEnd();
+
+	glColor3f(0.5, 0.5, 0.5);
+	glBegin(GL_POLYGON);//left wing
+	glVertex2f(0.0, 0.125);
+	glColor3f(0.3, 0.3, 0.3);
+	glVertex2f(0.0, -0.125);
+	glColor3f(0.5, 0.5, 0.5);
+	glVertex2f(0.375, -0.175);
+	glVertex2f(0.375, -0.125);
+	glEnd();
+
+	glColor3f(0.5, 0.5, 0.5);
+	glBegin(GL_POLYGON);//right wing
+	glVertex2f(0.0, 0.125);
+	glColor3f(0.3, 0.3, 0.3);
+	glVertex2f(0.0, -0.125);
+	glVertex2f(-0.375, -0.175);
+	glColor3f(0.5, 0.5, 0.5);
+	glVertex2f(-0.375, -0.125);
+	glEnd();
+
+
+	glBegin(GL_POLYGON);//lower right
+	glColor3f(0.3, 0.3, 0.3);
+	glVertex2f(0.0, -0.110);
+	glVertex2f(0.0, -0.25);
+	glColor3f(0.5, 0.5, 0.5);
+	glVertex2f(0.25, -0.275);
+	glVertex2f(0.25, -0.25);
+	glEnd();
+
+	glBegin(GL_POLYGON);//lower left
+	glColor3f(0.3, 0.3, 0.3);
+	glVertex2f(0.0, -0.110);
+	glVertex2f(0.0, -0.25);
+	glColor3f(0.5, 0.5, 0.5);
+	glVertex2f(-0.25, -0.275);
+	glVertex2f(-0.25, -0.25);
+	glEnd();
+
+
+
+}
+
+void plane3()
+{
+	glScalef(0.45, 0.45, 0.45);
+	//exaust
+	glColor3f(0.5, 0.5, 0.5);
+	glBegin(GL_POLYGON);
+	glVertex2f(0.025, -0.25);
+	glVertex2f(-0.025, -0.25);
+	glVertex2f(-0.025, -0.275);
+	glVertex2f(0.025, -0.275);
+	glEnd();
+	//exaust fire
+	glColor3f(0.0, 0.0, 1.0);
+	glBegin(GL_TRIANGLES);
+	glVertex2f(-0.025, -0.275);
+	glVertex2f(0.025, -0.275);
+	glVertex2f(0.0, -0.375);
+	glEnd();
+
+
+
+	glBegin(GL_POLYGON);//front
+	glColor3f(0.3, 0.3, 0.3);
+	glVertex2f(0.0, 0.45);
+	glColor3f(0.5, 0.5, 0.5);
+	glVertex2f(-0.075, 0.0);
+	glVertex2f(0.075, 0.0);
+	glEnd();
+
+	glColor3f(0.5, 0.5, 0.5);
+	glBegin(GL_POLYGON);//left wing
+	glVertex2f(0.0, 0.125);
+	glColor3f(0.3, 0.3, 0.3);
+	glVertex2f(0.0, -0.125);
+	glColor3f(0.5, 0.5, 0.5);
+	glVertex2f(0.375, -0.175);
+	glVertex2f(0.375, -0.125);
+	glEnd();
+
+	glColor3f(0.5, 0.5, 0.5);
+	glBegin(GL_POLYGON);//right wing
+	glVertex2f(0.0, 0.125);
+	glColor3f(0.3, 0.3, 0.3);
+	glVertex2f(0.0, -0.125);
+	glVertex2f(-0.375, -0.175);
+	glColor3f(0.5, 0.5, 0.5);
+	glVertex2f(-0.375, -0.125);
+	glEnd();
+
+
+	glBegin(GL_POLYGON);//lower right
+	glColor3f(0.3, 0.3, 0.3);
+	glVertex2f(0.0, -0.110);
+	glVertex2f(0.0, -0.25);
+	glColor3f(0.5, 0.5, 0.5);
+	glVertex2f(0.25, -0.275);
+	glVertex2f(0.25, -0.25);
+	glEnd();
+
+	glBegin(GL_POLYGON);//lower left
+	glColor3f(0.3, 0.3, 0.3);
+	glVertex2f(0.0, -0.110);
+	glVertex2f(0.0, -0.25);
+	glColor3f(0.5, 0.5, 0.5);
+	glVertex2f(-0.25, -0.275);
+	glVertex2f(-0.25, -0.25);
+	glEnd();
+
+}
+*/
 void display(void)
 {
 	//code
@@ -772,17 +987,21 @@ void display(void)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	
+	plane1();
+	//glLoadIdentity();
+
 	//VerticalLines();
 	//HorizontalLines();
 
+//	plane();
+	/*
 	B();
 	H();
 	A1();
 	R();
 	A2();
 	T();
-	
+	*/
 
 	SwapBuffers(ghdc);
 }
@@ -792,9 +1011,23 @@ void update(void)
 	//code
 	if (t <= 1.0)
 	{
-	 	t += 0.0005;
+	 	t += 0.0004;
 	}
-	
+
+	tBx = lerp(-1.5, -1.0, t);
+	tHx = lerp(-1.5, -0.6, t);
+	tHy = lerp(1.5, 0.0, t);
+	tA1x = lerp(1.5, -0.2, t);
+	tA1y = lerp(-1.5, 0.0, t);
+	tRx = lerp(1.6, 0.2, t);
+	tRy = lerp(1.6, 0.0, t);
+	tA2x = lerp(1.6, 0.6, t);
+	tA2y = lerp(1.6, 0.0, t);
+	tTx = lerp(1.9, 1.0, t);
+
+	year = (year + 1.0) % 360.0;
+
+/*
 	if (flag == 0)
 	{
 		tBx = lerp(-1.5, -1.0, t);
@@ -835,7 +1068,7 @@ void update(void)
 		flag += 1;
 		//t = 0.0;
 	}
-	
+	*/
 	
 }
 
