@@ -54,9 +54,19 @@ float tA2x = 1.6;
 float tA2y = -1.6;
 float tTx = 1.4;
 float t = 0.0;
+float t2 = 0.0;
+//for plane
 
+float p1 = -1.6;
+float p2x = -1.9;
+float p2y = 1.5;
+float p3x = -1.9;
+float p3y = -1.5;
+float p2Angle;
+float p3Angle;
 int flag = 0;
-float year = 0.0;
+int year;
+
 
 float lerp(float start, float end, float t)
 {
@@ -767,8 +777,10 @@ void HorizontalLines()
 
 void plane1()
 {
+	glLoadIdentity();
+	glTranslatef(p1, 0.0, 0.0);
 	glScalef(0.45, 0.45, 0.45);
-	glRotatef(year, 0.0, 0.0, 1.0);
+	glRotatef(90, 0.0, 0.0, -1.0);
 	//exaust
 	glColor3f(0.5, 0.5, 0.5);
 	glBegin(GL_POLYGON);
@@ -834,13 +846,15 @@ void plane1()
 		glVertex2f(-0.25, -0.25);
 	glEnd();
 
-	
-	
 }
-/*
+
 void plane2()
 {
+	glLoadIdentity();
+	
+	glTranslatef(p2x, p2y, 0.0);
 	glScalef(0.45, 0.45, 0.45);
+	glRotatef(p2Angle, 0.0, 0.0, -1.0);
 	//exaust
 	glColor3f(0.5, 0.5, 0.5);
 	glBegin(GL_POLYGON);
@@ -912,7 +926,10 @@ void plane2()
 
 void plane3()
 {
+	glLoadIdentity();
+	glTranslatef(p3x, p3y, 0.0);
 	glScalef(0.45, 0.45, 0.45);
+	glRotatef(p3Angle, 0.0, 0.0, -1.0);
 	//exaust
 	glColor3f(0.5, 0.5, 0.5);
 	glBegin(GL_POLYGON);
@@ -979,7 +996,7 @@ void plane3()
 	glEnd();
 
 }
-*/
+
 void display(void)
 {
 	//code
@@ -987,21 +1004,24 @@ void display(void)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	plane1();
 	//glLoadIdentity();
 
 	//VerticalLines();
 	//HorizontalLines();
 
 //	plane();
-	/*
+	
 	B();
 	H();
 	A1();
 	R();
 	A2();
 	T();
-	*/
+	
+	plane1();
+	plane2();
+	plane3();
+
 
 	SwapBuffers(ghdc);
 }
@@ -1011,9 +1031,10 @@ void update(void)
 	//code
 	if (t <= 1.0)
 	{
-	 	t += 0.0004;
+	 	t += 0.00009;
 	}
 
+	
 	tBx = lerp(-1.5, -1.0, t);
 	tHx = lerp(-1.5, -0.6, t);
 	tHy = lerp(1.5, 0.0, t);
@@ -1025,7 +1046,42 @@ void update(void)
 	tA2y = lerp(1.6, 0.0, t);
 	tTx = lerp(1.9, 1.0, t);
 
-	year = (year + 1.0) % 360.0;
+	if (t2 <= 1.0)
+	{
+		t2 += 0.00006;
+	}
+
+	//fprintf(gpFILE, "tBx = %f", tBx);
+	if (tBx <= (-1.0));
+	{
+		p1 = lerp(-1.9, -1.2, t2);
+		p2x = lerp(-1.9, -1.2, t2);
+		p2y = lerp(1.4, 0.0, t2);
+		p3x = lerp(-1.9, -1.2, t2);
+		p3y = lerp(-1.4, 0.0, t2);
+	}
+/*
+	p1 = lerp(-1.7, -1.2, t);
+	p2x = lerp(-1.9, -1.2, t);
+	p2y = lerp(1.4, 0.0, t);
+	p3x = lerp(-1.9, -1.2, t);
+	p3y = lerp(-1.4, 0.0, t);
+	*/
+
+	if (p2y > 0.0)
+		p2Angle = 140.0;
+	else
+		p2Angle = 90.0;
+
+	if (p3y > 0.0)
+	{
+		p3Angle = 90.0;
+	}
+	else
+		p3Angle = 40.0;
+
+
+	//year = (year + 0) % 360;
 
 /*
 	if (flag == 0)
