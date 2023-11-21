@@ -1,2 +1,4 @@
 #define MYICON 101
-#define MYSONG 102
+#define MY_STONE_BITMAP 102
+#define MY_KUNDALI_BITMAP 103
+#define MY_SMILEY_BITMAP 104
