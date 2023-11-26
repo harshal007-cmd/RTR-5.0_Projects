@@ -64,7 +64,7 @@ float p3x = -1.9;
 float p3y = -1.5;
 float p2Angle;
 float p3Angle;
-int flag = 0;
+//int flag = 0;
 int year;
 
 
@@ -1028,6 +1028,8 @@ void display(void)
 
 void update(void)
 {
+
+	static int flag = 0;
 	//code
 	if (t <= 1.0)
 	{
@@ -1045,13 +1047,16 @@ void update(void)
 	tA2x = lerp(1.6, 0.6, t);
 	tA2y = lerp(1.6, 0.0, t);
 	tTx = lerp(1.9, 1.0, t);
-
+	
 	if (t2 <= 1.0)
 	{
 		t2 += 0.00006;
 	}
 
+	//if()
+
 	//fprintf(gpFILE, "tBx = %f", tBx);
+	
 	if (tBx <= (-1.0));
 	{
 		p1 = lerp(-1.9, -1.2, t2);
@@ -1060,7 +1065,8 @@ void update(void)
 		p3x = lerp(-1.9, -1.2, t2);
 		p3y = lerp(-1.4, 0.0, t2);
 	}
-/*
+    
+	/*
 	p1 = lerp(-1.7, -1.2, t);
 	p2x = lerp(-1.9, -1.2, t);
 	p2y = lerp(1.4, 0.0, t);
@@ -1083,7 +1089,7 @@ void update(void)
 
 	//year = (year + 0) % 360;
 
-/*
+	/*
 	if (flag == 0)
 	{
 		tBx = lerp(-1.5, -1.0, t);
@@ -1122,10 +1128,10 @@ void update(void)
 	{
 		tTx = lerp(1.9, 1.0, t);
 		flag += 1;
-		//t = 0.0;
+		t = 0.0;
 	}
-	*/
-	
+*/
+
 }
 
 void uninitialize(void)
