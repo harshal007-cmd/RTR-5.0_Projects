@@ -52,9 +52,10 @@ float tRx = 1.6;
 float tRy = 1.6;
 float tA2x = 1.6;
 float tA2y = -1.6;
-float tTx = 1.4;
+float tTx = 2.2;
 float t = 0.0;
 float t2 = 0.0;
+float t3 = 0.0;
 //for plane
 
 float p1 = -1.6;
@@ -1031,32 +1032,31 @@ void update(void)
 
 	static int flag = 0;
 	//code
+	//t = 0.0;
+	
+	/*
 	if (t <= 1.0)
 	{
-	 	t += 0.00009;
+		t += 0.0006;
 	}
-
 	
 	tBx = lerp(-1.5, -1.0, t);
 	tHx = lerp(-1.5, -0.6, t);
 	tHy = lerp(1.5, 0.0, t);
-	tA1x = lerp(1.5, -0.2, t);
+	tA1x = lerp(-2.0, -0.2, t);
 	tA1y = lerp(-1.5, 0.0, t);
 	tRx = lerp(1.6, 0.2, t);
 	tRy = lerp(1.6, 0.0, t);
-	tA2x = lerp(1.6, 0.6, t);
-	tA2y = lerp(1.6, 0.0, t);
-	tTx = lerp(1.9, 1.0, t);
-	
+	tA2x = lerp(2.0, 0.6, t);
+	tA2y = lerp(-1.6, 0.0, t);
+	tTx = lerp(2.3, 1.0, t);
+	/*
 	if (t2 <= 1.0)
 	{
-		t2 += 0.00006;
+		t2 += 0.0006;
 	}
 
-	//if()
 
-	//fprintf(gpFILE, "tBx = %f", tBx);
-	
 	if (tBx <= (-1.0));
 	{
 		p1 = lerp(-1.9, -1.2, t2);
@@ -1065,14 +1065,17 @@ void update(void)
 		p3x = lerp(-1.9, -1.2, t2);
 		p3y = lerp(-1.4, 0.0, t2);
 	}
-    
-	/*
+
+	    
+    /*
 	p1 = lerp(-1.7, -1.2, t);
 	p2x = lerp(-1.9, -1.2, t);
 	p2y = lerp(1.4, 0.0, t);
 	p3x = lerp(-1.9, -1.2, t);
 	p3y = lerp(-1.4, 0.0, t);
 	*/
+
+	//Plane 1st movement
 
 	if (p2y > 0.0)
 		p2Angle = 140.0;
@@ -1086,52 +1089,81 @@ void update(void)
 	else
 		p3Angle = 40.0;
 
+	
+	//Plane 2nd Movement
+	
+	
+	
+	//Plane 3rd movement
 
-	//year = (year + 0) % 360;
+	fprintf(gpFILE, "flag = %d\n", flag);
 
-	/*
 	if (flag == 0)
 	{
 		tBx = lerp(-1.5, -1.0, t);
-		t = 0.0;
-     
+		t += 0.0005;
+		if (t >= 1.0)
+		{
+			flag += 1;
+			t = 0.0;
+		}
+		
 	}
 	else if (flag == 1)
 	{
 		tHx = lerp(-1.5, -0.6, t);
 		tHy = lerp(1.5, 0.0, t);
-		flag += 1;
-		t = 0.0;
+		t += 0.0005;
+		if (t >= 1.0)
+		{
+			flag += 1;
+			t = 0.0;
+		}
 	}
 	else if (flag == 2)
 	{
-		tA1x = lerp(1.5, -0.2, t);
-		tA1y = lerp(-1.5, 0.0, t);
-		flag += 1;
-		t = 0.0;
+		tA1x = lerp(-2.0, -0.2, t);
+	    tA1y = lerp(-1.5, 0.0, t);
+		t += 0.0005;
+		if (t >= 1.0)
+		{
+			flag += 1;
+			t = 0.0;
+		}
 	}
 	else if (flag == 3)
 	{
 		tRx = lerp(1.6, 0.2, t);
 		tRy = lerp(1.6, 0.0, t);
-		flag += 1;
-		t = 0.0;
+		t += 0.0005;
+		if (t >= 1.0)
+		{
+			flag += 1;
+			t = 0.0;
+		}
 	}
 	else if (flag == 4)
 	{
-		tA2x = lerp(1.6, 0.6, t);
-		tA2y = lerp(1.6, 0.0, t);
-		flag += 1;
-		t = 0.0;
+		tA2x = lerp(2.0, 0.6, t);
+	    tA2y = lerp(-1.6, 0.0, t);
+		t += 0.0005;
+		if (t >= 1.0)
+		{
+			flag += 1;
+			t = 0.0;
+		}
 	}
 	else if (flag == 5)
 	{
-		tTx = lerp(1.9, 1.0, t);
-		flag += 1;
-		t = 0.0;
+		tTx = lerp(2.2, 1.0, t);
+		t += 0.0005;
+		if (t >= 1.0)
+		{
+			flag += 1;
+			t = 0.0;
+		}
 	}
-*/
-
+	
 }
 
 void uninitialize(void)
