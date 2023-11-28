@@ -58,7 +58,7 @@ float t2 = 0.0;
 float t3 = 0.0;
 //for plane
 
-float p1 = -1.6;
+float p1 = -2.2;
 float p2x = -1.9;
 float p2y = 1.5;
 float p3x = -1.9;
@@ -1032,12 +1032,10 @@ void update(void)
 
 	static int flag = 0;
 	//code
-	//t = 0.0;
-	
-	/*
+//	/*
 	if (t <= 1.0)
 	{
-		t += 0.0006;
+		t += 0.0004;
 	}
 	
 	tBx = lerp(-1.5, -1.0, t);
@@ -1050,24 +1048,34 @@ void update(void)
 	tA2x = lerp(2.0, 0.6, t);
 	tA2y = lerp(-1.6, 0.0, t);
 	tTx = lerp(2.3, 1.0, t);
-	/*
+	
+
+	
 	if (t2 <= 1.0)
 	{
 		t2 += 0.0006;
 	}
 
 
-	if (tBx <= (-1.0));
+	if (tBx < (-1.0));
 	{
 		p1 = lerp(-1.9, -1.2, t2);
 		p2x = lerp(-1.9, -1.2, t2);
 		p2y = lerp(1.4, 0.0, t2);
 		p3x = lerp(-1.9, -1.2, t2);
 		p3y = lerp(-1.4, 0.0, t2);
-	}
+		if (p2y > 0.0)
+		{
+			fprintf(gpFILE, "p2y = %f----->p2Angle = %f\n",p2y, p2Angle);
 
-	    
-    /*
+		}
+		else
+			fprintf(gpFILE, "Else p2y = %f-------> p2Angle = %f\n",p2y, p2Angle);
+
+	}
+	
+// */	
+	/*
 	p1 = lerp(-1.7, -1.2, t);
 	p2x = lerp(-1.9, -1.2, t);
 	p2y = lerp(1.4, 0.0, t);
@@ -1076,25 +1084,45 @@ void update(void)
 	*/
 
 	//Plane 1st movement
-
+//	/*
 	if (p2y > 0.0)
+	{
 		p2Angle = 140.0;
+	}
 	else
 		p2Angle = 90.0;
-
+	
 	if (p3y > 0.0)
 	{
 		p3Angle = 90.0;
 	}
 	else
 		p3Angle = 40.0;
+ //   */
 
-	
-	//Plane 2nd Movement
-	
-	
-	
-	//Plane 3rd movement
+    /*
+
+	if (p2y > 0.0)
+	{
+		p2Angle = 140.0;
+		fprintf(gpFILE, "p2y = %f----->p2Angle = %f\n", p2y, p2Angle);
+
+	}
+	else if (p2y < 0.0)
+	{
+		p2Angle = 90.0;
+
+	}
+
+	if (p3y >= 0.0)
+	{
+		p3Angle = 90.0;
+	}
+	else if (p3y < 0.0)
+	{
+		p3Angle = 40.0;
+
+	}
 
 	fprintf(gpFILE, "flag = %d\n", flag);
 
@@ -1163,7 +1191,40 @@ void update(void)
 			t = 0.0;
 		}
 	}
-	
+	else if (flag == 6)
+	{
+		p1 = lerp(-2.1, -1.2, t);
+		p2x = lerp(-1.9, -1.2, t);
+		p2y = lerp(1.4, 0.0, t);
+		p3x = lerp(-1.9, -1.2, t);
+		p3y = lerp(-1.4, 0.0, t);
+		
+		//fprintf(gpFILE, "p2y = %f\n", p2y);
+		t += 0.0005f;
+		if (t >= 1.0)
+		{
+			flag += 1;
+			t = 0.0;
+		}
+		
+	}
+	else if (flag == 7)
+	{
+		p1 = lerp(-1.2, 1.4, t);
+		p2x = lerp(-1.2, 1.4, t);
+	//	p2y = lerp(1.4, 0.0, t);
+		p3x = lerp(-1.2, 1.4, t);
+		//p3y = lerp(-1.4, 0.0, t);
+		//fprintf(gpFILE, "p3y = %f\n", p3y);
+
+		t += 0.0005f;
+		if (t >= 1.0)
+		{
+			flag += 1;
+			t = 0.0;
+		}
+	}
+//	*/
 }
 
 void uninitialize(void)
