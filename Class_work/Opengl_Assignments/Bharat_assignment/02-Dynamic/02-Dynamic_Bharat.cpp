@@ -38,9 +38,9 @@ WINDOWPLACEMENT wpPrev = { sizeof(WINDOWPLACEMENT) };
 BOOL gbFullScreen = FALSE;
 
 //color veriables
-float r = 0.82;
-float g = 0.82;
-float b = 0.82;
+float r = 0.6;
+float g = 0.6;
+float b = 0.6;
 
 //lerp values
 float tBx = -1.0;
@@ -998,6 +998,165 @@ void plane3()
 
 }
 
+void flagB()
+{
+	glEnable(GL_LINE_SMOOTH);
+	glLineWidth(5.6);
+	glColor3f(1.0, 0.5, 0.0);
+	glBegin(GL_LINES);
+	glVertex2f(-1.175, 0.020);
+	glVertex2f(-0.825, 0.020);
+	glEnd();
+
+	glColor3f(1.0, 1.0, 1.0);
+	glBegin(GL_LINES);
+	glVertex2f(-1.175, 0.0);
+	glVertex2f(-0.825, 0.0);
+	glEnd();
+
+
+	glColor3f(0.0, 1.0, 0.0);
+	glBegin(GL_LINES);
+	glVertex2f(-1.175, -0.020);
+	glVertex2f(-0.825, -0.020);
+	glEnd();
+
+
+
+	glDisable(GL_LINE_SMOOTH);
+}
+
+void flagH()
+{
+	glEnable(GL_LINE_SMOOTH);
+	glLineWidth(5.6);
+	
+	glColor3f(1.0, 0.5, 0.0);
+	glBegin(GL_LINES);
+	glVertex2f(-0.775, 0.020);
+	glVertex2f(-0.425, 0.020);
+	glEnd();
+
+	glColor3f(1.0, 1.0, 1.0);
+	glBegin(GL_LINES);
+	glVertex2f(-0.775, 0.0);
+	glVertex2f(-0.425, 0.0);
+	glEnd();
+
+	glColor3f(0.0, 1.0, 0.0);
+	glBegin(GL_LINES);
+	glVertex2f(-0.775, -0.020);
+	glVertex2f(-0.425, -0.020);
+	glEnd();
+	
+	glDisable(GL_LINE_SMOOTH);
+}
+
+void flagA1()
+{
+	glEnable(GL_LINE_SMOOTH);
+	glLineWidth(5.6);
+
+	glColor3f(1.0, 0.5, 0.0);
+	glBegin(GL_LINES);
+	glVertex2f(-0.282, 0.020);
+	glVertex2f(-0.114, 0.020);
+	glEnd();
+
+	glColor3f(1.0, 1.0, 1.0);
+	glBegin(GL_LINES);
+	glVertex2f(-0.29, 0.0);
+	glVertex2f(-0.110, 0.0);
+	glEnd();
+
+	glColor3f(0.0, 1.0, 0.0);
+	glBegin(GL_LINES);
+	glVertex2f(-0.3, -0.020);
+	glVertex2f(-0.1, -0.020);
+	glEnd();
+
+	glDisable(GL_LINE_SMOOTH);
+}
+
+void flagR()
+{
+	glEnable(GL_LINE_SMOOTH);
+	glLineWidth(5.6);
+
+	glColor3f(1.0, 0.5, 0.0);
+	glBegin(GL_LINES);
+	glVertex2f(0.025, 0.020);
+	glVertex2f(0.371, 0.020);
+	glEnd();
+
+	glColor3f(1.0, 1.0, 1.0);
+	glBegin(GL_LINES);
+	glVertex2f(0.025, 0.0);
+	glVertex2f(0.338, 0.0);
+	glEnd();
+
+	glColor3f(0.0, 1.0, 0.0);
+	glBegin(GL_LINES);
+	glVertex2f(0.025, -0.020);
+	glVertex2f(0.321, -0.020);
+	glEnd();
+
+	glDisable(GL_LINE_SMOOTH);
+}
+
+void flagA2()
+{
+	glEnable(GL_LINE_SMOOTH);
+	glLineWidth(5.6);
+
+	glColor3f(1.0, 0.5, 0.0);
+	glBegin(GL_LINES);
+	glVertex2f(0.523, 0.020);
+	glVertex2f(0.677, 0.020);
+	glEnd();
+
+	glColor3f(1.0, 1.0, 1.0);
+	glBegin(GL_LINES);
+	glVertex2f(0.51, 0.0);
+	glVertex2f(0.6875, 0.0);
+	glEnd();
+
+	glColor3f(0.0, 1.0, 0.0);
+	glBegin(GL_LINES);
+	glVertex2f(0.5, -0.020);
+	glVertex2f(0.70, -0.020);
+	glEnd();
+
+	glDisable(GL_LINE_SMOOTH);
+}
+
+void flagT()
+{
+	glEnable(GL_LINE_SMOOTH);
+	glLineWidth(5.6);
+
+	glColor3f(1.0, 0.5, 0.0);
+	glBegin(GL_LINES);
+	glVertex2f(0.975, 0.020);
+	glVertex2f(1.025, 0.020);
+	glEnd();
+
+	glColor3f(1.0, 1.0, 1.0);
+	glBegin(GL_LINES);
+	glVertex2f(0.975, 0.0);
+	glVertex2f(1.025, 0.0);
+	glEnd();
+
+	glColor3f(0.0, 1.0, 0.0);
+	glBegin(GL_LINES);
+	glVertex2f(0.975, -0.020);
+	glVertex2f(1.025, -0.020);
+	glEnd();
+
+	glDisable(GL_LINE_SMOOTH);
+}
+
+
 void display(void)
 {
 	//code
@@ -1007,9 +1166,7 @@ void display(void)
 
 	//glLoadIdentity();
 
-	//VerticalLines();
-	//HorizontalLines();
-
+	
 //	plane();
 	
 	B();
@@ -1019,10 +1176,35 @@ void display(void)
 	A2();
 	T();
 	
+    //glLoadIdentity();
+	//VerticalLines();
+	//HorizontalLines();
+	
+	
+	/*
+	flagB();
+	flagH();
+	flagA1();
+	flagR();
+	flagA2();
+	flagT();
+	*/
+
+	///*
 	plane1();
 	plane2();
 	plane3();
+	
+	
 
+	if (p1 == (-1.0))
+	{
+		flagB();
+	}
+	else if (p1 == (-0.6))
+	{
+		flagB();
+	}
 
 	SwapBuffers(ghdc);
 }
@@ -1032,7 +1214,7 @@ void update(void)
 
 	static int flag = 0;
 	//code
-//	/*
+	/*
 	if (t <= 1.0)
 	{
 		t += 0.0004;
@@ -1053,7 +1235,7 @@ void update(void)
 	
 	if (t2 <= 1.0)
 	{
-		t2 += 0.0006;
+		t2 += 0.0004;
 	}
 
 
@@ -1084,7 +1266,7 @@ void update(void)
 	*/
 
 	//Plane 1st movement
-//	/*
+	/*
 	if (p2y > 0.0)
 	{
 		p2Angle = 140.0;
@@ -1100,7 +1282,7 @@ void update(void)
 		p3Angle = 40.0;
  //   */
 
-    /*
+   /*
 
 	if (p2y > 0.0)
 	{
@@ -1123,9 +1305,9 @@ void update(void)
 		p3Angle = 40.0;
 
 	}
-
+	
 	fprintf(gpFILE, "flag = %d\n", flag);
-
+	*/
 	if (flag == 0)
 	{
 		tBx = lerp(-1.5, -1.0, t);
@@ -1199,6 +1381,8 @@ void update(void)
 		p3x = lerp(-1.9, -1.2, t);
 		p3y = lerp(-1.4, 0.0, t);
 		
+		p2Angle = lerp(140, 90, t);
+		p3Angle = lerp(40, 90, t);
 		//fprintf(gpFILE, "p2y = %f\n", p2y);
 		t += 0.0005f;
 		if (t >= 1.0)
@@ -1210,10 +1394,10 @@ void update(void)
 	}
 	else if (flag == 7)
 	{
-		p1 = lerp(-1.2, 1.4, t);
-		p2x = lerp(-1.2, 1.4, t);
+		p1 = lerp(-1.2, 1.1, t);
+		p2x = lerp(-1.2, 1.1, t);
 	//	p2y = lerp(1.4, 0.0, t);
-		p3x = lerp(-1.2, 1.4, t);
+		p3x = lerp(-1.2, 1.1, t);
 		//p3y = lerp(-1.4, 0.0, t);
 		//fprintf(gpFILE, "p3y = %f\n", p3y);
 
@@ -1224,6 +1408,26 @@ void update(void)
 			t = 0.0;
 		}
 	}
+	else if (flag == 8)
+	{
+		p1 = lerp(1.1, 2.3, t);
+		p2x = lerp(1.1, 1.6, t);
+		p2y = lerp(0.0, 1.6, t);
+		p3x = lerp(1.1, 1.6, t);
+		p3y = lerp(0.0, -1.6, t);
+		//fprintf(gpFILE, "p3y = %f\n", p3y);
+
+		p2Angle = lerp(90, 40, t);
+		p3Angle = lerp(90, 140, t);
+
+		t += 0.0004f;
+		if (t >= 1.0)
+		{
+			flag += 1;
+			t = 0.0;
+		}
+	}
+
 //	*/
 }
 
