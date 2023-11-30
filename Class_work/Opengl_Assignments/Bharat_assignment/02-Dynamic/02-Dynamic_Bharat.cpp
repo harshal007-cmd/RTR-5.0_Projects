@@ -6,6 +6,7 @@
 #include"Window.h" //or OGL.h (if rename)
 #include<stdio.h>///for file IO
 #include<stdlib.h>//for exit() 
+#include<mmsystem.h>//for sound
 
 //OpenGL Header files
 #include<GL/GL.h>
@@ -22,6 +23,8 @@ HGLRC ghrc = NULL; //handle to GL Rendering Contex
 //Link with OpenGL Lib
 #pragma comment(lib,"openGL32.lib")
 #pragma comment(lib,"glu32.lib")
+#pragma comment(lib, "winmm.lib")
+
 
 //global function declaration
 LRESULT CALLBACK WndProg(HWND, UINT, WPARAM, LPARAM);
@@ -65,8 +68,17 @@ float p3x = -1.9;
 float p3y = -1.5;
 float p2Angle;
 float p3Angle;
+float flgYpts = 0.018;
+float speed1 = 0.0001;
+float speed2 = 0.0005;
 //int flag = 0;
-int year;
+int cnt = 0;
+
+
+LARGE_INTEGER frequency;
+LARGE_INTEGER frameStart;
+LARGE_INTEGER previousTime;
+GLfloat deltaTime = 0.0;
 
 
 float lerp(float start, float end, float t)
@@ -173,7 +185,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLi
 			if (gbActive == TRUE)
 			{
 				//Render
+				LARGE_INTEGER currentTime;
+				QueryPerformanceCounter(&currentTime);
+				//Render
 				display();
+				deltaTime = (double)(currentTime.QuadPart - previousTime.QuadPart);
+				previousTime = currentTime;
 
 				//Update
 				update();
@@ -330,7 +347,11 @@ int initialize(void)
 
 	//Set the Clear color of Window to Blue
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f); //here OpenGL starts
-	
+	QueryPerformanceFrequency(&frequency);
+	QueryPerformanceCounter(&previousTime);
+
+	PlaySoundA("Anamika_.wav", NULL, SND_FILENAME | SND_ASYNC);
+
 	//init quadric
 	//quadric = gluNewQuadric();
 
@@ -1000,12 +1021,14 @@ void plane3()
 
 void flagB()
 {
+	glLoadIdentity();
+	glTranslatef(-0.002, 0.0f, 0.0f);
 	glEnable(GL_LINE_SMOOTH);
-	glLineWidth(5.6);
+	glLineWidth(5.8);
 	glColor3f(1.0, 0.5, 0.0);
 	glBegin(GL_LINES);
-	glVertex2f(-1.175, 0.020);
-	glVertex2f(-0.825, 0.020);
+	glVertex2f(-1.175, flgYpts);
+	glVertex2f(-0.825, flgYpts);
 	glEnd();
 
 	glColor3f(1.0, 1.0, 1.0);
@@ -1017,8 +1040,8 @@ void flagB()
 
 	glColor3f(0.0, 1.0, 0.0);
 	glBegin(GL_LINES);
-	glVertex2f(-1.175, -0.020);
-	glVertex2f(-0.825, -0.020);
+	glVertex2f(-1.175, -flgYpts);
+	glVertex2f(-0.825, -flgYpts);
 	glEnd();
 
 
@@ -1028,13 +1051,15 @@ void flagB()
 
 void flagH()
 {
+	glLoadIdentity();
+	glTranslatef(-0.002, 0.0f, 0.0f);
 	glEnable(GL_LINE_SMOOTH);
 	glLineWidth(5.6);
 	
 	glColor3f(1.0, 0.5, 0.0);
 	glBegin(GL_LINES);
-	glVertex2f(-0.775, 0.020);
-	glVertex2f(-0.425, 0.020);
+	glVertex2f(-0.775, flgYpts);
+	glVertex2f(-0.425, flgYpts);
 	glEnd();
 
 	glColor3f(1.0, 1.0, 1.0);
@@ -1045,8 +1070,8 @@ void flagH()
 
 	glColor3f(0.0, 1.0, 0.0);
 	glBegin(GL_LINES);
-	glVertex2f(-0.775, -0.020);
-	glVertex2f(-0.425, -0.020);
+	glVertex2f(-0.775, -flgYpts);
+	glVertex2f(-0.425, -flgYpts);
 	glEnd();
 	
 	glDisable(GL_LINE_SMOOTH);
@@ -1054,13 +1079,15 @@ void flagH()
 
 void flagA1()
 {
+	glLoadIdentity();
+	glTranslatef(-0.002, 0.0f, 0.0f);
 	glEnable(GL_LINE_SMOOTH);
 	glLineWidth(5.6);
 
 	glColor3f(1.0, 0.5, 0.0);
 	glBegin(GL_LINES);
-	glVertex2f(-0.282, 0.020);
-	glVertex2f(-0.114, 0.020);
+	glVertex2f(-0.282, flgYpts);
+	glVertex2f(-0.114, flgYpts);
 	glEnd();
 
 	glColor3f(1.0, 1.0, 1.0);
@@ -1071,8 +1098,8 @@ void flagA1()
 
 	glColor3f(0.0, 1.0, 0.0);
 	glBegin(GL_LINES);
-	glVertex2f(-0.3, -0.020);
-	glVertex2f(-0.1, -0.020);
+	glVertex2f(-0.3, -flgYpts);
+	glVertex2f(-0.1, -flgYpts);
 	glEnd();
 
 	glDisable(GL_LINE_SMOOTH);
@@ -1080,13 +1107,15 @@ void flagA1()
 
 void flagR()
 {
+	glLoadIdentity();
+	glTranslatef(-0.002, 0.0f, 0.0f);
 	glEnable(GL_LINE_SMOOTH);
 	glLineWidth(5.6);
 
 	glColor3f(1.0, 0.5, 0.0);
 	glBegin(GL_LINES);
-	glVertex2f(0.025, 0.020);
-	glVertex2f(0.371, 0.020);
+	glVertex2f(0.025, flgYpts);
+	glVertex2f(0.371, flgYpts);
 	glEnd();
 
 	glColor3f(1.0, 1.0, 1.0);
@@ -1097,8 +1126,8 @@ void flagR()
 
 	glColor3f(0.0, 1.0, 0.0);
 	glBegin(GL_LINES);
-	glVertex2f(0.025, -0.020);
-	glVertex2f(0.321, -0.020);
+	glVertex2f(0.025, -flgYpts);
+	glVertex2f(0.321, -flgYpts);
 	glEnd();
 
 	glDisable(GL_LINE_SMOOTH);
@@ -1106,13 +1135,15 @@ void flagR()
 
 void flagA2()
 {
+	glLoadIdentity();
+	glTranslatef(-0.002, 0.0f, 0.0f);
 	glEnable(GL_LINE_SMOOTH);
 	glLineWidth(5.6);
 
 	glColor3f(1.0, 0.5, 0.0);
 	glBegin(GL_LINES);
-	glVertex2f(0.523, 0.020);
-	glVertex2f(0.677, 0.020);
+	glVertex2f(0.523, flgYpts);
+	glVertex2f(0.677, flgYpts);
 	glEnd();
 
 	glColor3f(1.0, 1.0, 1.0);
@@ -1123,8 +1154,8 @@ void flagA2()
 
 	glColor3f(0.0, 1.0, 0.0);
 	glBegin(GL_LINES);
-	glVertex2f(0.5, -0.020);
-	glVertex2f(0.70, -0.020);
+	glVertex2f(0.5, -flgYpts);
+	glVertex2f(0.70, -flgYpts);
 	glEnd();
 
 	glDisable(GL_LINE_SMOOTH);
@@ -1132,13 +1163,15 @@ void flagA2()
 
 void flagT()
 {
+	glLoadIdentity();
+	glTranslatef(-0.002, 0.0f, 0.0f);
 	glEnable(GL_LINE_SMOOTH);
 	glLineWidth(5.6);
 
 	glColor3f(1.0, 0.5, 0.0);
 	glBegin(GL_LINES);
-	glVertex2f(0.975, 0.020);
-	glVertex2f(1.025, 0.020);
+	glVertex2f(0.975, flgYpts);
+	glVertex2f(1.025, flgYpts);
 	glEnd();
 
 	glColor3f(1.0, 1.0, 1.0);
@@ -1149,8 +1182,8 @@ void flagT()
 
 	glColor3f(0.0, 1.0, 0.0);
 	glBegin(GL_LINES);
-	glVertex2f(0.975, -0.020);
-	glVertex2f(1.025, -0.020);
+	glVertex2f(0.975, -flgYpts);
+	glVertex2f(1.025, -flgYpts);
 	glEnd();
 
 	glDisable(GL_LINE_SMOOTH);
@@ -1164,10 +1197,6 @@ void display(void)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	//glLoadIdentity();
-
-	
-//	plane();
 	
 	B();
 	H();
@@ -1175,36 +1204,36 @@ void display(void)
 	R();
 	A2();
 	T();
-	
-    //glLoadIdentity();
-	//VerticalLines();
-	//HorizontalLines();
-	
-	
-	/*
-	flagB();
-	flagH();
-	flagA1();
-	flagR();
-	flagA2();
-	flagT();
-	*/
 
-	///*
+	if (p1 >= (-1.1))
+	{
+		flagB();
+	}
+	if (p1 >= (-0.6))
+	{
+		flagH();
+	}
+	if (p1 >= (-0.2))
+	{
+		flagA1();
+	}
+	if (p1 >= (0.2))
+	{
+		flagR();
+	}
+	if (p1 >= (0.6))
+	{
+		flagA2();
+	}
+	if (p1 >= (1.0))
+	{
+		flagT();
+	}
+
+
 	plane1();
 	plane2();
 	plane3();
-	
-	
-
-	if (p1 == (-1.0))
-	{
-		flagB();
-	}
-	else if (p1 == (-0.6))
-	{
-		flagB();
-	}
 
 	SwapBuffers(ghdc);
 }
@@ -1214,104 +1243,11 @@ void update(void)
 
 	static int flag = 0;
 	//code
-	/*
-	if (t <= 1.0)
-	{
-		t += 0.0004;
-	}
 	
-	tBx = lerp(-1.5, -1.0, t);
-	tHx = lerp(-1.5, -0.6, t);
-	tHy = lerp(1.5, 0.0, t);
-	tA1x = lerp(-2.0, -0.2, t);
-	tA1y = lerp(-1.5, 0.0, t);
-	tRx = lerp(1.6, 0.2, t);
-	tRy = lerp(1.6, 0.0, t);
-	tA2x = lerp(2.0, 0.6, t);
-	tA2y = lerp(-1.6, 0.0, t);
-	tTx = lerp(2.3, 1.0, t);
-	
-
-	
-	if (t2 <= 1.0)
-	{
-		t2 += 0.0004;
-	}
-
-
-	if (tBx < (-1.0));
-	{
-		p1 = lerp(-1.9, -1.2, t2);
-		p2x = lerp(-1.9, -1.2, t2);
-		p2y = lerp(1.4, 0.0, t2);
-		p3x = lerp(-1.9, -1.2, t2);
-		p3y = lerp(-1.4, 0.0, t2);
-		if (p2y > 0.0)
-		{
-			fprintf(gpFILE, "p2y = %f----->p2Angle = %f\n",p2y, p2Angle);
-
-		}
-		else
-			fprintf(gpFILE, "Else p2y = %f-------> p2Angle = %f\n",p2y, p2Angle);
-
-	}
-	
-// */	
-	/*
-	p1 = lerp(-1.7, -1.2, t);
-	p2x = lerp(-1.9, -1.2, t);
-	p2y = lerp(1.4, 0.0, t);
-	p3x = lerp(-1.9, -1.2, t);
-	p3y = lerp(-1.4, 0.0, t);
-	*/
-
-	//Plane 1st movement
-	/*
-	if (p2y > 0.0)
-	{
-		p2Angle = 140.0;
-	}
-	else
-		p2Angle = 90.0;
-	
-	if (p3y > 0.0)
-	{
-		p3Angle = 90.0;
-	}
-	else
-		p3Angle = 40.0;
- //   */
-
-   /*
-
-	if (p2y > 0.0)
-	{
-		p2Angle = 140.0;
-		fprintf(gpFILE, "p2y = %f----->p2Angle = %f\n", p2y, p2Angle);
-
-	}
-	else if (p2y < 0.0)
-	{
-		p2Angle = 90.0;
-
-	}
-
-	if (p3y >= 0.0)
-	{
-		p3Angle = 90.0;
-	}
-	else if (p3y < 0.0)
-	{
-		p3Angle = 40.0;
-
-	}
-	
-	fprintf(gpFILE, "flag = %d\n", flag);
-	*/
 	if (flag == 0)
 	{
 		tBx = lerp(-1.5, -1.0, t);
-		t += 0.0005;
+		t += speed1;
 		if (t >= 1.0)
 		{
 			flag += 1;
@@ -1323,7 +1259,7 @@ void update(void)
 	{
 		tHx = lerp(-1.5, -0.6, t);
 		tHy = lerp(1.5, 0.0, t);
-		t += 0.0005;
+		t += speed1;
 		if (t >= 1.0)
 		{
 			flag += 1;
@@ -1334,7 +1270,7 @@ void update(void)
 	{
 		tA1x = lerp(-2.0, -0.2, t);
 	    tA1y = lerp(-1.5, 0.0, t);
-		t += 0.0005;
+		t += speed1;
 		if (t >= 1.0)
 		{
 			flag += 1;
@@ -1345,7 +1281,7 @@ void update(void)
 	{
 		tRx = lerp(1.6, 0.2, t);
 		tRy = lerp(1.6, 0.0, t);
-		t += 0.0005;
+		t += speed1;
 		if (t >= 1.0)
 		{
 			flag += 1;
@@ -1356,7 +1292,7 @@ void update(void)
 	{
 		tA2x = lerp(2.0, 0.6, t);
 	    tA2y = lerp(-1.6, 0.0, t);
-		t += 0.0005;
+		t += speed1;
 		if (t >= 1.0)
 		{
 			flag += 1;
@@ -1366,7 +1302,7 @@ void update(void)
 	else if (flag == 5)
 	{
 		tTx = lerp(2.2, 1.0, t);
-		t += 0.0005;
+		t += speed1;
 		if (t >= 1.0)
 		{
 			flag += 1;
@@ -1383,8 +1319,7 @@ void update(void)
 		
 		p2Angle = lerp(140, 90, t);
 		p3Angle = lerp(40, 90, t);
-		//fprintf(gpFILE, "p2y = %f\n", p2y);
-		t += 0.0005f;
+		t += speed2;
 		if (t >= 1.0)
 		{
 			flag += 1;
@@ -1396,17 +1331,16 @@ void update(void)
 	{
 		p1 = lerp(-1.2, 1.1, t);
 		p2x = lerp(-1.2, 1.1, t);
-	//	p2y = lerp(1.4, 0.0, t);
 		p3x = lerp(-1.2, 1.1, t);
-		//p3y = lerp(-1.4, 0.0, t);
-		//fprintf(gpFILE, "p3y = %f\n", p3y);
 
-		t += 0.0005f;
+		t += speed2;
 		if (t >= 1.0)
 		{
 			flag += 1;
 			t = 0.0;
 		}
+
+		
 	}
 	else if (flag == 8)
 	{
@@ -1415,17 +1349,17 @@ void update(void)
 		p2y = lerp(0.0, 1.6, t);
 		p3x = lerp(1.1, 1.6, t);
 		p3y = lerp(0.0, -1.6, t);
-		//fprintf(gpFILE, "p3y = %f\n", p3y);
 
 		p2Angle = lerp(90, 40, t);
 		p3Angle = lerp(90, 140, t);
 
-		t += 0.0004f;
+		t += speed2;
 		if (t >= 1.0)
 		{
 			flag += 1;
 			t = 0.0;
 		}
+
 	}
 
 //	*/
