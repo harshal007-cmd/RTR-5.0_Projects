@@ -46,7 +46,7 @@ float g = 0.6;
 float b = 0.6;
 
 //lerp values
-float tBx = -1.0;
+float tBx = -2.5;
 float tHx = 1.6;
 float tHy = 1.6;
 float tA1x = -1.6;
@@ -70,10 +70,10 @@ float p2Angle;
 float p3Angle;
 float flgYpts = 0.018;
 float speed1 = 0.0001;
-float speed2 = 0.0005;
+float speed2 = 0.0003;
 //int flag = 0;
 int cnt = 0;
-
+char a;
 
 LARGE_INTEGER frequency;
 LARGE_INTEGER frameStart;
@@ -142,7 +142,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLi
 	//creating window
 	hwnd = CreateWindowEx(WS_EX_APPWINDOW,
 		szAppName,
-		TEXT("HVS:Point_assignment"),
+		TEXT("HVS:Dynamic_Bharat"),
 		WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | WS_VISIBLE,
 		(xScreen - WIDTH / 2), (yScreen - HEIGHT / 2), WIDTH, HEIGHT,
 		NULL, NULL,
@@ -228,6 +228,10 @@ LRESULT CALLBACK WndProg(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 	case WM_KEYDOWN:
 		switch (LOWORD(wParam))
 		{
+		case VK_SPACE:
+			a = 'a';
+			PlaySoundA("Anamika_.wav", NULL, SND_FILENAME | SND_ASYNC);
+			break;
 		case VK_ESCAPE:
 			DestroyWindow(hwnd);
 			break;
@@ -344,13 +348,12 @@ int initialize(void)
 		fprintf(gpFILE, "wglMakeCurrent() Failed !!\n");
 		return -5;
 	}
-
+	
 	//Set the Clear color of Window to Blue
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f); //here OpenGL starts
 	QueryPerformanceFrequency(&frequency);
 	QueryPerformanceCounter(&previousTime);
-
-	PlaySoundA("Anamika_.wav", NULL, SND_FILENAME | SND_ASYNC);
+	
 
 	//init quadric
 	//quadric = gluNewQuadric();
@@ -812,7 +815,7 @@ void plane1()
 		glVertex2f(0.025, -0.275);
 	glEnd();
 	//exaust fire
-	glColor3f(1.0, 0.5, 0.0);
+	glColor3f(1.0, 1.0, 1.0);
 	glBegin(GL_TRIANGLES);
 		glVertex2f(-0.025, -0.275);
 		glVertex2f(0.025, -0.275);
@@ -886,7 +889,7 @@ void plane2()
 	glVertex2f(0.025, -0.275);
 	glEnd();
 	//exaust fire
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3f(1.0, 0.5, 0.0);
 	glBegin(GL_TRIANGLES);
 	glVertex2f(-0.025, -0.275);
 	glVertex2f(0.025, -0.275);
@@ -961,7 +964,7 @@ void plane3()
 	glVertex2f(0.025, -0.275);
 	glEnd();
 	//exaust fire
-	glColor3f(0.0, 0.0, 1.0);
+	glColor3f(0.0, 1.0, 0.0);
 	glBegin(GL_TRIANGLES);
 	glVertex2f(-0.025, -0.275);
 	glVertex2f(0.025, -0.275);
@@ -1197,43 +1200,51 @@ void display(void)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
+
+	switch (a)
+	{
+	case 'a':
+		B();
+		H();
+		A1();
+		R();
+		A2();
+		T();
+
+		if (p1 >= (-1.1))
+		{
+			flagB();
+		}
+		if (p1 >= (-0.6))
+		{
+			flagH();
+		}
+		if (p1 >= (-0.2))
+		{
+			flagA1();
+		}
+		if (p1 >= (0.2))
+		{
+			flagR();
+		}
+		if (p1 >= (0.6))
+		{
+			flagA2();
+		}
+		if (p1 >= (1.0))
+		{
+			flagT();
+		}
+
+
+		plane1();
+		plane2();
+		plane3();
+
+		break;
+	}
 	
-	B();
-	H();
-	A1();
-	R();
-	A2();
-	T();
-
-	if (p1 >= (-1.1))
-	{
-		flagB();
-	}
-	if (p1 >= (-0.6))
-	{
-		flagH();
-	}
-	if (p1 >= (-0.2))
-	{
-		flagA1();
-	}
-	if (p1 >= (0.2))
-	{
-		flagR();
-	}
-	if (p1 >= (0.6))
-	{
-		flagA2();
-	}
-	if (p1 >= (1.0))
-	{
-		flagT();
-	}
-
-
-	plane1();
-	plane2();
-	plane3();
+	
 
 	SwapBuffers(ghdc);
 }
@@ -1246,7 +1257,7 @@ void update(void)
 	
 	if (flag == 0)
 	{
-		tBx = lerp(-1.5, -1.0, t);
+		tBx = lerp(-2.5, -1.0, t);
 		t += speed1;
 		if (t >= 1.0)
 		{
