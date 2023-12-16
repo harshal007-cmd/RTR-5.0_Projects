@@ -1,3 +1,4 @@
+/*
 #include <iostream>
 
 class StringOperations {
@@ -139,3 +140,84 @@ int main() {
 
     return 0;
 }
+*/
+
+#include <iostream>
+using namespace std;
+class StringOp
+{
+private:
+	char* str;
+
+public:
+	StringOp(const char* input)
+	{
+		int len=0;
+		while(input[len]!='\0')
+			len++;
+
+		str=new char[len+1];
+
+		for(int i=0;i<len;++i)
+		{
+			str[i]=input[i];
+		}
+		str[len]='\0';
+	}
+    
+    const char* getOriginal()
+    {
+    	return str;
+    }   
+
+	void strRev()
+	{
+		int len=0,i,j;
+		char* str2;
+		while(str[len]!='\0')
+			len++;
+		str2=new char[len+1];
+
+
+		for(i=0,j=len-1;i<len;i++,j--)
+			str2[i]=str[j];
+        
+        str2[i]='\0';
+		cout<<"Reversed str is :"<<str2<<endl;
+				
+	}
+};
+
+int main()
+{
+	char* input="This is string";
+	StringOp strop(input);
+
+	cout<<"Original string is "<<strop.getOriginal()<<endl;
+	strop.strRev();
+
+	return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
