@@ -1,3 +1,7 @@
 #include "Window.h"
 
 MYICON ICON MyIcon.ico
+MY_STONE_BITMAP BITMAP Stone.bmp
+MY_KUNDALI_BITMAP BITMAP Kundali.bmp 
+MY_SMILEY_BITMAP BITMAP Smiley.bmp
+MY_WORLD_BITMAP BITMAP WM.bmp
