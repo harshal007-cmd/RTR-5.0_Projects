@@ -47,7 +47,7 @@ GLfloat lightPosition[] = { 100.0,100.0,100.0,1.0 };
 
 GLfloat matreialAmbient[] = { 0.1,0.1,0.1,0.0 };
 GLfloat matrerialDiffuse[] = { 1.0,1.0,1.0,1.0 };
-GLfloat materialSpecular[] = { 0.5,0.5,0.5,1.0 };
+GLfloat materialSpecular[] = { 0.4,0.4,0.4,0.0 };
 GLfloat materialShiness[] = { 200.0 };
 
 static GLint fogMode;
@@ -444,14 +444,14 @@ void display(void)
 	
 	//3.Following lines should be used when modeling and viewing x-formation is to be done
 	gluLookAt(0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
-	glTranslatef(0.0f, 0.0f, -3.0f);
+	glTranslatef(0.0f, 0.0f, -6.0f);
 	glRotatef(90.0, -1.0f, 0.0f, 0.0f);
 	glRotatef(pAngle, 0.0f, 0.0f, 1.0f);
 
 	glBindTexture(GL_TEXTURE_2D, texture_world);
 	
 	gluQuadricTexture(quadric, GL_TRUE);
-	gluSphere(quadric, 1.4, 100, 100);
+	gluSphere(quadric, 2.2, 500, 500);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 
@@ -463,7 +463,7 @@ void display(void)
 void update(void)
 {
 	//code
-	pAngle += 0.03f;
+	pAngle += 0.3f;
 	if (pAngle >= 360.0f)
 	{
 		pAngle = pAngle - 360.0f;
