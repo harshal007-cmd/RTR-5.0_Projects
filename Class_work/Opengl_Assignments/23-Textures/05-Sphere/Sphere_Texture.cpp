@@ -41,13 +41,14 @@ GLfloat pAngle = 0.0;
 
 BOOL bLight = FALSE;
 GLfloat lightAmbient[] = { 0.1,0.1,0.1,1.0 };
-GLfloat lightDiffuese[] = { 1.0,1.0,1.0,1.0 };
+GLfloat lightDiffuese[] = { 0.9,0.9,0.9,1.0 };
 GLfloat lightSpecular[] = { 1.0,1.0,1.0,1.0 };
 GLfloat lightPosition[] = { 100.0,100.0,100.0,1.0 };
 
 GLfloat matreialAmbient[] = { 0.1,0.1,0.1,0.0 };
 GLfloat matrerialDiffuse[] = { 1.0,1.0,1.0,1.0 };
-GLfloat materialSpecular[] = { 0.4,0.4,0.4,0.0 };
+GLfloat materialSpecular[] = { 0.2,0.2,0.2,0.0 };
+//GLfloat materialEmisson[] = {0.0,0.0,0.0,1.0};
 GLfloat materialShiness[] = { 200.0 };
 
 static GLint fogMode;
@@ -342,6 +343,8 @@ int initialize(void)
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, matrerialDiffuse);
 	glMaterialfv(GL_FRONT, GL_SPECULAR, materialSpecular);
 	glMaterialfv(GL_FRONT, GL_SHININESS, materialShiness);
+//    glMaterialfv(GL_FRONT, GL_EMISSION, materialEmisson);
+
 
 	glEnable(GL_LIGHT0);// can be kept enable, its Light0 already enabled
 	
