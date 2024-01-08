@@ -1,0 +1,6 @@
+#pragma once
+#define BAT_ICON 2001
+#define ID_BITMAP_SMILEY 2002
+#define ID_BITMAP_KUNDALI 2003
+#define ID_BITMAP_STONE 2004
+#define ID_BITMAP_MARBLE 2005
