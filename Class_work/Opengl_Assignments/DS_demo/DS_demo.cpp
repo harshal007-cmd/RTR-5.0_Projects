@@ -1,10 +1,13 @@
-//xxxxxx OpenGL Starts.... First Code xxxxxx// 30th July
-	
 //Common header files
 #include<windows.h>//win32
 #include"Window.h" //or OGL.h (if rename)
 #include<stdio.h>///for file IO
 #include<stdlib.h>//for exit() 
+#include<mmsystem.h>//for sound
+
+#define _USE_MATH_DEFINES 1
+#include<math.h>
+
 
 //OpenGL Header files
 #include<GL/GL.h>
@@ -21,6 +24,7 @@ HGLRC ghrc = NULL; //handle to GL Rendering Contex
 //Link with OpenGL Lib
 #pragma comment(lib,"openGL32.lib")
 #pragma comment(lib,"glu32.lib")
+#pragma comment(lib, "winmm.lib")
 
 //global function declaration
 LRESULT CALLBACK WndProg(HWND, UINT, WPARAM, LPARAM);
@@ -53,6 +57,18 @@ GLfloat materialShiness[] = { 200.0 };
 static GLint fogMode;
 GLuint texture_world = 0;
 GLUquadric* quadric = NULL;
+
+//time mang
+LARGE_INTEGER frequency;
+LARGE_INTEGER frameStart;
+LARGE_INTEGER previousTime;
+GLfloat deltaTime = 0.0;
+
+float lerp(float start, float end, float t)
+{
+	return start + t * (end - start);
+}
+
 
 //Entry point function
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLine, int iCmdShow)
@@ -381,6 +397,11 @@ int initialize(void)
 	glEnable(GL_TEXTURE_2D);
 	quadric = gluNewQuadric();
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+	QueryPerformanceFrequency(&frequency);
+	QueryPerformanceCounter(&previousTime);
+
+
 	resize(WIDTH, HEIGHT);
 	return 0;
 }
