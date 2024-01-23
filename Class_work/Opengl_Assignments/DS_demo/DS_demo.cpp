@@ -12,6 +12,12 @@
 //OpenGL Header files
 #include<GL/GL.h>
 #include<GL/GLU.h>
+#include"glcorearb.h"
+
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
+#include"Terrain.h"
 
 //OpenGL related Global Variables
 HDC ghdc = NULL;
@@ -86,7 +92,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLi
 	TCHAR szAppName[] = TEXT("WINDEV");
 	int iResult = 0;
 	BOOL bDone = FALSE;
-
+	
 	//Screen Size
 	int xScreen, yScreen;
 	xScreen = GetSystemMetrics(SM_CXSCREEN) / 2;
@@ -124,7 +130,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLi
 	//creating window
 	hwnd = CreateWindowEx(WS_EX_APPWINDOW,
 		szAppName,
-		TEXT("HVS:3D Pyramid"),
+		TEXT("HVS:DS Demo"),
 		WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | WS_VISIBLE,
 		(xScreen - WIDTH / 2), (yScreen - HEIGHT / 2), WIDTH, HEIGHT,
 		NULL, NULL,
@@ -187,6 +193,7 @@ LRESULT CALLBACK WndProg(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 	//Function declaration
 	void ToogleFullScreen(void);
 	void resize(int, int);
+	int oldMouseX, oldMouseY;
 
 	//code
 	switch (iMsg)
@@ -200,8 +207,9 @@ LRESULT CALLBACK WndProg(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 	case WM_SIZE:
 		resize(LOWORD(lParam),HIWORD(lParam));
 		break;
+	/*
 	case WM_ERASEBKGND:
-		return 0;
+		return 0;*/
 	case WM_KEYDOWN:
 		switch (LOWORD(wParam))
 		{
@@ -244,6 +252,29 @@ LRESULT CALLBACK WndProg(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 			}
 			break;
 		}
+		break;
+	case WM_MOUSEMOVE:
+
+		// save old mouse coordinates
+		oldMouseX = mouseX;
+		oldMouseY = mouseY;
+
+		// get mouse coordinates from Windows
+		mouseX = LOWORD(lParam);
+		mouseY = HIWORD(lParam);
+
+		// these lines limit the camera's range
+		if (mouseY < 200)
+			mouseY = 200;
+
+		if (mouseY > 450)
+			mouseY = 450;
+
+		if ((mouseX - oldMouseX) > 0)		// mouse moved to the right
+			angle += 3.0f;
+		else if ((mouseX - oldMouseX) < 0)	// mouse moved to the left
+			angle -= 3.0f;
+		return 0;
 		break;
 	case WM_CLOSE:
 		DestroyWindow(hwnd);
@@ -288,11 +319,14 @@ void ToogleFullScreen(void)
 	}
 }
 
+
 int initialize(void)
 {
 	//function declarations
 	void resize(int, int);
-	BOOL loadGLTexture(GLuint*, TCHAR[]);
+	BOOL LoadGLTexture(GLuint*, TCHAR[]);
+	GLuint createTexture2D(const char* filePath);
+	void InitTerrain();
 
 	//code
 	PIXELFORMATDESCRIPTOR pFd;
@@ -352,16 +386,46 @@ int initialize(void)
 		return -5;
 	}
 
+	glActiveTexture = (PFNGLACTIVETEXTUREPROC)wglGetProcAddress("glActiveTextureARB");
+	glMultiTexCoord2f = (PFNGLMULTITEXCOORD2FARBPROC)wglGetProcAddress("glMultiTexCoord2fARB");
+
+	glClearColor(0.1f, 0.1f, 0.1f, 1.0f); //here OpenGL starts
+
 	//Enabling depth
+	/*
 	glShadeModel(GL_SMOOTH);//light, texture etc make it smooth
 	glClearDepth(1.0f);//depth buffer to 1
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);//check less than or equal to with 1.0f
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-
+	*/
 	//Set the Clear color of Window to Blue
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f); //here OpenGL starts
+	
+	//------------ Terrain related ---------------------//
+	glClearDepth(1.0f);
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LEQUAL);
+	glShadeModel(GL_SMOOTH);
+	glEnable(GL_CULL_FACE);
+	glFrontFace(GL_CCW);
+	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
+	glEnable(GL_TEXTURE_2D);
+	texture_land = createTexture2D("grass.bmp");
+	texture_water = createTexture2D("water.bmp");
+
+	int width, height, channel;
+	heightmapData = stbi_load("Terrain2.bmp", &width, &height, &channel, STBI_rgb);
+
+	fprintf(gpFILE, "Terrain Data %d %d %d\n", width, height, channel);
+
+	InitTerrain();
+
+
+	//------------ Terrain related ENDS -----------------//
+
+	//----------- Light related -----------------------//
+	/*
 	glLightfv(GL_LIGHT0, GL_AMBIENT, lightAmbient);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, lightDiffuese);
 	glLightfv(GL_LIGHT0, GL_SPECULAR, lightSpecular);
@@ -373,9 +437,12 @@ int initialize(void)
 	glMaterialfv(GL_FRONT, GL_SHININESS, materialShiness);
 
 	glEnable(GL_LIGHT0);// can be kept enable, its Light0 already enabled
-	
-// /* fog
-///	glEnable(GL_FOG);
+	*/
+	//----------- Light Related ENDS -----------------//
+
+	//----------- Fog releated -----------------------//
+     /* fog
+    ///	glEnable(GL_FOG);
 		GLfloat fogColor[4] = { 0.7, 0.7, 0.7, 1.0 };
 		fogMode = GL_LINEAR;
 		glFogi(GL_FOG_MODE, fogMode);
@@ -385,8 +452,10 @@ int initialize(void)
 		glFogf(GL_FOG_START, 1.0);
 		glFogf(GL_FOG_END, 4.0);
 	
+	//---------- Fog related ENDS ------------------//
+
 	glClearColor(0.7, 0.7, 0.7, 1.0); //background fog color 
-//	*/
+//	
 	bResult = loadGLTexture(&texture_world, MAKEINTRESOURCE(MY_WORLD_BITMAP));
 	if (bResult == FALSE)
 	{
@@ -397,7 +466,7 @@ int initialize(void)
 	glEnable(GL_TEXTURE_2D);
 	quadric = gluNewQuadric();
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
+	*/
 	QueryPerformanceFrequency(&frequency);
 	QueryPerformanceCounter(&previousTime);
 
@@ -405,7 +474,7 @@ int initialize(void)
 	resize(WIDTH, HEIGHT);
 	return 0;
 }
-
+/*
 BOOL loadGLTexture(GLuint* texture, TCHAR imageResourceID[])
 {
 	//local var decl
@@ -449,7 +518,7 @@ BOOL loadGLTexture(GLuint* texture, TCHAR imageResourceID[])
 	return TRUE;
 
 }
-
+*/
 void resize(int width, int height)
 {
 	//code
@@ -483,15 +552,17 @@ void renderSpheres(float x, float y, float z)
  	glPopMatrix();
 }
 
+
 void display(void)
 {
 	//code
+	/*
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-
-	
+	*/
+	/*
 	//3.Following lines should be used when modeling and viewing x-formation is to be done
 	gluLookAt(0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
 		
@@ -503,7 +574,9 @@ void display(void)
 	renderSpheres(1.2,-0.0,-3.0);
 	renderSpheres(1.6,-0.0,-3.5);
 	renderSpheres(2.0,-0.0,-4.0);
-	
+	*/
+
+	displayTerrain();
 	
 
 
@@ -519,6 +592,17 @@ void update(void)
 	{
 		pAngle = pAngle - 360.0f;
 	}
+
+	if (waterHeight > 155.0f)
+		waterDir = false;
+	else if (waterHeight < 154.0f)
+		waterDir = true;
+
+	if (waterDir)
+		waterHeight += 0.01f;
+	else
+		waterHeight -= 0.01f;
+
 
 }
 
