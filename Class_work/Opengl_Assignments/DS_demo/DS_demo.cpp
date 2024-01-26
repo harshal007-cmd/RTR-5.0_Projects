@@ -8,16 +8,9 @@
 #define _USE_MATH_DEFINES 1
 #include<math.h>
 
-
 //OpenGL Header files
 #include<GL/GL.h>
 #include<GL/GLU.h>
-#include"glcorearb.h"
-
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
-
-#include"Terrain.h"
 
 //OpenGL related Global Variables
 HDC ghdc = NULL;
@@ -35,7 +28,6 @@ HGLRC ghrc = NULL; //handle to GL Rendering Contex
 //global function declaration
 LRESULT CALLBACK WndProg(HWND, UINT, WPARAM, LPARAM);
 
-
 //File io
 FILE* gpFILE = NULL;
 
@@ -46,23 +38,6 @@ DWORD dwstyle = 0;
 WINDOWPLACEMENT wpPrev = { sizeof(WINDOWPLACEMENT) };
 BOOL gbFullScreen = FALSE;
 
-GLfloat pAngle = 0.0;
-
-BOOL bLight = FALSE;
-BOOL fog = FALSE;
-GLfloat lightAmbient[] = { 0.1,0.1,0.1,1.0 };
-GLfloat lightDiffuese[] = { 1.0,1.0,1.0,1.0 };
-GLfloat lightSpecular[] = { 1.0,1.0,1.0,1.0 };
-GLfloat lightPosition[] = { 100.0,100.0,100.0,1.0 };
-
-GLfloat matreialAmbient[] = { 0.1,0.1,0.1,0.0 };
-GLfloat matrerialDiffuse[] = { 1.0,1.0,1.0,1.0 };
-GLfloat materialSpecular[] = { 0.4,0.4,0.4,0.0 };
-GLfloat materialShiness[] = { 200.0 };
-
-static GLint fogMode;
-GLuint texture_world = 0;
-GLUquadric* quadric = NULL;
 
 //time mang
 LARGE_INTEGER frequency;
@@ -70,11 +45,21 @@ LARGE_INTEGER frameStart;
 LARGE_INTEGER previousTime;
 GLfloat deltaTime = 0.0;
 
+
+//for gluPers var
+GLfloat angle = 0.0;
+GLfloat vnear = 0.0;
+GLfloat vfar = 0.0;
+GLfloat t = 0.0;
+
+//textre vars
+GLuint texture_clouds = 0;
+
+
 float lerp(float start, float end, float t)
 {
 	return start + t * (end - start);
 }
-
 
 //Entry point function
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLine, int iCmdShow)
@@ -193,8 +178,7 @@ LRESULT CALLBACK WndProg(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 	//Function declaration
 	void ToogleFullScreen(void);
 	void resize(int, int);
-	int oldMouseX, oldMouseY;
-
+	
 	//code
 	switch (iMsg)
 	{
@@ -225,57 +209,10 @@ LRESULT CALLBACK WndProg(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 		case 'f':
 			ToogleFullScreen();
 			break;
-		case 'L':
-		case 'l':
-			if (bLight == FALSE)
-			{
-				glEnable(GL_LIGHTING);
-				bLight = TRUE;
-			}
-			else
-			{
-				glDisable(GL_LIGHTING);
-				bLight = FALSE;
-			}
-			break;
-		case 'O':
-		case 'o':
-			if(fog == FALSE)
-			{
-				glEnable(GL_FOG);
-				fog = TRUE;
-			}
-			else
-			{
-				glDisable(GL_FOG);
-				fog = FALSE;
-			}
-			break;
+		
 		}
 		break;
-	case WM_MOUSEMOVE:
-
-		// save old mouse coordinates
-		oldMouseX = mouseX;
-		oldMouseY = mouseY;
-
-		// get mouse coordinates from Windows
-		mouseX = LOWORD(lParam);
-		mouseY = HIWORD(lParam);
-
-		// these lines limit the camera's range
-		if (mouseY < 200)
-			mouseY = 200;
-
-		if (mouseY > 450)
-			mouseY = 450;
-
-		if ((mouseX - oldMouseX) > 0)		// mouse moved to the right
-			angle += 3.0f;
-		else if ((mouseX - oldMouseX) < 0)	// mouse moved to the left
-			angle -= 3.0f;
-		return 0;
-		break;
+	
 	case WM_CLOSE:
 		DestroyWindow(hwnd);
 		break;
@@ -319,14 +256,11 @@ void ToogleFullScreen(void)
 	}
 }
 
-
 int initialize(void)
 {
 	//function declarations
 	void resize(int, int);
 	BOOL LoadGLTexture(GLuint*, TCHAR[]);
-	GLuint createTexture2D(const char* filePath);
-	void InitTerrain();
 
 	//code
 	PIXELFORMATDESCRIPTOR pFd;
@@ -386,87 +320,26 @@ int initialize(void)
 		return -5;
 	}
 
-	glActiveTexture = (PFNGLACTIVETEXTUREPROC)wglGetProcAddress("glActiveTextureARB");
-	glMultiTexCoord2f = (PFNGLMULTITEXCOORD2FARBPROC)wglGetProcAddress("glMultiTexCoord2fARB");
 
-	glClearColor(0.1f, 0.1f, 0.1f, 1.0f); //here OpenGL starts
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f); //here OpenGL starts
 
 	//Enabling depth
-	/*
+	
 	glShadeModel(GL_SMOOTH);//light, texture etc make it smooth
 	glClearDepth(1.0f);//depth buffer to 1
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);//check less than or equal to with 1.0f
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-	*/
-	//Set the Clear color of Window to Blue
 	
-	//------------ Terrain related ---------------------//
-	glClearDepth(1.0f);
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LEQUAL);
-	glShadeModel(GL_SMOOTH);
-	glEnable(GL_CULL_FACE);
-	glFrontFace(GL_CCW);
-	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-
-	glEnable(GL_TEXTURE_2D);
-	texture_land = createTexture2D("grass.bmp");
-	texture_water = createTexture2D("water.bmp");
-
-	int width, height, channel;
-	heightmapData = stbi_load("Terrain2.bmp", &width, &height, &channel, STBI_rgb);
-
-	fprintf(gpFILE, "Terrain Data %d %d %d\n", width, height, channel);
-
-	InitTerrain();
-
-
-	//------------ Terrain related ENDS -----------------//
-
-	//----------- Light related -----------------------//
-	/*
-	glLightfv(GL_LIGHT0, GL_AMBIENT, lightAmbient);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, lightDiffuese);
-	glLightfv(GL_LIGHT0, GL_SPECULAR, lightSpecular);
-	glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
-
-	glMaterialfv(GL_FRONT, GL_AMBIENT, matreialAmbient);
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, matrerialDiffuse);
-	glMaterialfv(GL_FRONT, GL_SPECULAR, materialSpecular);
-	glMaterialfv(GL_FRONT, GL_SHININESS, materialShiness);
-
-	glEnable(GL_LIGHT0);// can be kept enable, its Light0 already enabled
-	*/
-	//----------- Light Related ENDS -----------------//
-
-	//----------- Fog releated -----------------------//
-     /* fog
-    ///	glEnable(GL_FOG);
-		GLfloat fogColor[4] = { 0.7, 0.7, 0.7, 1.0 };
-		fogMode = GL_LINEAR;
-		glFogi(GL_FOG_MODE, fogMode);
-		glFogfv(GL_FOG_COLOR, fogColor);//actual fog color
-		glFogf(GL_FOG_DENSITY, 0.2);
-		glHint(GL_FOG_HINT, GL_DONT_CARE);
-		glFogf(GL_FOG_START, 1.0);
-		glFogf(GL_FOG_END, 4.0);
-	
-	//---------- Fog related ENDS ------------------//
-
-	glClearColor(0.7, 0.7, 0.7, 1.0); //background fog color 
-//	
-	bResult = loadGLTexture(&texture_world, MAKEINTRESOURCE(MY_WORLD_BITMAP));
+	//texture
+	bResult = LoadGLTexture(&texture_clouds, MAKEINTRESOURCE(MY_CLOUDS_BITMAP));
 	if (bResult == FALSE)
 	{
-		fprintf(gpFILE, "Loadding of Stone Texture failed\n");
+		fprintf(gpFILE, "Loading cluods texture failed\n");
 		return -6;
-
 	}
 	glEnable(GL_TEXTURE_2D);
-	quadric = gluNewQuadric();
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	*/
+
 	QueryPerformanceFrequency(&frequency);
 	QueryPerformanceCounter(&previousTime);
 
@@ -474,51 +347,7 @@ int initialize(void)
 	resize(WIDTH, HEIGHT);
 	return 0;
 }
-/*
-BOOL loadGLTexture(GLuint* texture, TCHAR imageResourceID[])
-{
-	//local var decl
-	HBITMAP hBitmap = NULL;
-	BITMAP bmp;
-
-	hBitmap = (HBITMAP)LoadImage(GetModuleHandle(NULL), imageResourceID, IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION);
-	if (hBitmap == NULL)
-	{
-		fprintf(gpFILE, "Loadimage failed\n");
-		return FALSE;
-
-	}
-
-	//get image data
-	GetObject(hBitmap, sizeof(BITMAP), &bmp);
-
-	//create opengl texture obj
-	glGenTextures(1, texture);
-
-	//bind to gen tex
-	glBindTexture(GL_TEXTURE_2D, *texture);
-
-	//unpack and manage
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
-
-	//set
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-
-	gluBuild2DMipmaps(GL_TEXTURE_2D, 3, bmp.bmWidth, bmp.bmHeight, GL_BGR_EXT, GL_UNSIGNED_BYTE, (void*)bmp.bmBits);
-
-	//Unbind
-	glBindTexture(GL_TEXTURE_2D, 0);
-
-	//Delete
-	DeleteObject(hBitmap);
-
-	hBitmap = NULL;
-
-	return TRUE;
-
-}
-*/
+///*
 void resize(int width, int height)
 {
 	//code
@@ -531,79 +360,225 @@ void resize(int width, int height)
 	glViewport(0, 0, (GLsizei)width, (GLsizei)height);
 	glMatrixMode(GL_PROJECTION);//use GL_Projection from Matrix maths from OpenGL math lib
 	glLoadIdentity();
-	gluPerspective(45.0f, (GLfloat)width / (GLfloat)height, 0.1f, 100.0f);
+	gluPerspective(90.0, (GLfloat)width / (GLfloat)height, 0.1f, 100.0f);
+
+}
+//*/
+/*
+void resize(int width, int height)
+{
+	//code
+	
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+
+	if (width > height)
+	{
+		glOrtho((GLfloat)width / (GLfloat)height * -1.0f, (GLfloat)width / (GLfloat)height * 1.0f, -1.0f, 1.0f, -1.0f, 1.0f);
+	}
+	else
+	{
+		glOrtho(-1.0f, 1.0f, (GLfloat)height / (GLfloat)width * -1.0f, (GLfloat)height / (GLfloat)width * 1.0f, -1.0f, 1.0f);
+	}
+	glViewport(0, 0, (GLsizei)width, (GLsizei)height);
+
 
 }
 
-void renderSpheres(float x, float y, float z)
+//*/
+
+BOOL LoadGLTexture(GLuint* texture, TCHAR img_src[])
 {
- 	glPushMatrix();
- 	glTranslatef(x,y,z);
- 	glRotatef(90.0, -1.0f, 0.0f, 0.0f);
-	glRotatef(pAngle, 0.0f, 0.0f, 1.0f);
+	HBITMAP hBitmap = NULL;
+	BITMAP bmp;
+	BOOL bResult = FALSE;
+	hBitmap = (HBITMAP)LoadImage(GetModuleHandle(NULL), img_src, IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION);
 
-	glBindTexture(GL_TEXTURE_2D, texture_world);
+	if (hBitmap)
+	{
+		bResult = TRUE;
+		GetObject(hBitmap, sizeof(BITMAP), &bmp);
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+		glGenTextures(1, texture);
+		glBindTexture(GL_TEXTURE_2D, *texture);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 
- 	gluQuadricTexture(quadric, GL_TRUE);
-	gluSphere(quadric, 0.3, 500, 500);
+		//Create Texture
+		gluBuild2DMipmaps(GL_TEXTURE_2D, 3, bmp.bmWidth, bmp.bmHeight, GL_BGR_EXT, GL_UNSIGNED_BYTE, bmp.bmBits);
+		glBindTexture(GL_TEXTURE_2D, 0);
+		DeleteObject(hBitmap);
+	}
+	return bResult;
+}
 
-	glBindTexture(GL_TEXTURE_2D, 0);
+void VerticalLines()
+{
+	float xPt1=0.025f;
+	float xPt2=-0.025f;
 
- 	glPopMatrix();
+	glLineWidth(3.2);
+	glBegin(GL_LINES);
+	glColor3f(0.0, 1.0, 0.0);
+	glVertex3f(0.0, 1.0, 0.0);
+	glVertex3f(0.0, -1.0, 0.0);
+	glEnd();
+
+	glColor3f(0.0, 0.0, 1.0);
+	for (int i = 1; i <= 40; i++) 
+	{
+		if (i % 5 == 0) 
+		{
+			glLineWidth(2.2f);
+		}
+		else 
+		{
+			glLineWidth(1.0f);
+		}
+
+		glBegin(GL_LINES);
+		
+		glVertex2f(xPt1, 1.0);
+		glVertex2f(xPt1, -1.0);
+		
+		xPt1 += 0.025;
+		glEnd();
+	}
+
+	glColor3f(0.0, 0.0, 1.0);
+	for (int j = 1; j <= 40; j++) 
+	{
+		if (j % 5 == 0) 
+		{
+			glLineWidth(2.2);
+		}
+		else
+		{
+			glLineWidth(1.0);
+		}
+			
+		glBegin(GL_LINES);
+		glVertex2f(xPt2, 1.0);
+		glVertex2f(xPt2, -1.0);
+		
+		xPt2 -= 0.025f;
+		glEnd();
+	}
+}
+
+void HorizontalLines()
+{
+	float yPt1 = 0.025f;
+	float yPt2 = -0.025f;
+
+	glLineWidth(3.2);
+	glBegin(GL_LINES);
+	glColor3f(1.0, 0.0, 0.0);
+	glVertex3f(-1.0, 0.0, 0.0);
+	glVertex3f(1.0, 0.0, 0.0);
+	glColor3f(0.0, 0.0, 1.0);
+	glEnd();
+
+	glColor3f(0.0, 0.0, 1.0);
+	for (int i = 1; i <= 40; i++)
+	{
+		if (i % 5 == 0)
+			glLineWidth(2.2);
+		else
+			glLineWidth(1.0);
+
+		glBegin(GL_LINES);
+		glVertex2f(-1.0f, yPt1);
+		glVertex2f(1.0f, yPt1);
+
+		yPt1 += 0.025;
+		glEnd();
+	}
+	
+
+	glColor3f(0.0, 0.0, 1.0);
+	for (int j = 1; j <= 40; j++)
+	{
+		if (j % 5 == 0)
+			glLineWidth(2.2);
+		else
+			glLineWidth(1.0);
+		glBegin(GL_LINES);
+		glVertex2f(-1.0f, yPt2);
+		glVertex2f(1.0f, yPt2);
+
+		yPt2 -= 0.025f;
+		glEnd();
+	}
 }
 
 
 void display(void)
 {
 	//code
-	/*
+	
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	*/
-	/*
-	//3.Following lines should be used when modeling and viewing x-formation is to be done
-	gluLookAt(0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
-		
-	renderSpheres(-0.8,-0.0,-0.5);
-	renderSpheres(-0.4,-0.0,-1.0);
-	renderSpheres(-0.0,-0.0,-1.5);
-	renderSpheres(0.4,-0.0,-2.0);
-	renderSpheres(0.8,-0.0,-2.5);
-	renderSpheres(1.2,-0.0,-3.0);
-	renderSpheres(1.6,-0.0,-3.5);
-	renderSpheres(2.0,-0.0,-4.0);
-	*/
-
-	displayTerrain();
 	
 
+	//3.Following lines should be used when modeling and viewing x-formation is to be done
+//	gluLookAt(0.4f, 0.2f, 0.1f, 0.0f, 0.0f, -0.0f, 0.0f, 1.0f, -0.0f);
+	glTranslatef(0.0, 0.0, -0.7);
+	
+	glBindTexture(GL_TEXTURE_2D, texture_clouds);
 
+	/*
+	glBegin(GL_POLYGON);
+	glVertex2f(1.0, 1.0);
+	glVertex2f(-1.0, 1.0);
+	glVertex2f(-1.0, -1.0);
+	glVertex2f(1.0, -1.0);
+	glEnd();
+	*/
+	glBegin(GL_QUADS);
+	glTexCoord2f(1.0, 1.0);//TRight
+	glVertex2f(1.0, 1.0);
+
+	glTexCoord2f(0.0, 1.0);
+	glVertex2f(-1.0, 1.0);
+
+	glTexCoord2f(0.0, 0.0);
+	glVertex2f(-1.0, -1.0);
+
+	glTexCoord2f(1.0, 0.0);
+	glVertex2f(1.0, -1.0);
+
+	glEnd();
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	glColor3f(0.0, 0.0, 0.0);
+	glBegin(GL_POLYGON);
+	glVertex2f(0.3, 0.3);
+	glVertex2f(-0.3, 0.3);
+	glVertex2f(-0.3, -0.3);
+	glVertex2f(0.3, -0.3);
+	glEnd();
+
+
+
+	/*
+	HorizontalLines();
+	
+	VerticalLines();
+	*/
 	SwapBuffers(ghdc);
-
+	
 }
 
 void update(void)
 {
 	//code
-	pAngle += 0.3f;
-	if (pAngle >= 360.0f)
-	{
-		pAngle = pAngle - 360.0f;
-	}
-
-	if (waterHeight > 155.0f)
-		waterDir = false;
-	else if (waterHeight < 154.0f)
-		waterDir = true;
-
-	if (waterDir)
-		waterHeight += 0.01f;
-	else
-		waterHeight -= 0.01f;
-
-
+	
+	
+	
 }
 
 void uninitialize(void)
