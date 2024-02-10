@@ -432,7 +432,7 @@ void resize(int width, int height)
 	glViewport(0, 0, (GLsizei)width, (GLsizei)height);
 	glMatrixMode(GL_PROJECTION);//use GL_Projection from Matrix maths from OpenGL math lib
 	glLoadIdentity();
-	gluPerspective(45.0f, (GLfloat)width / (GLfloat)height, 0.1f, 100.0f);
+	gluPerspective(45.0f, (GLfloat)width / (GLfloat)height, 0.1f, 500.0f);
 
 }
 
@@ -446,7 +446,7 @@ void display(void)
 
 	
 	//3.Following lines should be used when modeling and viewing x-formation is to be done
-	gluLookAt(0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+	gluLookAt(0.0f, -0.0f, 0.1f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
 	glTranslatef(0.0f, 0.0f, -6.0f);
 	glRotatef(90.0, -1.0f, 0.0f, 0.0f);
 	glRotatef(pAngle, 0.0f, 0.0f, 1.0f);

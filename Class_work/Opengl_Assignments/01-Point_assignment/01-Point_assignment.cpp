@@ -45,7 +45,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLi
 	void uninitialize(void);
 	void display(void);
 	void update(void);
-
+	
 	//local variable declarations
 	WNDCLASSEX wndclass;
 	HWND hwnd;

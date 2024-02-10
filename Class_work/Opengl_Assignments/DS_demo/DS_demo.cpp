@@ -339,7 +339,7 @@ int initialize(void)
 		return -6;
 	}
 	glEnable(GL_TEXTURE_2D);
-
+	glEnable(GL_LIGHT0);
 	QueryPerformanceFrequency(&frequency);
 	QueryPerformanceCounter(&previousTime);
 
@@ -360,7 +360,7 @@ void resize(int width, int height)
 	glViewport(0, 0, (GLsizei)width, (GLsizei)height);
 	glMatrixMode(GL_PROJECTION);//use GL_Projection from Matrix maths from OpenGL math lib
 	glLoadIdentity();
-	gluPerspective(90.0, (GLfloat)width / (GLfloat)height, 0.1f, 100.0f);
+	gluPerspective(45.0, (GLfloat)width / (GLfloat)height, 0.1f, 300.0f);
 
 }
 //*/
@@ -512,21 +512,8 @@ void HorizontalLines()
 	}
 }
 
-
-void display(void)
+void clouds_tex()
 {
-	//code
-	
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	
-
-	//3.Following lines should be used when modeling and viewing x-formation is to be done
-//	gluLookAt(0.4f, 0.2f, 0.1f, 0.0f, 0.0f, -0.0f, 0.0f, 1.0f, -0.0f);
-	glTranslatef(0.0, 0.0, -0.7);
-	
 	glBindTexture(GL_TEXTURE_2D, texture_clouds);
 
 	/*
@@ -554,21 +541,50 @@ void display(void)
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-	glColor3f(0.0, 0.0, 0.0);
-	glBegin(GL_POLYGON);
-	glVertex2f(0.3, 0.3);
-	glVertex2f(-0.3, 0.3);
-	glVertex2f(-0.3, -0.3);
-	glVertex2f(0.3, -0.3);
+}
+
+void room()
+{
+	//left wall
+	glBegin(GL_QUADS);
+	//glVertex2f()
 	glEnd();
+}
 
+void display(void)
+{
+	//code
+	
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	
 
+	//3.Following lines should be used when modeling and viewing x-formation is to be done
+//	gluLookAt(0.4f, 0.2f, 0.1f, 0.0f, 0.0f, -0.0f, 0.0f, 1.0f, -0.0f);
+	glTranslatef(0.0, 0.0, -3.0);
+	//glScalef(0.2, 0.0, 0.0);
+	clouds_tex();
+	//glEnable(GL_BLEND);
+	
 	/*
+	glColor3f(1.0, 0.0, 0.0);
+	glBegin(GL_POLYGON);
+	glVertex2f(0.1, 0.1);
+	glVertex2f(-0.1, 0.1);
+	glVertex2f(-0.1, -0.1);
+	glVertex2f(0.1, -0.1);
+	glEnd();
+	*/
+	glLoadIdentity();
+	glTranslatef(0.0,0.0,-2.0);
 	HorizontalLines();
 	
 	VerticalLines();
-	*/
+	
+	glColor3f(1.0, 1.0, 1.0);
+
 	SwapBuffers(ghdc);
 	
 }
