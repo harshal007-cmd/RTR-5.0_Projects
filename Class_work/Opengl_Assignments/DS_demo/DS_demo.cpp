@@ -12,6 +12,10 @@
 #include<GL/GL.h>
 #include<GL/GLU.h>
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
+
 //OpenGL related Global Variables
 HDC ghdc = NULL;
 HGLRC ghrc = NULL; //handle to GL Rendering Contex
@@ -55,7 +59,11 @@ GLfloat t = 0.0;
 //textre vars
 GLuint texture_clouds = 0;
 
-
+//update variables
+GLfloat oUpperY = 0.0;
+GLfloat oLowerY = 0.0;
+GLfloat ot1 = 0.0;
+GLfloat ot2 = 0.0;
 float lerp(float start, float end, float t)
 {
 	return start + t * (end - start);
@@ -260,12 +268,11 @@ int initialize(void)
 {
 	//function declarations
 	void resize(int, int);
-	BOOL LoadGLTexture(GLuint*, TCHAR[]);
-
+//	BOOL LoadGLTexture(GLuint*, TCHAR[]);
+	GLuint createTexture2D(const char*);
 	//code
 	PIXELFORMATDESCRIPTOR pFd;
 	int iPixelFormatIndex = 0;
-	BOOL bResult;
 
 	ZeroMemory(&pFd, sizeof(PIXELFORMATDESCRIPTOR));//init to 0
 	
@@ -332,14 +339,9 @@ int initialize(void)
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 	
 	//texture
-	bResult = LoadGLTexture(&texture_clouds, MAKEINTRESOURCE(MY_CLOUDS_BITMAP));
-	if (bResult == FALSE)
-	{
-		fprintf(gpFILE, "Loading cluods texture failed\n");
-		return -6;
-	}
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_LIGHT0);
+	texture_clouds = createTexture2D("C:\\Users\\lenovo\\Desktop\\RTR_5_Course_Programming\\RTR-5.0_Projects\\Class_work\\Opengl_Assignments\\DS_demo\\clouds1.bmp");
 	QueryPerformanceFrequency(&frequency);
 	QueryPerformanceCounter(&previousTime);
 
@@ -386,6 +388,43 @@ void resize(int width, int height)
 }
 
 //*/
+
+GLuint createTexture2D(const char* filePath)
+{
+    stbi_set_flip_vertically_on_load(true);
+    int width, height, channel;
+    unsigned char* data = stbi_load(filePath,&width, &height, &channel, 0);
+
+    if(!data)
+    {
+        fprintf(gpFILE,"Failed To Load %s Texture\n",filePath);
+        return -1;
+    }	
+
+    GLenum format = GL_RGBA;
+
+    if(channel == STBI_grey)
+        format = GL_RED;
+    else if(channel == STBI_rgb)
+        format = GL_RGB;
+    else if(channel == STBI_rgb_alpha)
+        format = GL_RGBA;
+
+    GLuint texture;
+    glPixelStorei(GL_UNPACK_ALIGNMENT,4);
+    glGenTextures(1,&texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+    glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+    glBindTexture(GL_TEXTURE_2D,0);
+
+    stbi_image_free(data);
+    return texture;
+}
+
 
 BOOL LoadGLTexture(GLuint* texture, TCHAR img_src[])
 {
@@ -543,11 +582,40 @@ void clouds_tex()
 
 }
 
+void opening()
+{
+	//opening, upper and lower
+	glPushMatrix();
+	glColor3f(0.0, 0.0, 0.0);
+	glTranslatef(0.0, oUpperY, 0.0);
+	glBegin(GL_QUADS);
+		glVertex2f(2.0, 2.0);
+		glVertex2f(-2.0, 2.0);
+		glVertex2f(-2.0, 0.0);
+		glVertex2f(2.0, 0.0);
+	glEnd();
+
+	glPopMatrix();
+
+	glColor3f(0.0, 0.0, 0.0);
+	glTranslatef(0.0, (-1) * oUpperY, 0.0);
+	glBegin(GL_QUADS);
+		glVertex2f(2.0, 0.0);
+		glVertex2f(-2.0, 0.0);
+		glVertex2f(-2.0, -2.0);
+		glVertex2f(2.0, -2.0);
+	glEnd();
+	
+}
+
 void room()
 {
-	//left wall
+	//floor
 	glBegin(GL_QUADS);
-	//glVertex2f()
+		glVertex2f(2.0, -0.5);
+		glVertex2f(-2.0, -0.5);
+		glVertex2f(-2.0, -1.875);
+		glVertex2f(2.0, -1.875);
 	glEnd();
 }
 
@@ -561,13 +629,14 @@ void display(void)
 	glLoadIdentity();
 	
 
-	//3.Following lines should be used when modeling and viewing x-formation is to be done
-//	gluLookAt(0.4f, 0.2f, 0.1f, 0.0f, 0.0f, -0.0f, 0.0f, 1.0f, -0.0f);
-	glTranslatef(0.0, 0.0, -3.0);
+//  gluLookAt(0.4f, 0.2f, 0.1f, 0.0f, 0.0f, -0.0f, 0.0f, 1.0f, -0.0f);
+	glTranslatef(0.0, 0.0, -2.4);
 	//glScalef(0.2, 0.0, 0.0);
 	clouds_tex();
-	//glEnable(GL_BLEND);
-	
+	//glLoadIdentity();
+	room();
+	opening();
+
 	/*
 	glColor3f(1.0, 0.0, 0.0);
 	glBegin(GL_POLYGON);
@@ -579,8 +648,9 @@ void display(void)
 	*/
 	glLoadIdentity();
 	glTranslatef(0.0,0.0,-2.0);
-	HorizontalLines();
+
 	
+	HorizontalLines();
 	VerticalLines();
 	
 	glColor3f(1.0, 1.0, 1.0);
@@ -592,6 +662,12 @@ void display(void)
 void update(void)
 {
 	//code
+	if (ot1 <= 1.0)
+	{
+		ot1 += 0.0008;
+	}
+	
+	oUpperY = lerp(0.0, 1.8, ot1);
 	
 	
 	
