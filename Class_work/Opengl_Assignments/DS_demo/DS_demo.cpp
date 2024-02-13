@@ -611,12 +611,136 @@ void opening()
 void room()
 {
 	//floor
+	glColor3f(0.5, 0.5, 0.5);
 	glBegin(GL_QUADS);
 		glVertex2f(2.0, -0.5);
 		glVertex2f(-2.0, -0.5);
 		glVertex2f(-2.0, -1.875);
 		glVertex2f(2.0, -1.875);
 	glEnd();
+
+	//right wall
+	glColor3f(0.3, 0.3, 0.3);
+	glBegin(GL_QUADS);
+		glVertex2f(2.0, 2.0);//upper right
+		glVertex2f(0.625, 2.0);
+		glVertex2f(0.625, -0.5);
+		glVertex2f(2.0, -0.5);
+	glEnd();
+
+	//left wall
+	glColor3f(0.3, 0.3, 0.3);
+	glBegin(GL_QUADS);
+		glVertex2f(-0.625, 2.0);//upper right
+		glVertex2f(-2.0, 2.0);
+		glVertex2f(-2.0, -0.5);
+		glVertex2f(-0.625, -0.5);
+	glEnd();
+
+
+	//Gallary glass
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	glColor4f(0.5, 0.5, 0.5, 0.4);
+	glBegin(GL_QUADS);
+		glVertex2f(0.625, -0.125);//upper right
+		glVertex2f(-0.625, -0.125);
+		glVertex2f(-0.625, -0.5);
+		glVertex2f(0.625, -0.5);
+	glEnd();
+	glEnable(GL_BLEND);
+
+	//glass border
+	glEnable(GL_LINE_SMOOTH);
+	glLineWidth(3.0);
+	glColor3f(0.2, 0.2, 0.2);
+	glBegin(GL_LINES);
+		glVertex2f(0.625, -0.125);
+		glVertex2f(-0.625, -0.125);
+	glEnd();
+	glDisable(GL_LINE_SMOOTH);
+
+}
+
+void watch_border(float cx, float cy, float r, int num_segments, GLfloat t1)
+{
+	// watch border
+
+	glEnable(GL_LINE_SMOOTH);
+	glLineWidth(4.0);
+	glColor3f(1.0f * t1, 0.0f * t1, 0.0f * t1);
+	glBegin(GL_LINE_LOOP);
+	glVertex2f(cx, cy);
+	for (int i = 0; i <= num_segments; ++i)
+	{
+		float theta = 2.0f * 3.1415926f * (float)i / (float)num_segments;
+		float x = r * cosf(theta);
+		float y = r * sinf(theta);
+		glVertex2f(cx + x, cy + y);
+	}
+	glEnd();
+	glDisable(GL_LINE_SMOOTH);
+}
+
+void watch_border(float cx, float cy, float r, int num_segments)
+{
+	// watch border
+
+	glEnable(GL_LINE_SMOOTH);
+	glLineWidth(4.0);
+	glColor3f(1.0f, 0.0f, 0.0f);
+	glBegin(GL_LINE_LOOP);
+	glVertex2f(cx, cy);
+	for (int i = 0; i <= num_segments; ++i)
+	{
+		float theta = 2.0f * 3.1415926f * (float)i / (float)num_segments;
+		float x = r * cosf(theta);
+		float y = r * sinf(theta);
+		glVertex2f(cx + x, cy + y);
+	}
+	glEnd();
+	glDisable(GL_LINE_SMOOTH);
+}
+
+void watch_on_Wall(float cx, float cy, float r, int num_segments)
+{
+	// Watch background
+	glColor3f(0.8f, 0.8f , 0.8f);
+	glBegin(GL_TRIANGLE_FAN);
+	glVertex2f(cx, cy);
+	float theta;
+	for (int i = 0; i <= num_segments; ++i)
+	{
+		theta = 2.0f * 3.1415926f * (float)i / (float)num_segments;
+		float x = r * cosf(theta);
+		float y = r * sinf(theta);
+		glVertex2f(cx + x, cy + y);
+	}
+	glEnd();
+
+	
+	// Moving clock hands --------------
+	//  Moving clock hands --------------
+	glColor3f(0.0, 0.0, 0.0);
+	glPointSize(1.0);
+	glLineWidth(1.5);
+	glBegin(GL_LINES);
+
+	glVertex2f(cx, cy);
+	glVertex2f(cx + 0.06, cy + 0.02);
+
+	glEnd();
+	glColor3f(0.0, 0.0, 0.0);
+	glPointSize(1.0);
+	glLineWidth(1.5);
+	glBegin(GL_LINES);
+
+	glVertex2f(cx, cy);
+	glVertex2f(cx + 0.05,cy + 0.05);
+
+	glEnd();
+
 }
 
 void display(void)
@@ -635,8 +759,11 @@ void display(void)
 	clouds_tex();
 	//glLoadIdentity();
 	room();
-	opening();
+	watch_border(1.0, 0.5, 0.1, 100);
+	watch_on_Wall(1.0, 0.5, 0.1, 100);
 
+	//opening();
+	
 	/*
 	glColor3f(1.0, 0.0, 0.0);
 	glBegin(GL_POLYGON);
@@ -649,10 +776,11 @@ void display(void)
 	glLoadIdentity();
 	glTranslatef(0.0,0.0,-2.0);
 
-	
+	/*
 	HorizontalLines();
 	VerticalLines();
-	
+	//*/
+
 	glColor3f(1.0, 1.0, 1.0);
 
 	SwapBuffers(ghdc);
