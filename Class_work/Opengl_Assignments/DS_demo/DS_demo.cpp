@@ -11,7 +11,7 @@
 //OpenGL Header files
 #include<GL/GL.h>
 #include<GL/GLU.h>
-
+#include"extra.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
@@ -425,7 +425,6 @@ GLuint createTexture2D(const char* filePath)
     return texture;
 }
 
-
 BOOL LoadGLTexture(GLuint* texture, TCHAR img_src[])
 {
 	HBITMAP hBitmap = NULL;
@@ -451,105 +450,6 @@ BOOL LoadGLTexture(GLuint* texture, TCHAR img_src[])
 	return bResult;
 }
 
-void VerticalLines()
-{
-	float xPt1=0.025f;
-	float xPt2=-0.025f;
-
-	glLineWidth(3.2);
-	glBegin(GL_LINES);
-	glColor3f(0.0, 1.0, 0.0);
-	glVertex3f(0.0, 1.0, 0.0);
-	glVertex3f(0.0, -1.0, 0.0);
-	glEnd();
-
-	glColor3f(0.0, 0.0, 1.0);
-	for (int i = 1; i <= 40; i++) 
-	{
-		if (i % 5 == 0) 
-		{
-			glLineWidth(2.2f);
-		}
-		else 
-		{
-			glLineWidth(1.0f);
-		}
-
-		glBegin(GL_LINES);
-		
-		glVertex2f(xPt1, 1.0);
-		glVertex2f(xPt1, -1.0);
-		
-		xPt1 += 0.025;
-		glEnd();
-	}
-
-	glColor3f(0.0, 0.0, 1.0);
-	for (int j = 1; j <= 40; j++) 
-	{
-		if (j % 5 == 0) 
-		{
-			glLineWidth(2.2);
-		}
-		else
-		{
-			glLineWidth(1.0);
-		}
-			
-		glBegin(GL_LINES);
-		glVertex2f(xPt2, 1.0);
-		glVertex2f(xPt2, -1.0);
-		
-		xPt2 -= 0.025f;
-		glEnd();
-	}
-}
-
-void HorizontalLines()
-{
-	float yPt1 = 0.025f;
-	float yPt2 = -0.025f;
-
-	glLineWidth(3.2);
-	glBegin(GL_LINES);
-	glColor3f(1.0, 0.0, 0.0);
-	glVertex3f(-1.0, 0.0, 0.0);
-	glVertex3f(1.0, 0.0, 0.0);
-	glColor3f(0.0, 0.0, 1.0);
-	glEnd();
-
-	glColor3f(0.0, 0.0, 1.0);
-	for (int i = 1; i <= 40; i++)
-	{
-		if (i % 5 == 0)
-			glLineWidth(2.2);
-		else
-			glLineWidth(1.0);
-
-		glBegin(GL_LINES);
-		glVertex2f(-1.0f, yPt1);
-		glVertex2f(1.0f, yPt1);
-
-		yPt1 += 0.025;
-		glEnd();
-	}
-	
-
-	glColor3f(0.0, 0.0, 1.0);
-	for (int j = 1; j <= 40; j++)
-	{
-		if (j % 5 == 0)
-			glLineWidth(2.2);
-		else
-			glLineWidth(1.0);
-		glBegin(GL_LINES);
-		glVertex2f(-1.0f, yPt2);
-		glVertex2f(1.0f, yPt2);
-
-		yPt2 -= 0.025f;
-		glEnd();
-	}
-}
 
 void clouds_tex()
 {
@@ -661,6 +561,54 @@ void room()
 	glEnd();
 	glDisable(GL_LINE_SMOOTH);
 
+
+}
+
+void manStanding(float cx, float cy, float r, int num_segments)
+{
+	//head
+	glColor3f(0.0, 0.0, 0.0);
+	glBegin(GL_TRIANGLE_FAN);
+	glVertex2f(cx, cy);
+	float angle;
+
+	for (int i = 0; i <= num_segments; ++i)
+	{
+		angle = 2.0 * M_PI * (float)i / (float)num_segments;
+		float x = r * cos(angle);
+		float y = r * sin(angle);
+		glVertex2f(cx + x, cy + y);
+	}
+	glEnd();
+
+	//neck
+	glLineWidth(150.0);
+	glColor3f(0.0, 0.0, 0.0);
+	glBegin(GL_LINES);
+		glVertex2f(cx, cy);
+		glVertex2f(cx, cy + (-0.2));
+	glEnd();
+
+	//upper body
+	glColor3f(0.0, 0.0, 0.0);
+	glBegin(GL_POLYGON);
+	glVertex2f(0.07, -0.07);
+	glVertex2f(-0.07, -0.07);
+	glVertex2f(-0.077, -0.077);
+	glVertex2f(-0.077, -0.27);
+	glVertex2f(0.077, -0.27);
+	glVertex2f(0.077, -0.077);
+	glEnd();
+
+	//legs
+		//left
+	glBegin(GL_QUADS);
+	glVertex2f(0.0, -0.4);
+	glVertex2f(-0.085, -0.5);
+	glVertex2f(-0.085, -0.5);
+	glVertex2f(-0.085, -0.0);
+	glEnd();
+
 }
 
 void watch_border(float cx, float cy, float r, int num_segments, GLfloat t1)
@@ -761,7 +709,7 @@ void display(void)
 	room();
 	watch_border(1.0, 0.5, 0.1, 100);
 	watch_on_Wall(1.0, 0.5, 0.1, 100);
-
+	manStanding(0.0, 0.02, 0.06, 100);
 	//opening();
 	
 	/*
@@ -776,7 +724,7 @@ void display(void)
 	glLoadIdentity();
 	glTranslatef(0.0,0.0,-2.0);
 
-	/*
+	///*
 	HorizontalLines();
 	VerticalLines();
 	//*/
