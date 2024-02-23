@@ -1,5 +1,0 @@
-C:/Users/gs-3228/Desktop/RTR-5.0_Projects/RTR-5.0_Projects/Coding Practice/C++/Threading/out/build/x64-Debug/CMakeFiles/edit_cache.dir
-C:/Users/gs-3228/Desktop/RTR-5.0_Projects/RTR-5.0_Projects/Coding Practice/C++/Threading/out/build/x64-Debug/CMakeFiles/rebuild_cache.dir
-C:/Users/gs-3228/Desktop/RTR-5.0_Projects/RTR-5.0_Projects/Coding Practice/C++/Threading/out/build/x64-Debug/Threading/CMakeFiles/Threading.dir
-C:/Users/gs-3228/Desktop/RTR-5.0_Projects/RTR-5.0_Projects/Coding Practice/C++/Threading/out/build/x64-Debug/Threading/CMakeFiles/edit_cache.dir
-C:/Users/gs-3228/Desktop/RTR-5.0_Projects/RTR-5.0_Projects/Coding Practice/C++/Threading/out/build/x64-Debug/Threading/CMakeFiles/rebuild_cache.dir
