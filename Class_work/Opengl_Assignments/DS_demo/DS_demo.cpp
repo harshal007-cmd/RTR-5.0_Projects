@@ -11,6 +11,11 @@
 //OpenGL Header files
 #include<GL/GL.h>
 #include<GL/GLU.h>
+#include"first.h"
+#include"second.h"
+#include"third.h"
+#include"fourth.h"
+#include"fifth.h"
 #include"extra.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
@@ -56,14 +61,8 @@ GLfloat vnear = 0.0;
 GLfloat vfar = 0.0;
 GLfloat t = 0.0;
 
-//textre vars
-GLuint texture_clouds = 0;
+int change = 1;
 
-//update variables
-GLfloat oUpperY = 0.0;
-GLfloat oLowerY = 0.0;
-GLfloat ot1 = 0.0;
-GLfloat ot2 = 0.0;
 float lerp(float start, float end, float t)
 {
 	return start + t * (end - start);
@@ -341,7 +340,11 @@ int initialize(void)
 	//texture
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_LIGHT0);
-	texture_clouds = createTexture2D("C:\\Users\\lenovo\\Desktop\\RTR_5_Course_Programming\\RTR-5.0_Projects\\Class_work\\Opengl_Assignments\\DS_demo\\clouds1.bmp");
+	texture_clouds = createTexture2D("C:\\Users\\gs-3228\\Desktop\\RTR-5.0_Projects\\RTR-5.0_Projects\\Class_work\\Opengl_Assignments\\DS_demo\\clouds1.jpg");
+	texture_build1 = createTexture2D("C:\\Users\\gs-3228\\Desktop\\RTR-5.0_Projects\\RTR-5.0_Projects\\Class_work\\Opengl_Assignments\\DS_demo\\buildings_1.png");
+	texture_fog1 = createTexture2D("C:\\Users\\gs-3228\\Desktop\\RTR-5.0_Projects\\RTR-5.0_Projects\\Class_work\\Opengl_Assignments\\DS_demo\\fog1.png");
+	texture_build2 = createTexture2D("C:\\Users\\gs-3228\\Desktop\\RTR-5.0_Projects\\RTR-5.0_Projects\\Class_work\\Opengl_Assignments\\DS_demo\\buildings2.png");
+	texture_fog2 = createTexture2D("C:\\Users\\gs-3228\\Desktop\\RTR-5.0_Projects\\RTR-5.0_Projects\\Class_work\\Opengl_Assignments\\DS_demo\\fog2.png");
 	QueryPerformanceFrequency(&frequency);
 	QueryPerformanceCounter(&previousTime);
 
@@ -450,247 +453,6 @@ BOOL LoadGLTexture(GLuint* texture, TCHAR img_src[])
 	return bResult;
 }
 
-
-void clouds_tex()
-{
-	glBindTexture(GL_TEXTURE_2D, texture_clouds);
-
-	/*
-	glBegin(GL_POLYGON);
-	glVertex2f(1.0, 1.0);
-	glVertex2f(-1.0, 1.0);
-	glVertex2f(-1.0, -1.0);
-	glVertex2f(1.0, -1.0);
-	glEnd();
-	*/
-	glBegin(GL_QUADS);
-	glTexCoord2f(1.0, 1.0);//TRight
-	glVertex2f(1.0, 1.0);
-
-	glTexCoord2f(0.0, 1.0);
-	glVertex2f(-1.0, 1.0);
-
-	glTexCoord2f(0.0, 0.0);
-	glVertex2f(-1.0, -1.0);
-
-	glTexCoord2f(1.0, 0.0);
-	glVertex2f(1.0, -1.0);
-
-	glEnd();
-
-	glBindTexture(GL_TEXTURE_2D, 0);
-
-}
-
-void opening()
-{
-	//opening, upper and lower
-	glPushMatrix();
-	glColor3f(0.0, 0.0, 0.0);
-	glTranslatef(0.0, oUpperY, 0.0);
-	glBegin(GL_QUADS);
-		glVertex2f(2.0, 2.0);
-		glVertex2f(-2.0, 2.0);
-		glVertex2f(-2.0, 0.0);
-		glVertex2f(2.0, 0.0);
-	glEnd();
-
-	glPopMatrix();
-
-	glColor3f(0.0, 0.0, 0.0);
-	glTranslatef(0.0, (-1) * oUpperY, 0.0);
-	glBegin(GL_QUADS);
-		glVertex2f(2.0, 0.0);
-		glVertex2f(-2.0, 0.0);
-		glVertex2f(-2.0, -2.0);
-		glVertex2f(2.0, -2.0);
-	glEnd();
-	
-}
-
-void room()
-{
-	//floor
-	glColor3f(0.5, 0.5, 0.5);
-	glBegin(GL_QUADS);
-		glVertex2f(2.0, -0.5);
-		glVertex2f(-2.0, -0.5);
-		glVertex2f(-2.0, -1.875);
-		glVertex2f(2.0, -1.875);
-	glEnd();
-
-	//right wall
-	glColor3f(0.3, 0.3, 0.3);
-	glBegin(GL_QUADS);
-		glVertex2f(2.0, 2.0);//upper right
-		glVertex2f(0.625, 2.0);
-		glVertex2f(0.625, -0.5);
-		glVertex2f(2.0, -0.5);
-	glEnd();
-
-	//left wall
-	glColor3f(0.3, 0.3, 0.3);
-	glBegin(GL_QUADS);
-		glVertex2f(-0.625, 2.0);//upper right
-		glVertex2f(-2.0, 2.0);
-		glVertex2f(-2.0, -0.5);
-		glVertex2f(-0.625, -0.5);
-	glEnd();
-
-
-	//Gallary glass
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	glColor4f(0.5, 0.5, 0.5, 0.4);
-	glBegin(GL_QUADS);
-		glVertex2f(0.625, -0.125);//upper right
-		glVertex2f(-0.625, -0.125);
-		glVertex2f(-0.625, -0.5);
-		glVertex2f(0.625, -0.5);
-	glEnd();
-	glEnable(GL_BLEND);
-
-	//glass border
-	glEnable(GL_LINE_SMOOTH);
-	glLineWidth(3.0);
-	glColor3f(0.2, 0.2, 0.2);
-	glBegin(GL_LINES);
-		glVertex2f(0.625, -0.125);
-		glVertex2f(-0.625, -0.125);
-	glEnd();
-	glDisable(GL_LINE_SMOOTH);
-
-
-}
-
-void manStanding(float cx, float cy, float r, int num_segments)
-{
-	//head
-	glColor3f(0.0, 0.0, 0.0);
-	glBegin(GL_TRIANGLE_FAN);
-	glVertex2f(cx, cy);
-	float angle;
-
-	for (int i = 0; i <= num_segments; ++i)
-	{
-		angle = 2.0 * M_PI * (float)i / (float)num_segments;
-		float x = r * cos(angle);
-		float y = r * sin(angle);
-		glVertex2f(cx + x, cy + y);
-	}
-	glEnd();
-
-	//neck
-	glLineWidth(150.0);
-	glColor3f(0.0, 0.0, 0.0);
-	glBegin(GL_LINES);
-		glVertex2f(cx, cy);
-		glVertex2f(cx, cy + (-0.2));
-	glEnd();
-
-	//upper body
-	glColor3f(0.0, 0.0, 0.0);
-	glBegin(GL_POLYGON);
-	glVertex2f(0.07, -0.07);
-	glVertex2f(-0.07, -0.07);
-	glVertex2f(-0.077, -0.077);
-	glVertex2f(-0.077, -0.27);
-	glVertex2f(0.077, -0.27);
-	glVertex2f(0.077, -0.077);
-	glEnd();
-
-	//legs
-		//left
-	glBegin(GL_QUADS);
-	glVertex2f(0.0, -0.4);
-	glVertex2f(-0.085, -0.5);
-	glVertex2f(-0.085, -0.5);
-	glVertex2f(-0.085, -0.0);
-	glEnd();
-
-}
-
-void watch_border(float cx, float cy, float r, int num_segments, GLfloat t1)
-{
-	// watch border
-
-	glEnable(GL_LINE_SMOOTH);
-	glLineWidth(4.0);
-	glColor3f(1.0f * t1, 0.0f * t1, 0.0f * t1);
-	glBegin(GL_LINE_LOOP);
-	glVertex2f(cx, cy);
-	for (int i = 0; i <= num_segments; ++i)
-	{
-		float theta = 2.0f * 3.1415926f * (float)i / (float)num_segments;
-		float x = r * cosf(theta);
-		float y = r * sinf(theta);
-		glVertex2f(cx + x, cy + y);
-	}
-	glEnd();
-	glDisable(GL_LINE_SMOOTH);
-}
-
-void watch_border(float cx, float cy, float r, int num_segments)
-{
-	// watch border
-
-	glEnable(GL_LINE_SMOOTH);
-	glLineWidth(4.0);
-	glColor3f(1.0f, 0.0f, 0.0f);
-	glBegin(GL_LINE_LOOP);
-	glVertex2f(cx, cy);
-	for (int i = 0; i <= num_segments; ++i)
-	{
-		float theta = 2.0f * 3.1415926f * (float)i / (float)num_segments;
-		float x = r * cosf(theta);
-		float y = r * sinf(theta);
-		glVertex2f(cx + x, cy + y);
-	}
-	glEnd();
-	glDisable(GL_LINE_SMOOTH);
-}
-
-void watch_on_Wall(float cx, float cy, float r, int num_segments)
-{
-	// Watch background
-	glColor3f(0.8f, 0.8f , 0.8f);
-	glBegin(GL_TRIANGLE_FAN);
-	glVertex2f(cx, cy);
-	float theta;
-	for (int i = 0; i <= num_segments; ++i)
-	{
-		theta = 2.0f * 3.1415926f * (float)i / (float)num_segments;
-		float x = r * cosf(theta);
-		float y = r * sinf(theta);
-		glVertex2f(cx + x, cy + y);
-	}
-	glEnd();
-
-	
-	// Moving clock hands --------------
-	//  Moving clock hands --------------
-	glColor3f(0.0, 0.0, 0.0);
-	glPointSize(1.0);
-	glLineWidth(1.5);
-	glBegin(GL_LINES);
-
-	glVertex2f(cx, cy);
-	glVertex2f(cx + 0.06, cy + 0.02);
-
-	glEnd();
-	glColor3f(0.0, 0.0, 0.0);
-	glPointSize(1.0);
-	glLineWidth(1.5);
-	glBegin(GL_LINES);
-
-	glVertex2f(cx, cy);
-	glVertex2f(cx + 0.05,cy + 0.05);
-
-	glEnd();
-
-}
-
 void display(void)
 {
 	//code
@@ -702,33 +464,49 @@ void display(void)
 	
 
 //  gluLookAt(0.4f, 0.2f, 0.1f, 0.0f, 0.0f, -0.0f, 0.0f, 1.0f, -0.0f);
-	glTranslatef(0.0, 0.0, -2.4);
+	//glTranslatef(0.0, 0.0, -2.4);
 	//glScalef(0.2, 0.0, 0.0);
-	clouds_tex();
-	//glLoadIdentity();
-	room();
-	watch_border(1.0, 0.5, 0.1, 100);
-	watch_on_Wall(1.0, 0.5, 0.1, 100);
-	manStanding(0.0, 0.02, 0.06, 100);
-	//opening();
 	
-	/*
-	glColor3f(1.0, 0.0, 0.0);
-	glBegin(GL_POLYGON);
-	glVertex2f(0.1, 0.1);
-	glVertex2f(-0.1, 0.1);
-	glVertex2f(-0.1, -0.1);
-	glVertex2f(0.1, -0.1);
-	glEnd();
-	*/
-	glLoadIdentity();
-	glTranslatef(0.0,0.0,-2.0);
+	
+	switch (change)
+	{
+	case 1:
+		glTranslatef(0.0, 0.0, -2.4);
+		scene1();
+		
+		break;
+	case 2:
+	
+		glTranslatef(0.0, 0.0, build1_t);
+		build1_tex();
+		fprintf(gpFILE, "build 1  = %f\n", build1_t);
+		break;
+	case 3:
+		glLoadIdentity();
+		glTranslatef(0.0, 0.0, fog1_t);
+	    fog1_tex();
+		fprintf(gpFILE, "fog t val = %f and Change = %d\n", fog1_t,change);
+		break;
 
-	///*
-	HorizontalLines();
-	VerticalLines();
-	//*/
+	case 4:
+		glLoadIdentity();
+		glTranslatef(0.0, 0.0, build2_t);
+		build2_tex();
+		fprintf(gpFILE, "build2 t val = %f\n", build2_t);
 
+		break;
+	case 5:
+		glLoadIdentity();
+		glTranslatef(0.0, 0.0, fog2_t);
+		fog2_tex();
+		fprintf(gpFILE, "fog2 t val = %f and Change = %d\n", fog2_t,change);
+		break;
+
+	default:
+		change = 0;
+		break;
+	}
+	
 	glColor3f(1.0, 1.0, 1.0);
 
 	SwapBuffers(ghdc);
@@ -738,14 +516,97 @@ void display(void)
 void update(void)
 {
 	//code
-	if (ot1 <= 1.0)
+	switch (change)
 	{
-		ot1 += 0.0008;
+	case 1:
+		if (ot1 <= 1.0)
+			ot1 += 0.007;
+
+		oUpperY = lerp(0.0, 1.0, ot1);
+		change = 2;
+		break;
+	case 2:
+		if (ot2 <= 1.0)
+		{
+			ot2 += 0.001;
+		}
+		build1_t = lerp(-1.0, -3.1, ot2);
+		change = 3;
+		break;
+	case 3:
+		if (ot3 <= 1.0)
+		{
+			ot3 += 0.0003;
+		}
+		fog1_t = lerp(-1.0, -3.1, ot3);
+		change = 4;
+		break;
+	case 4:
+		if (ot4 <= 1.0)
+		{
+			ot4 += 0.0003;
+		}
+		build2_t = lerp(-1.0, -3.1, ot4);
+		change = 4;
+		break;
+	case 5:
+		if (ot5 <= 1.0)
+		{
+			ot5 += 0.0003;
+		}
+		fog2_t = lerp(-1.0, -3.1, ot5);
+	
+		break;
+	default:
+		break;
 	}
+
+/*
+	if (ot1 <= 1.0)
+		ot1 += 0.007;
 	
-	oUpperY = lerp(0.0, 1.8, ot1);
+	oUpperY = lerp(0.0, 1.0, ot1);
+
+
+	if (oUpperY >= 1.0)
+		change = 2;
+
+	if (ot2 <= 1.0)
+	{
+		ot2 += 0.001;
+	}
+	build1_t = lerp(-1.0, -3.1, ot2);
+
+
+	if (build1_t <= -3.1)
+		change = 3;
+		
+	if (ot3 <= 1.0)
+	{
+		ot3 += 0.0003;
+	}
+	fog1_t = lerp(-1.0, -3.1, ot3);
 	
 	
+	if (fog1_t <= -2.0)
+		change = 4;
+	
+	if (ot4 <= 1.0)
+	{
+		ot4 += 0.0003;
+	}
+	build2_t = lerp(-1.0, -3.1, ot4);
+
+	
+	if (build2_t <= -3.0)
+		change = 5;
+	if (ot5 <= 1.0)
+	{
+		ot5 += 0.0003;
+	}
+	fog2_t = lerp(-1.0, -3.1, ot5);
+	*/
+		
 	
 }
 
