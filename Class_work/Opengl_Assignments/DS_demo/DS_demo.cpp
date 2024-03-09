@@ -516,6 +516,7 @@ void display(void)
 void update(void)
 {
 	//code
+	///*
 	switch (change)
 	{
 	case 1:
@@ -560,8 +561,10 @@ void update(void)
 	default:
 		break;
 	}
+	/*/
 
-/*
+
+	/*
 	if (ot1 <= 1.0)
 		ot1 += 0.007;
 	
