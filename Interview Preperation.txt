@@ -1,0 +1,314 @@
+Algorithms and data structures
+1. What main data structures do you know?
+2. As a data container, what are the main differences between array and list?
+3. What is the difference between singly linked list and doubly linked list data structures?
+4. What is the difference between stack and queue data structures?
+5. What is algorithm complexity?
+6. What are associative unordered and ordered containers?
+7. Explain what the binary tree is.
+8. What is the search time complexity for binary tree? Why? Is it guaranteed?
+9. What is the difference between depth-first and breadth-first searches for binary tree?
+10. What is the structure of a hash table? How does it work?
+11. What is the time complexity of add/search operations in a hash table?
+12. Explain what the binary search algorithm is. 
+13. What sorting algorithms do you know?
+
+Practical tasks
+1. How do you effectively delete sequence of elements from the middle of array? 
+2. Given an array with 100 elements (numbers from 0 to 99). One element has been removed from the array. How would you find the removed element? How would you solve this if the array is sorted, or the array is not sorted?
+3. How do you find duplicates in array? How would you solve it for the array of chars?
+4. How do you find the middle element of a singly linked list in one pass?
+5. How do you detect a loop in a singly linked list?
+6. Given an array of numbers: 20, 17, 30, 21, 45, 2, 18. Form a sorted binary tree diagram. How should the sequences be changed to produce the worst binary search tree? 
+7. Provide a recursive and a non-recursive solution for the tree traversal algorithms for a binary tree.
+
+Literature
+
+1. Algorithms (Robert Sedgewick and Kevin Wayne)
+2. Introduction to Algorithms (Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, Clifford Stein)
+3. Programming Pearls (Jon Bentley)
+
+
+----------------------
+
+Computational geometry
+1. What is the difference between a point and a vector?
+2. What is the dot product of two vectors? List its properties.
+3. How do you check if two vectors are parallel/orthogonal?
+4. How do you find a projection of one vector onto the direction of another vector?
+5. What is the cross product? List its properties.
+6. How do you compute an angle between two vectors?
+7. How do you compute a signed angle measured from vector A to vector B on a 3D plane containing both vectors?
+8. How to check if three vectors are coplanar?
+9. Can you uniquely define a plane having two non-collinear vectors? How?
+10. What is the mixed product of three vectors? What is its geometric sense?
+11. What is a convex polygon? How do you check if a polygon is convex or concave?
+
+General questions
+1. Compute the distance between an infinite line and a point in 3D. What needs to be changed to compute the distance between a finite segment and a point?
+2. Compute the distance between two arbitrary infinite lines in 3D.
+3. Compute the intersection line for two planes.
+4. How do you compute the area of a convex polygon? How should the algorithm be changed to work with non-convex polygons?
+5. How do you determine whether a polygon's points go in a clockwise or counter-clockwise direction?
+6. How many parameters are required to uniquely define a line/plane? What are the parameters?
+7. How many parameters are required to uniquely define a sphere/cone/cylinder/torus? What are the parameters?
+8. Is it possible to find a circle's radius and the center point from three points lying on the circle? If yes, how would you do so? Is it possible to do with less than 3 points? 
+9. Suppose you have a triangle. All edge lengths and corner angles are known. How would you compute the radius of the minimum enclosing circle?
+
+Transformations and rotational matrices
+1. Given a coordinate system with X-axis (x1, y1), Y-axis (x2, y2) and an origin O(x,y). What would be the matrix that transforms the point coordinates from a global coordinate space?
+2. How do you turn a 2D vector 90 degrees in a CCW direction?
+3. How do you compute an inverted rotational matrix? 
+4. What would be the transformation matrix that rotates an object around an axis that passes through its origin and is aligned with the Z-direction? How would the matrix change if the axis passed through an arbitrary point P in 3D space?
+5. What would be the matrix for a 0 degree rotation around an axis line that passes point P(0.55, 12.669, 0.15) and has the direction D = (‑0.002196, ‑0.0020014, ‑0.9999956)?
+6. Given two coordinate systems CS1 and CS2 defined by transformation matrices M1 and M2 correspondingly. Given a point P in CS1's space. How do you compute the coordinates of P in CS2's space?
+
+Literature
+
+1. Mathematics for Computer Graphics Applications (M.E. Mortenson) 
+2. 3D Math Primer For Graphics And Game Development (Fletcher Dunn)
+3. Mathematics for 3D Game Programming and Computer Graphics (Eric Lengyel)
+4. Foundations of 3D Computer Graphics (Steven J. Gortler)
+5. Essential Mathematics for Computational Design (Robert McNeel)
+
+----------------------------------
+
+C++
+General questions
+
+1. What is the difference between a reference and a pointer?
+2. Explain the difference between int x; int x(); and int x{};
+3. assert(sizeof(int) != sizeof(long)); Is this statement always true?
+4. What will the following line of code print out and why? unsigned int x = -1; std::cout << x;
+5. Can you explain the difference between new and new[]? Is it possible to delete memory using delete[] allocated within the new operator?
+6. What is the difference between new/malloc or delete/free?
+7. What is the difference between stack and heap allocation?
+8. What is the evaluation order of the function parameters in C++?
+9. What is the construction order of global variables?
+10. What is the forward declaration of classes? What is it used for?
+11. What is the meaning of a const keyword and how can it be used? 
+12. What is the meaning of a static keyword and how can it be used? 
+13. What are the advantages of using friend classes?
+14. What is an abstract class? What is the pure virtual function?
+15. How do you create a virtual constructor and virtual destructor for a class? Why would you do it? 
+16. What is a vtable and how does it work?
+17. Initialization order of Bases and Members.
+18. Is it possible to call a virtual function inside of a constructor/destructor?
+19. What is a template and how is it used? 
+20. What is specialization? How can it help to improve efficiency? 
+21. struct Vector{ int* data; int size; }; Write copy constructor, operator= and destructor for the struct Vector.
+22. What is an iterator? What iterator types do you know?
+23. What is RAII?
+24. When should you use std::unique_ptr vs. std::shared_ptr? 
+25. How should runtime errors be handled in C++? What general approaches do you know?
+26. What will happen if the exception will be thrown within a constructor?
+27. C++ supports multiple inheritance. What is the "diamond problem" that can occur with multiple inheritance? Give an example.
+
+Concurrency and multithreading questions
+
+1. How to create a new thread and give it an execution function? Give an example of a simple function.
+2. What two modes of execution of the thread function can you name?
+3. What C++ features can we use to protect data between multiple threads?
+4. How can we synchronize data between threads?
+5. There is a Value data type that works in a single-threaded environment. Make changes so that it works as efficiently as possible in a multi-threaded environment.
+
+class Value 
+{ 
+private:
+     int m_value{};
+
+public:
+      Value (){}
+      int getValue() const
+      { 
+          return m_value;
+      }
+      void updateValue(int value)
+      { 
+          m_value = value; 
+      } 
+}
+6. There is an algorithm that is divided into 5 parts. They must be executed one by one in different threads, using the result of the previous step. How do you implement it?
+7. What is the difference between using std::async and std::thread?
+8. There is a thread that reads the data, and there is a thread that uses the received data. These threads run independently. How do you implement synchronization between these threads?
+9. What does the co_yield function do?
+10. Explain the difference between sleep_for and sleep_until functions.
+11. Is it possible to find out how many threads are available for parallel work using C++ tools?
+12. There are two mutexes. How do you securely acquire them?
+13. You have a function that needs to be called once, no matter how many threads you have. How will you do it?
+14. What is std::promises used for?
+15. What is std::packaged_task used for?
+16. What is std::future used for?
+17. Is it possible to return an exception from a thread? If yes, please explain.
+18. Does adding multithreading always improve the result?
+19. Is there an alternative to a mutex in C++ to ensure data protection?
+20. What can you tell about std::atomic?
+21. What is a race condition in a multi-threaded application?
+22. What are coroutines?
+23. What is std::jthread? Can you explain the difference between std::jthread and std::thread?
+
+Literature
+
+Introductory without previous programming experience
+1. Programming: Principles and Practice Using C++ (Bjarne Stroustrup)
+
+Introductory with previous programming experience
+1. A Tour of C++ (Bjarne Stroustrup)
+2. Thinking in C++ (Bruce Eckel)
+
+Best practices
+1. Effective C++ (Scott Meyers)
+2. Effective STL (Scott Meyers)
+
+Intermediate
+1. Inside the C++ Object Model (Stanley Lippman)
+2. More Effective C++ (Scott Meyers)
+3. Exceptional C++ (Herb Sutter)
+4. More Exceptional C++ (Herb Sutter)
+5. Exceptional C++ Style (Herb Sutter)
+6. C++ Coding Standards (Herb Sutter and Andrei Alexandrescu)
+7. C++ Concurrency in Action (Anthony Williams)
+
+Advanced
+1. Modern C++ Design (Andrei Alexandrescu)
+2. C++ Template Metaprogramming (David Abrahams and Aleksey Gurtovoy)
+
+--------------------------------------------------------------------------------
+C#
+1. What is the difference between value and reference types? Is it true that the value type is always stored in a stack?
+2. What is the output for this block of code?
+
+struct Num 
+{ 
+     public int i;
+}
+class MyProgram
+{ 
+     static void Main()
+     {
+          Num x = new Num(); 
+          x.i = 10; 
+          Update(x); 
+          Console.Write(x.i);
+     }
+
+      static void Update(Num y)
+     {
+          y.i = 20; 
+     } 
+}
+3. What is the difference between classes and structures? Is it possible to inherit from structure? In what cases it's better to use structures?
+4. What is the purpose of namespaces? Is it good practice to keep your application in a single namespace?
+5. Is the following code correct?
+
+struct Num 
+{ 
+   public const double x = 1.0;
+   public Num(double start)
+   {
+        x = start;
+   }
+}
+6. Will the following code compile?
+
+double d = 1.11;
+ int i = d;
+7. What will be the output for this block of code?
+
+int i = 5;
+ object b = i;
+ i++;
+ int c = ((int)b);
+ c++;
+ Console.Write(i.ToString(), b);
+8. Can you describe why the lock() statement is designed to only accept reference type parameters?
+9. How method arguments are passed in C#? Can this behavior be changed?
+10. What is the difference between Int.Parse and Int.TryParse?
+11. What are the implicit and explicit type conversions?
+12. How do you cast from one reference type to another without risking to throw an exception?
+13. Why isn't it possible to create an instance of an abstract class?
+14. Is it possible to invoke a method from an abstract class?
+15. Is it true that Interface can only contain method declarations?
+16. Is it possible to specify access modifiers inside of an interface?
+17. Can you inherit from two interfaces with the same method name in both of them?
+18. Is it possible to define two methods with the same name and arguments, but with a different return types?
+19. What is the difference between method overriding and overloading?
+20. What does protected internal access modifier mean?
+21. Your class Shape has one constructor with parameters. Can you create an instances of this class by calling new Shape()?
+22. Is it possible to override a method which is declared without a virtual keyword?
+23. What is the difference between new and override keywords in method declaration?
+24. Is it possible to explicitly call a class’ static constructor?
+25. How can you override a static constructor?
+26. Can you use this keyword inside of a static method?
+27. What is the difference between using a static class and a Singleton pattern?
+28. What does immutable mean? Can you provide examples?
+29. How can you create delegates in C#?
+30. Are delegates of a value or a reference type?
+31. What is the difference between events and multicast delegates?
+32. Is there any difference between Action and Function?
+33. What are lambda expressions? What are they used for?
+34. Is it possible to access variables from the outside of a lambda expression?
+35. What is LINQ used for?
+36. What should usually be done inside of a catch statement?
+37. Does the following code make sense?
+
+try
+{
+     DoSomeWork();
+}
+catch(Exception ex){}
+catch(StackOverflowException ex){}
+38. What is reflection? Where can it be used?
+39. What are generics?
+40. What constrains can be applied to generics?
+41. Can Garbage Collection be forced manually?
+42. What are the generations of .NET Garbage Collector?
+43. With the IDisposable interface, what logic is usually placed inside of the Dispose method?
+44. Can you extend the core .NET framework class with your own method?
+
+Literature
+
+Introductory without previous programming experience
+1. C# and the .NET Platform (Andrew Troelsen)
+2. C# 4.0 The Complete Reference (Herbert Schildt)
+
+Advanced
+1. CLR via C# (Jeffrey Richter)
+2. C# in Depth (Jon Skeet)
+3. Agile Principles, Patterns, and Practices in C# (Robert C. Martin, Micah Martin)
+4. Code Complete (Steve McConnell)
+
+----------------------------------------------
+
+CUDA
+General CUDA questions
+
+What is a thread in the CUDA® parallel computing platform? Describe the difference between the CUDA thread and CPU thread.
+What is a CUDA warp?
+What is a CUDA kernel?
+What are CUDA kernel dimensions? How do you choose kernel dimensions?
+Tell me/us about global and shared memory. Compare those types of memory.
+What is “occupancy” in CUDA?
+What is “coalesced memory access”?
+What is “scattered write”?
+What is a “memory bank conflict”? Does it exist for both global and shared memory?
+What are “ideal conditions” for a CUDA application? Could you please share your thoughts on it?
+Does CUDA parallel execution always outperform CPU parallel execution?
+What synchronization mechanisms in CUDA do you know?
+How can communication between thread blocks be achieved?
+How do you measure CUDA application performance? What could hit the performance?
+Tell me/us about profiling tools. How do you profile a CUDA application and an individual CUDA kernel?
+How do you improve the performance of the CUDA kernel?
+What is unified memory?
+Tell me/us about __host__,__global__, and __device__  specifiers.
+GPU architecture-specific questions
+
+What is a streaming multiprocessor?
+What is a load/store unit?
+What is Warp Scheduler?
+What is SFU?
+Tell me/us about FP32 and FP64 units. What are tensor cores?
+Tell me/us about L1 and L2 caches.
+Tell me/us about CUDA registers.
+What is texture memory? What benefits does it provide?
+
