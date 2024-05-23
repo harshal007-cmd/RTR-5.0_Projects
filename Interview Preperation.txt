@@ -173,6 +173,259 @@ Advanced
 1. Modern C++ Design (Andrei Alexandrescu)
 2. C++ Template Metaprogramming (David Abrahams and Aleksey Gurtovoy)
 
+
+##################### C++ Answers ###########################
+What is the difference between a reference and a pointer?
+
+Reference: An alias for an existing variable. It must be initialized when declared and cannot be null or changed to reference another variable.
+Pointer: A variable that stores the memory address of another variable. It can be null, reassigned, and can perform pointer arithmetic.
+
+Explain the difference between int x;, int x();, and int x{};
+
+int x;: Declares an uninitialized integer variable.
+int x();: Declares a function x that returns an integer.
+int x{};: Declares an integer variable x initialized to zero (default initialization).
+
+assert(sizeof(int) != sizeof(long)); Is this statement always true?
+No, this is not always true. The sizes of int and long can be the same, especially on 32-bit systems where both might be 4 bytes.
+What will the following line of code print out and why? unsigned int x = -1; std::cout << x;
+
+It will print the maximum value for unsigned int because -1 is converted to an unsigned value by adding 2^32, resulting in 4294967295 on a typical system.
+
+Can you explain the difference between new and new[]? Is it possible to delete memory using delete[] allocated within the new operator?
+new allocates memory for a single object, while new[] allocates memory for an array of objects.
+Memory allocated with new should be deallocated with delete, and memory allocated with new[] should be deallocated with delete[]. Using delete[] on memory allocated with new is undefined behavior.
+
+What is the difference between new/malloc or delete/free?
+new/delete are C++ operators that call constructors and destructors.
+malloc/free are C functions that allocate and deallocate raw memory without calling constructors or destructors.
+
+What is the difference between stack and heap allocation?
+Stack Allocation: Memory is allocated in the stack frame of the function call. It is fast, limited in size, and automatically deallocated when the function returns.
+Heap Allocation: Memory is allocated from the heap using new/malloc and must be manually deallocated using delete/free. It has a larger, but slower, allocation time and size.
+
+What is the evaluation order of the function parameters in C++?
+The evaluation order of function parameters is unspecified in C++. Each compiler may evaluate them in a different order.
+
+What is the construction order of global variables?
+Global variables are constructed in the order they are defined within a translation unit. Across different translation units, the order is unspecified.
+
+What is the forward declaration of classes? What is it used for?
+Forward Declaration: Declares the existence of a class without defining it. It is used to declare pointers or references to the class, enabling more efficient compilation and resolving circular dependencies.
+
+What is the meaning of the const keyword and how can it be used?
+const Keyword: Indicates that a variable’s value cannot be changed after initialization. It can be used for variables, pointers, references, member functions, and function parameters.
+
+What is the meaning of the static keyword and how can it be used?
+static Keyword:
+In functions: Keeps the variable’s value between function calls.
+In classes: Indicates class-wide variables and methods that belong to the class, not any particular instance.
+In file scope: Limits the variable or function's scope to the file.
+
+What are the advantages of using friend classes?
+Friend Classes: Allow another class to access private and protected members. This can be useful for operator overloading or when two classes need to work closely together.
+What is an abstract class? What is a pure virtual function?
+
+Abstract Class: A class that cannot be instantiated and often contains at least one pure virtual function.
+Pure Virtual Function: A function declared with = 0 in a class, forcing derived classes to provide an implementation.
+
+How do you create a virtual constructor and virtual destructor for a class? Why would you do it?
+Virtual Destructor: Declared with the virtual keyword to ensure the correct destructor is called for derived class objects.
+Virtual Constructor: Not possible in C++. Instead, use factory methods or cloning functions to create instances polymorphically.
+
+What is a vtable and how does it work?
+Vtable (Virtual Table): A table of function pointers used to implement dynamic dispatch for virtual functions. Each class with virtual functions has its own vtable, and objects of that class point to this table.
+Initialization order of Bases and Members.
+
+Bases are initialized before members. Within the member initialization list, members are initialized in the order they are declared in the class, not the order listed in the initializer list.
+
+Is it possible to call a virtual function inside of a constructor/destructor?
+Yes, it is possible, but the version of the virtual function called will be that of the class currently being constructed or destructed, not of any derived classes.
+
+
+What is a template and how is it used?
+Template: Allows functions and classes to operate with generic types. Defined with template <typename T>. They enable code reuse and type safety.
+
+What is specialization? How can it help to improve efficiency?
+Specialization: Defining a specific implementation of a template for a particular type. It can optimize performance for known types.
+
+struct Vector{ int* data; int size; }; Write copy constructor, operator= and destructor for the struct Vector.
+
+cpp
+Copy code
+struct Vector {
+    int* data;
+    int size;
+
+    // Copy constructor
+    Vector(const Vector& other) : size(other.size) {
+        data = new int[size];
+        std::copy(other.data, other.data + size, data);
+    }
+
+    // Copy assignment operator
+    Vector& operator=(const Vector& other) {
+        if (this == &other) return *this; // Self-assignment check
+        delete[] data;
+        size = other.size;
+        data = new int[size];
+        std::copy(other.data, other.data + size, data);
+        return *this;
+    }
+
+    // Destructor
+    ~Vector() {
+        delete[] data;
+    }
+};
+
+
+What is an iterator? What iterator types do you know?
+Iterator: An object that enables traversal over the elements of a container.
+Types: Input, Output, Forward, Bidirectional, Random Access.
+
+What is RAII?
+RAII (Resource Acquisition Is Initialization): A programming idiom where resource allocation is tied to object lifetime, ensuring resources are released when the object is destroyed.
+
+When should you use std::unique_ptr vs. std::shared_ptr?
+std::unique_ptr: For exclusive ownership of a resource.
+std::shared_ptr: For shared ownership, where multiple pointers can own the same resource.
+
+How should runtime errors be handled in C++? What general approaches do you know?
+Use exceptions to handle runtime errors. Other approaches include error codes and assertions.
+
+What will happen if the exception will be thrown within a constructor?
+If an exception is thrown in a constructor, the destructor is not called, but the destructors of any fully constructed base or member objects will be called.
+
+
+C++ supports multiple inheritance. What is the "diamond problem" that can occur with multiple inheritance? Give an example.
+Diamond Problem: Occurs when a class inherits from two classes that have a common base class, causing ambiguity.
+Example:
+cpp
+Copy code
+class A { /* ... */ };
+class B : public A { /* ... */ };
+class C : public A { /* ... */ };
+class D : public B, public C { /* ... */ }; // D has two A bases
+
+
+Concurrency and Multithreading Questions
+How to create a new thread and give it an execution function? Give an example of a simple function.
+
+cpp
+Copy code
+#include <thread>
+void printHello() {
+    std::cout << "Hello, world!" << std::endl;
+}
+
+int main() {
+    std::thread t(printHello);
+    t.join();
+    return 0;
+}
+
+What two modes of execution of the thread function can you name?
+Synchronous (joinable) mode: The main thread waits for the new thread to finish using join().
+Detached mode: The new thread runs independently from the main thread using detach().
+
+
+What C++ features can we use to protect data between multiple threads?
+Mutex: std::mutex, std::recursive_mutex
+Lock: std::lock_guard, std::unique_lock
+Atomic: std::atomic
+
+How can we synchronize data between threads?
+
+Mutexes: Protect shared data.
+Condition Variables: Coordinate thread activities.
+Futures and Promises: Synchronize threads with return values.
+
+There is a Value data type that works in a single-threaded environment. Make changes so that it works as efficiently as possible in a multi-threaded environment.
+cpp
+Copy code
+#include <mutex>
+
+class Value {
+private:
+    int m_value{};
+    mutable std::mutex m_mutex;
+
+public:
+    Value() {}
+    int getValue() const {
+        std::lock_guard<std::mutex> lock(m_mutex);
+        return m_value;
+    }
+    void updateValue(int value) {
+        std::lock_guard<std::mutex> lock(m_mutex);
+        m_value = value;
+    }
+};
+There is an algorithm that is divided into 5 parts. They must be executed one by one in different threads, using the result of the previous step. How do you implement it?
+
+Use a chain of std::promise and std::future to pass results between threads sequentially.
+What is the difference between using std::async and std::thread?
+
+std::async can run tasks asynchronously and return a future. std::thread launches a new thread for immediate execution without built-in return value support.
+There is a thread that reads the data, and there is a thread that uses the received data. These threads run independently. How do you implement synchronization between these threads?
+
+Use a std::condition_variable to notify the consumer thread when data is ready.
+What does the co_yield function do?
+
+co_yield is used in coroutines to suspend execution and return a value, allowing resumption from the same point.
+Explain the difference between sleep_for and sleep_until functions.
+
+sleep_for sleeps for a specified duration.
+sleep_until sleeps until a specified time point.
+
+Is it possible to find out how many threads are available for parallel work using C++ tools?
+Yes, use std::thread::hardware_concurrency() to get the number of hardware threads available.
+
+There are two mutexes. How do you securely acquire them?
+Use std::lock to acquire multiple mutexes securely without risking deadlock.
+
+You have a function that needs to be called once, no matter how many threads you have. How will you do it?
+Use std::call_once with std::once_flag.
+
+What is std::promise used for?
+std::promise is used to set a value or an exception to be retrieved by a std::future.
+
+What is std::packaged_task used for?
+std::packaged_task wraps a callable object so it can be executed asynchronously, returning a std::future.
+
+What is std::future used for?
+std::future is used to retrieve the result of an asynchronous operation.
+
+Is it possible to return an exception from a thread? If yes, please explain.
+Yes, by setting an exception in a std::promise which can be retrieved via a std::future.
+
+Does adding multithreading always improve the result?
+No, due to overhead, synchronization issues, and contention for shared resources.
+
+Is there an alternative to a mutex in C++ to ensure data protection?
+Yes, std::atomic provides a lock-free mechanism for certain operations.
+
+What can you tell about std::atomic?
+std::atomic provides atomic operations on integral types, ensuring thread-safe operations without using locks.
+
+What is a race condition in a multi-threaded application?
+A race condition occurs when multiple threads access shared data concurrently and at least one thread modifies it, leading to undefined behavior.
+
+What are coroutines?
+Coroutines are functions that can suspend execution to be resumed later, enabling cooperative multitasking and simplifying asynchronous programming.
+
+What is std::jthread? Can you explain the difference between std::jthread and std::thread?
+std::jthread is a newer thread class that automatically joins upon destruction, preventing resource leaks. std::thread requires explicit joining or detachment.
+
+
+
+
+
+
+
+
+
 --------------------------------------------------------------------------------
 C#
 1. What is the difference between value and reference types? Is it true that the value type is always stored in a stack?
@@ -312,3 +565,139 @@ Tell me/us about L1 and L2 caches.
 Tell me/us about CUDA registers.
 What is texture memory? What benefits does it provide?
 
+----=============
+
+CUDA Parallel Computing Platform
+1. What is a thread in the CUDA® parallel computing platform? Describe the difference between the CUDA thread and CPU thread.
+CUDA Thread: A lightweight execution unit that runs a portion of a parallel program. Each CUDA thread runs on a CUDA core within a GPU.
+Difference: CUDA threads are managed by the GPU and can be in the thousands or millions, allowing massive parallelism. CPU threads are managed by the operating system and are fewer in number, typically limited to the number of cores and hardware threads in the CPU.
+
+2. What is a CUDA warp?
+CUDA Warp: A group of 32 CUDA threads that execute the same instruction at the same time in SIMD (Single Instruction, Multiple Data) fashion. Warps are the fundamental unit of execution in CUDA.
+
+3. What is a CUDA kernel?
+CUDA Kernel: A function written in CUDA C/C++ that runs on the GPU. Kernels are executed by multiple parallel threads.
+
+4. What are CUDA kernel dimensions? How do you choose kernel dimensions?
+CUDA Kernel Dimensions: Kernels are launched with a specified number of thread blocks (grid) and a specified number of threads per block (block size). This is defined using dim3 for blocks and grids.
+Choosing Dimensions: Depends on the problem size and hardware limitations. Typically, you want to maximize parallelism while considering the maximum number of threads per block (usually 1024) and optimizing for memory access patterns.
+
+5. Tell me/us about global and shared memory. Compare those types of memory.
+Global Memory: Large, slow, and accessible by all threads. It resides off-chip.
+Shared Memory: Faster, on-chip memory accessible by threads within the same block. It allows for efficient data sharing and communication between threads in a block.
+
+6. What is “occupancy” in CUDA?
+Occupancy: The ratio of active warps to the maximum number of possible warps per multiprocessor. High occupancy can help hide memory latency and keep the GPU busy.
+
+7. What is “coalesced memory access”?
+Coalesced Memory Access: A pattern where consecutive threads access consecutive memory addresses, leading to efficient memory transactions and improved performance.
+
+8. What is “scattered write”?
+Scattered Write: A pattern where threads write to non-contiguous memory locations. It can be less efficient than coalesced access due to potential memory transaction overheads.
+
+9. What is a “memory bank conflict”? Does it exist for both global and shared memory?
+Memory Bank Conflict: Occurs in shared memory when multiple threads access different addresses in the same memory bank simultaneously, causing serialization.
+Existence: It exists primarily in shared memory, not in global memory.
+
+10. What are “ideal conditions” for a CUDA application? Could you please share your thoughts on it?
+Ideal Conditions: High occupancy, coalesced memory accesses, minimal memory bank conflicts, balanced load across threads and blocks, and efficient use of shared memory.
+
+11. Does CUDA parallel execution always outperform CPU parallel execution?
+Performance: Not always. CUDA excels at massively parallel tasks with regular memory access patterns. However, for tasks with complex dependencies or limited parallelism, CPU execution might be more efficient.
+
+12. What synchronization mechanisms in CUDA do you know?
+Synchronization Mechanisms:
+__syncthreads(): Synchronizes all threads within a block.
+cudaDeviceSynchronize(): Synchronizes the CPU with the GPU.
+cudaStreamSynchronize(): Synchronizes the CPU with a specific stream.
+
+13. How can communication between thread blocks be achieved?
+Communication Between Blocks: Through global memory. One block writes to global memory, and another reads from it. Synchronization can be achieved using cudaDeviceSynchronize().
+
+14. How do you measure CUDA application performance? What could hit the performance?
+Measuring Performance: Use profiling tools like nvprof, NVIDIA Nsight, and cudaEvent APIs.
+Performance Hits: Inefficient memory access patterns, low occupancy, excessive synchronization, and poor load balancing.
+
+15. Tell me/us about profiling tools. How do you profile a CUDA application and an individual CUDA kernel?
+Profiling Tools:
+nvprof: Command-line profiler.
+NVIDIA Nsight: Integrated development environment for CUDA profiling and debugging.
+cudaEvent APIs: Measure elapsed time between events.
+Profiling Steps: Instrument code with cudaEventRecord and analyze with tools to identify bottlenecks.
+
+16. How do you improve the performance of the CUDA kernel?
+Improving Performance: Optimize memory access patterns, increase occupancy, use shared memory efficiently, minimize synchronization, and ensure coalesced accesses.
+
+17. What is unified memory?
+Unified Memory: A memory management system where the CPU and GPU share a single memory address space, simplifying data management between the two.
+
+18. Tell me/us about __host__, __global__, and __device__ specifiers.
+Specifiers:
+__host__: Declares a function that runs on the CPU.
+__global__: Declares a kernel function that runs on the GPU and is callable from the CPU.
+__device__: Declares a function that runs on the GPU and is callable from other GPU functions.
+GPU Architecture-Specific Questions
+1. What is a streaming multiprocessor?
+Streaming Multiprocessor (SM): A unit within a GPU that executes threads. Each SM has multiple cores, warp schedulers, and various types of memory.
+2. What is a load/store unit?
+Load/Store Unit: Handles memory operations, such as loading data from global memory into registers or storing data from registers to global memory.
+3. What is Warp Scheduler?
+Warp Scheduler: Manages the execution of warps within an SM, scheduling warps based on availability and readiness.
+4. What is SFU?
+SFU (Special Function Unit): Handles mathematical functions like trigonometric, exponential, and logarithmic calculations.
+5. Tell me/us about FP32 and FP64 units. What are tensor cores?
+FP32 and FP64 Units: Handle single-precision (32-bit) and double-precision (64-bit) floating-point operations, respectively.
+Tensor Cores: Specialized units designed for performing mixed-precision matrix multiplications, significantly accelerating deep learning tasks.
+6. Tell me/us about L1 and L2 caches.
+L1 Cache: Per-SM cache that is small and fast, providing low-latency access to frequently used data.
+L2 Cache: Larger, slower, shared cache between all SMs, reducing global memory access latency.
+7. Tell me/us about CUDA registers.
+CUDA Registers: Fast, on-chip storage for each thread. Limited in number and allocated at compile time.
+8. What is texture memory? What benefits does it provide?
+Texture Memory: Specialized read-only memory optimized for spatial locality. Provides benefits like caching, filtering, and interpolation, making it suitable for graphics and certain computational tasks.
+Additional Concepts
+1. Coalesced Memory Access
+Ensuring consecutive threads access consecutive memory addresses, leading to fewer and more efficient memory transactions.
+2. Memory Bank Conflict
+Occurs in shared memory when multiple threads access different addresses within the same memory bank simultaneously, causing serialization and performance degradation.
+Ideal Conditions for a CUDA Application
+High occupancy
+Coalesced memory access
+Minimal memory bank conflicts
+Efficient use of shared memory
+Balanced workload distribution
+Synchronization Mechanisms in CUDA
+__syncthreads(): Synchronizes threads within a block.
+cudaDeviceSynchronize(): Synchronizes the CPU with the GPU.
+cudaStreamSynchronize(): Synchronizes the CPU with a specific stream.
+Communication Between Thread Blocks
+Achieved through global memory. One block writes to global memory, and another reads from it. Synchronization is managed by cudaDeviceSynchronize().
+Measuring CUDA Application Performance
+Use profiling tools like nvprof, NVIDIA Nsight, and cudaEvent APIs to identify and address bottlenecks.
+Profiling Tools
+nvprof: Command-line profiler.
+NVIDIA Nsight: Integrated development environment for CUDA profiling and debugging.
+cudaEvent APIs: Measure elapsed time between events.
+Improving CUDA Kernel Performance
+Optimize memory access patterns
+Increase occupancy
+Use shared memory efficiently
+Minimize synchronization
+Ensure coalesced memory accesses
+Unified Memory
+Simplifies data management between CPU and GPU by providing a shared memory address space.
+__host__, __global__, and __device__ Specifiers
+__host__: Declares a function that runs on the CPU.
+__global__: Declares a kernel function that runs on the GPU and is callable from the CPU.
+__device__: Declares a function that runs on the GPU and is callable from other GPU functions.
+GPU Architecture-Specific Questions
+Streaming Multiprocessor (SM): Executes threads within a GPU, consisting of multiple cores, warp schedulers, and various types of memory.
+Load/Store Unit: Handles memory operations.
+Warp Scheduler: Manages the execution of warps within an SM.
+SFU (Special Function Unit): Handles mathematical functions like trigonometric, exponential, and logarithmic calculations.
+FP32 and FP64 Units: Handle single-precision and double-precision floating-point operations.
+Tensor Cores: Accelerate deep learning tasks through mixed-precision matrix multiplications.
+L1 and L2 Caches: Provide low-latency access to frequently used data, reducing global memory access latency.
+CUDA Registers: Fast, on-chip storage for each thread.
+Texture Memory: Provides benefits like caching, filtering, and interpolation.
+By understanding these concepts and their implications, you can effectively discuss CUDA programming and GPU architecture in an interview setting.
