@@ -1,0 +1,14 @@
+cls
+
+del *.exe
+del *.txt
+
+cl.exe /c /EHsc  /I ..\include\ *.cpp
+
+rc.exe /I ..\include\ ..\resource\Window.rc
+
+link.exe *.obj ..\resource\window.res user32.lib gdi32.lib glew32.lib kernel32.lib /OUT:..\bin\%~1.exe
+
+
+..\bin\%~1.exe
+
