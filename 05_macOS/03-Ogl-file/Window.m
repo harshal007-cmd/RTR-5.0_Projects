@@ -4,7 +4,7 @@
 //gobal variabls
 FILE* gpFile = NULL;
 
-@interface AppDelegate:NSObjet <NSApplicationDelegate, NSWindowDelegate>
+@interface AppDelegate:NSObject <NSApplicationDelegate, NSWindowDelegate>
 @end
 
 @interface GLView:NSView
@@ -17,7 +17,7 @@ int main(int argc, char* argv[])
 	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc]init];
 	
 	//create gloabal shared nsapp obj
-	NSApp =[NSApplication shaderApplication];
+	NSApp =[NSApplication sharedApplication];
 
 	//set its delegate to our AppDelegate custom class
 	[NSApp setDelegate:[[AppDelegate alloc]init]];
@@ -35,7 +35,7 @@ int main(int argc, char* argv[])
 @implementation AppDelegate
 {
 	NSWindow* window;
-	View GLView *glView;
+	NSView *glView;
 }
 
 -(void)applicationDidFinishLaunching:(NSNotification*)notification
@@ -55,16 +55,16 @@ int main(int argc, char* argv[])
 		[self release];
 		[NSApp terminate:self];
 	}
-	fprintf(gpFile,"Program started sucessfully\n");
+	fprintf(gpFile,"Program started successfully\n");
 
 	//declare rectangle fram for our window
 	NSRect win_rect = NSMakeRect(0.0,0.0,800.0,600.0);
 
 	//create window
 	window = [[NSWindow alloc]initWithContentRect:win_rect
-				*					    styleMask:NSWindowStyleMaskTiled |
+									    styleMask:NSWindowStyleMaskTitled |
 												  NSWindowStyleMaskClosable |
-												  NSWindowStyleMaskMiniaturizalble |
+												  NSWindowStyleMaskMiniaturizable |
 												  NSWindowStyleMaskResizable
 										  backing:NSBackingStoreBuffered
 											defer:NO];
@@ -97,7 +97,7 @@ int main(int argc, char* argv[])
 	//Log file closing code
 	if(gpFile)
 	{
-		fprintf(gpFile,"Program finished succesfully\n");
+		fprintf(gpFile,"Program finished successfully\n");
 		fclose(gpFile);
 		gpFile = NULL;
 	}
@@ -125,7 +125,7 @@ int main(int argc, char* argv[])
 -(id)initWithFrame:(NSRect)frame
 {
 	//code
-	self=[supe initWithFrame:frame];
+	self=[super initWithFrame:frame];
 	if(self)
 	{
 
@@ -151,7 +151,7 @@ int main(int argc, char* argv[])
 -(void)keyDown:(NSEvent*)event
 {
 	//code
-	int key = (int)[[event charaters]charactersAtInder:0];
+	int key = (int)[[event characters]characterAtIndex:0];
 
 	switch(key)
 	{
@@ -188,24 +188,4 @@ int main(int argc, char* argv[])
 
 
 //
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
