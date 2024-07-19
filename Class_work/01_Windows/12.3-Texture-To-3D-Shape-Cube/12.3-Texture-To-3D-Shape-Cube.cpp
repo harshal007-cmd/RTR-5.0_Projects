@@ -1,4 +1,4 @@
-	//xxxxxx OpenGL PP Starts.... First Code xxxxxx//
+//xxxxxx OpenGL PP Starts.... First Code xxxxxx//
 //Common header files
 #include<windows.h>//win32
 #include"Window.h" //or OGL.h (if rename)
@@ -6,11 +6,15 @@
 #include<stdlib.h>//for exit()
 
 //OpenGL Header files
-#include"GL/glew.h"//this must be before gl.h
+#include"GL\glew.h"//this must be before gl.h
 #include<GL/GL.h>
 
-#include"vmath.h";
+#include"vmath.h"
 using namespace vmath;
+
+
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 
 
 //OpenGL related Global Variables
@@ -23,16 +27,35 @@ GLuint shaderProgramObject = 0;
 enum
 {
 	AMC_ATTRIBUTE_POSITION = 0,
-	AMC_ATTRIBUTE_COLOR
+	AMC_ATTRIBUTE_NORMAL=1,
+	AMC_ATTRIBUTE_TEXCOORDS
 };
 
-GLuint VAO = 0;
-GLuint VBO_positions= 0;
-GLuint VBO_color = 0;
+GLuint VAO_Cube = 0;
+GLuint VBO_cube_positions = 0;
+GLuint VBO_cube_normal = 0;
+GLuint VBO_texcoord_cube = 0;
 
 GLuint mvpMatrixUniform = 0;
 
 mat4 perspectiveGraphicsProjectionMatrix;  //in vmath
+
+GLuint textureCube;
+GLuint textureSamplerUniform = 0;
+
+GLuint modelViewMatrixUniform = 0;
+GLuint projectionMatrixUniform = 0;
+GLuint ldUniform = 0;
+GLuint kdUniform = 0;
+GLuint lightPositionUniform = 0;
+GLuint keyPressUniform = 0;
+
+BOOL bLightingEnable = FALSE;
+BOOL bAnimationEnable = FALSE;
+
+GLfloat lightDiffuse[] = { 1.0f ,1.0f ,1.0f ,1.0f };
+GLfloat materialDiffuse[] = { 1.0f, 1.f , 1.0f, 1.0f };
+GLfloat lightPosition[] = { 0.0f, 2.0f, 0.0f, 1.0f };
 
 
 //Macros
@@ -58,6 +81,8 @@ WINDOWPLACEMENT wpPrev = { sizeof(WINDOWPLACEMENT) };
 BOOL gbFullScreen = FALSE;
 
 
+GLfloat pAngle = 0.0f;
+GLfloat cAngle = 0.0f;
 
 //Entry point function
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLine, int iCmdShow)
@@ -251,12 +276,51 @@ void ToogleFullScreen(void)
 	}
 }
 
+GLuint createTexture2D(const char* filePath)
+{
+	stbi_set_flip_vertically_on_load(true);
+	int width, height, channel;
+	unsigned char* data = stbi_load(filePath, &width, &height, &channel, 0);
+
+	if (!data)
+	{
+		fprintf(gpFILE, "Failed To Load %s Texture\n", filePath);
+		return -1;
+	}
+
+	GLenum format = GL_RGBA;
+
+	if (channel == STBI_grey)
+		format = GL_RED;
+	else if (channel == STBI_rgb)
+		format = GL_RGB;
+	else if (channel == STBI_rgb_alpha)
+		format = GL_RGBA;
+
+
+	GLuint texture;
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+	glGenerateMipmap(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	stbi_image_free(data);
+	return texture;
+}
+
+
 int initialize(void)
 {
 	//function declarations
 	void printGLInfo();
 	void uninitialize();
-    void resize(int, int);
+	void resize(int, int);
 
 	//code
 	PIXELFORMATDESCRIPTOR pFd;
@@ -329,13 +393,26 @@ int initialize(void)
 		"#version 460 core" \
 		"\n" \
 		"in vec4 aPosition;" \
-		"in vec4 aColor;" \
-		"out vec4 oColor;" \
-        "uniform mat4 uMvpMatrix;" \
+		"in vec3 aNormal;"\
+		"uniform mat4 uModelViewMatrix;" \
+		"uniform mat4 uProjectionMatrix;" \
+		"uniform vec3 uLd;" \
+		"uniform vec3 uKd;" \
+		"uniform vec4 uLightPosition;" \
+		"uniform int uKeyPress;" \
+		"out vec3 oDiffuseLight;" \
+		"in vec2 aTexcoords;" \
+		"uniform mat4 uMvpMatrix;" \
+		"out vec2 oTexcoords;"\
 		"void main(void)" \
 		"{" \
-		"	gl_Position = uMvpMatrix * aPosition;" \
-		"	oColor = aColor;" \
+		"vec4 iPosition = uModelViewMatrix * aPosition;"
+		"mat3 normalMatrix = mat3(transpose(inverse(uModelViewMatrix)));"
+		"vec3 n = normalize(normalMatrix * aNormal);"
+		"vec3 s = normalize(vec3(uLightPosition - iPosition));"
+		"oDiffuseLight = uLd * uKd * max(dot(s, n),0);"
+		"	gl_Position = uProjectionMatrix * uModelViewMatrix * aPosition;" \
+		"	oTexcoords = aTexcoords;" \
 		"}";
 
 	vertexShaderObject = glCreateShader(GL_VERTEX_SHADER);
@@ -369,11 +446,14 @@ int initialize(void)
 	const GLchar* fragmentShaderCode =
 		"#version 460 core" \
 		"\n" \
-		"in vec4 oColor;" \
+		"in vec2 oTexcoords;" \
+		"in vec3 oDiffuseLight;" \
+		"uniform sampler2D uTextureSampler;"\
 		"out vec4 FragColor;" \
 		"void main(void)" \
 		"{" \
-		"	FragColor = oColor;" \
+		"	vec4 tFragColor = texture(uTextureSampler, oTexcoords);" \
+			"FragColor = tFragColor * vec4(oDiffuseLight, 1.0);"
 		"}";
 
 	fragmentShaderObject = glCreateShader(GL_FRAGMENT_SHADER);
@@ -407,7 +487,8 @@ int initialize(void)
 	glAttachShader(shaderProgramObject, vertexShaderObject);
 	glAttachShader(shaderProgramObject, fragmentShaderObject);
 	glBindAttribLocation(shaderProgramObject, AMC_ATTRIBUTE_POSITION, "aPosition");
-	glBindAttribLocation(shaderProgramObject, AMC_ATTRIBUTE_COLOR, "aColor");
+	glBindAttribLocation(shaderProgramObject, AMC_ATTRIBUTE_TEXCOORDS, "aTexcoords");
+	glBindAttribLocation(shaderProgramObject, AMC_ATTRIBUTE_NORMAL, "aNormal");
 
 	glLinkProgram(shaderProgramObject);
 	status = 0;
@@ -432,41 +513,172 @@ int initialize(void)
 		}
 	}
 
-	const GLfloat triangle_position[] =
+	modelViewMatrixUniform = glGetUniformLocation(shaderProgramObject, "uModelViewMatrix");
+	projectionMatrixUniform = glGetUniformLocation(shaderProgramObject, "uProjectionMatrix");
+	ldUniform = glGetUniformLocation(shaderProgramObject, "uLd");
+	kdUniform = glGetUniformLocation(shaderProgramObject, "uKd");
+	lightPositionUniform = glGetUniformLocation(shaderProgramObject, "uLightPosition");
+	textureSamplerUniform = glGetUniformLocation(shaderProgramObject, "uTextureSampler");
+
+
+
+	const GLfloat cube_position[] =
 	{
-		0.0, 1.0, 0.0,
-		-1.0, -1.0, 0.0,
-		1.0, -1.0, 0.0
+
+			// front
+		 1.0f,  1.0f,  1.0f, // top-right of front
+		-1.0f,  1.0f,  1.0f, // top-left of front
+		-1.0f, -1.0f,  1.0f, // bottom-left of front
+		 1.0f, -1.0f,  1.0f, // bottom-right of front
+
+		 // right
+		  1.0f,  1.0f, -1.0f, // top-right of right
+		  1.0f,  1.0f,  1.0f, // top-left of right
+		  1.0f, -1.0f,  1.0f, // bottom-left of right
+		  1.0f, -1.0f, -1.0f, // bottom-right of right
+
+		  // back
+		   1.0f,  1.0f, -1.0f, // top-right of back
+		  -1.0f,  1.0f, -1.0f, // top-left of back
+		  -1.0f, -1.0f, -1.0f, // bottom-left of back
+		   1.0f, -1.0f, -1.0f, // bottom-right of back
+
+		   // left
+		   -1.0f,  1.0f,  1.0f, // top-right of left
+		   -1.0f,  1.0f, -1.0f, // top-left of left
+		   -1.0f, -1.0f, -1.0f, // bottom-left of left
+		   -1.0f, -1.0f,  1.0f, // bottom-right of left
+
+		   // top
+			1.0f,  1.0f, -1.0f, // top-right of top
+		   -1.0f,  1.0f, -1.0f, // top-left of top
+		   -1.0f,  1.0f,  1.0f, // bottom-left of top
+			1.0f,  1.0f,  1.0f, // bottom-right of top
+
+			// bottom
+			 1.0f, -1.0f,  1.0f, // top-right of bottom
+			-1.0f, -1.0f,  1.0f, // top-left of bottom
+			-1.0f, -1.0f, -1.0f, // bottom-left of bottom
+			 1.0f, -1.0f, -1.0f, // bottom-right of bottom
+
+
 	};
 
-	const GLfloat triangle_color[] =
+	const GLfloat cube_texcoords[] =
 	{
-		1.0, 0.0, 0.0,
-		0.0, 1.0, 0.0,
-		0.0, 0.0, 1.0
+
+		// front
+		1.0f, 1.0f, // top-right of front
+		0.0f, 1.0f, // top-left of front
+		0.0f, 0.0f, // bottom-left of front
+		1.0f, 0.0f, // bottom-right of front
+
+		// right
+		1.0f, 1.0f, // top-right of right
+		0.0f, 1.0f, // top-left of right
+		0.0f, 0.0f, // bottom-left of right
+		1.0f, 0.0f, // bottom-right of right
+
+		// back
+		1.0f, 1.0f, // top-right of back
+		0.0f, 1.0f, // top-left of back
+		0.0f, 0.0f, // bottom-left of back
+		1.0f, 0.0f, // bottom-right of back
+
+		// left
+		1.0f, 1.0f, // top-right of left
+		0.0f, 1.0f, // top-left of left
+		0.0f, 0.0f, // bottom-left of left
+		1.0f, 0.0f, // bottom-right of left
+
+		// top
+		1.0f, 1.0f, // top-right of top
+		0.0f, 1.0f, // top-left of top
+		0.0f, 0.0f, // bottom-left of top
+		1.0f, 0.0f, // bottom-right of top
+
+		// bottom
+		1.0f, 1.0f, // top-right of bottom
+		0.0f, 1.0f, // top-left of bottom
+		0.0f, 0.0f, // bottom-left of bottom
+		1.0f, 0.0f, // bottom-right of bottom
 	};
 
+	const GLfloat cube_Normals[] = {
+		// front surface
+		 0.0f,  0.0f,  1.0f, // top-right of front
+		 0.0f,  0.0f,  1.0f, // top-left of front
+		 0.0f,  0.0f,  1.0f, // bottom-left of front
+		 0.0f,  0.0f,  1.0f, // bottom-right of front
+
+		 // right surface
+		 1.0f,  0.0f,  0.0f, // top-right of right
+		 1.0f,  0.0f,  0.0f, // top-left of right
+		 1.0f,  0.0f,  0.0f, // bottom-left of right
+		 1.0f,  0.0f,  0.0f, // bottom-right of right
+
+		 // back surface
+		 0.0f,  0.0f, -1.0f, // top-right of back
+		 0.0f,  0.0f, -1.0f, // top-left of back
+		 0.0f,  0.0f, -1.0f, // bottom-left of back
+		 0.0f,  0.0f, -1.0f, // bottom-right of back
+
+		 // left surface
+		-1.0f,  0.0f,  0.0f, // top-right of left
+		-1.0f,  0.0f,  0.0f, // top-left of left
+		-1.0f,  0.0f,  0.0f, // bottom-left of left
+		-1.0f,  0.0f,  0.0f, // bottom-right of left
+
+		// top surface
+		0.0f,  1.0f,  0.0f, // top-right of top
+		0.0f,  1.0f,  0.0f, // top-left of top
+		0.0f,  1.0f,  0.0f, // bottom-left of top
+		0.0f,  1.0f,  0.0f, // bottom-right of top
+
+		// bottom surface
+		0.0f, -1.0f,  0.0f, // top-right of bottom
+		0.0f, -1.0f,  0.0f, // top-left of bottom
+		0.0f, -1.0f,  0.0f, // bottom-left of bottom
+		0.0f, -1.0f,  0.0f, // bottom-right of bottom
+
+	};
+
+
+	//Pyramid
 	//VAO - vertex array object
-	glGenVertexArrays(1, &VAO);
-	glBindVertexArray(VAO);
+	glGenVertexArrays(1, &VAO_Cube);
+	glBindVertexArray(VAO_Cube);
+
+	//Triangle
 
 	//VBO for position - vertex buffer object
-	glGenBuffers(1, &VBO_positions);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO_positions);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(triangle_position), triangle_position, GL_STATIC_DRAW);
+	glGenBuffers(1, &VBO_cube_positions);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO_cube_positions);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(cube_position), cube_position, GL_STATIC_DRAW);
 	glVertexAttribPointer(AMC_ATTRIBUTE_POSITION, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 	glEnableVertexAttribArray(AMC_ATTRIBUTE_POSITION);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	//VBO for colors
-	glGenBuffers(1, &VBO_color);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO_color);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(triangle_color), triangle_color, GL_STATIC_DRAW);
-	glVertexAttribPointer(AMC_ATTRIBUTE_COLOR, 3, GL_FLOAT, GL_FALSE, 0, NULL);
-	glEnableVertexAttribArray(AMC_ATTRIBUTE_COLOR);
+	glGenBuffers(1, &VBO_texcoord_cube);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO_texcoord_cube);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(cube_texcoords), cube_texcoords, GL_STATIC_DRAW);
+	glVertexAttribPointer(AMC_ATTRIBUTE_TEXCOORDS, 2, GL_FLOAT, GL_FALSE, 0, NULL);
+	glEnableVertexAttribArray(AMC_ATTRIBUTE_TEXCOORDS);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	//VBO For cube normals
+	glGenBuffers(1, &VBO_cube_normal);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO_cube_normal);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(cube_Normals), cube_Normals, GL_STATIC_DRAW);
+	glVertexAttribPointer(AMC_ATTRIBUTE_NORMAL, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	glEnableVertexAttribArray(AMC_ATTRIBUTE_NORMAL);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	glBindVertexArray(0);
+
+	textureCube = createTexture2D("Avengers.jpg");
+
 
 	//Enabling depth
 	glClearDepth(1.0f);//depth buffer to 1
@@ -478,7 +690,7 @@ int initialize(void)
 
 	perspectiveGraphicsProjectionMatrix = vmath::mat4::identity();
 
-    resize(WIDTH, HEIGHT);
+	resize(WIDTH, HEIGHT);
 
 
 	return 0;
@@ -516,7 +728,7 @@ void resize(int width, int height)
 	glViewport(0, 0, (GLsizei)width, (GLsizei)height);
 
 	//set perspective projection matrix
-    perspectiveGraphicsProjectionMatrix = vmath::perspective(45.0f, (GLfloat)width / (GLfloat)height, 0.1f, 100.0f);
+	perspectiveGraphicsProjectionMatrix = vmath::perspective(45.0f, (GLfloat)width / (GLfloat)height, 0.1f, 100.0f);
 
 }
 
@@ -527,18 +739,63 @@ void display(void)
 
 	glUseProgram(shaderProgramObject);
 
-    //X-formation
-    mat4 modelViewMatrix = vmath::translate(0.0f, 0.0f, -3.0f);
-    mat4 modelViewProjectionMatrix = perspectiveGraphicsProjectionMatrix * modelViewMatrix;
+	//Pyramid----------
+		//Cube-----------
+	mat4 modelViewMatrix = mat4::identity();
 
-    //Push above MVP info vertex shader's mvpUniform
-    glUniformMatrix4fv(mvpMatrixUniform, 1, GL_FALSE, modelViewProjectionMatrix);
+	mat4 translationMatrix = mat4::identity();
+	translationMatrix = vmath::translate(0.0f, 0.0f, -4.0f);
 
-	glBindVertexArray(VAO);
+	mat4 scaleMatrix = mat4::identity();
+	scaleMatrix = vmath::scale(0.75f, 0.75f, 0.75f);
 
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	mat4 rotationMatrix1 = mat4::identity();
+	rotationMatrix1 = vmath::rotate(cAngle, 1.0f, 0.0f, 0.0f);
+
+	mat4 rotationMatrix2 = mat4::identity();
+	rotationMatrix2 = vmath::rotate(cAngle, 0.0f, 1.0f, 0.0f);
+
+	mat4 rotationMatrix3 = mat4::identity();
+	rotationMatrix3 = vmath::rotate(cAngle, 0.0f, 0.0f, 1.0f);
+
+	mat4 rotationMatrix = rotationMatrix1 * rotationMatrix2 * rotationMatrix3;
+
+
+	modelViewMatrix = translationMatrix * scaleMatrix * rotationMatrix;
+
+	mat4 modelViewProjectionMatrix = mat4::identity();
+	modelViewProjectionMatrix = perspectiveGraphicsProjectionMatrix * modelViewMatrix;
+
+
+
+	//Push above MVP info vertex shader's mvpUniform
+	glUniformMatrix4fv(modelViewMatrixUniform, 1, GL_FALSE, modelViewMatrix);
+	glUniformMatrix4fv(projectionMatrixUniform, 1, GL_FALSE, perspectiveGraphicsProjectionMatrix);
+
+	//Light
+	//glUniform1i(keyPressUniform, 1);
+	glUniform3fv(ldUniform, 1, lightDiffuse);
+	glUniform3fv(kdUniform, 1, materialDiffuse);
+	glUniform4fv(lightPositionUniform, 1, lightPosition);
+
+
+	//Texture binding 
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, textureCube);	
+	glUniform1i(textureSamplerUniform, 0);
+
+	glBindVertexArray(VAO_Cube);
+
+	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+	glDrawArrays(GL_TRIANGLE_FAN, 4, 4);
+	glDrawArrays(GL_TRIANGLE_FAN, 8, 4);
+	glDrawArrays(GL_TRIANGLE_FAN, 12, 4);
+	glDrawArrays(GL_TRIANGLE_FAN, 16, 4);
+	glDrawArrays(GL_TRIANGLE_FAN, 20, 4);
 
 	glBindVertexArray(0);
+
+
 	glUseProgram(0);
 
 	SwapBuffers(ghdc);
@@ -549,6 +806,11 @@ void display(void)
 void update(void)
 {
 	//code
+	cAngle += 0.07f;
+	if (cAngle >= 360.0f)
+	{
+		cAngle = cAngle - 360.0f;
+	}
 
 }
 
@@ -587,26 +849,35 @@ void uninitialize(void)
 		shaderProgramObject = 0;
 	}
 
+
+
+
+
+	//Triangle
 	//delete VBO of color
-	if (VBO_color)
+	if (VBO_texcoord_cube)
 	{
-		glDeleteBuffers(1, &VBO_color);
-		VBO_color = 0;
+		glDeleteBuffers(1, &VBO_texcoord_cube);
+		VBO_texcoord_cube = 0;
 	}
 
 	//delete VBO of position
-	if (VBO_positions)
+	if (VBO_cube_positions)
 	{
-		glDeleteBuffers(1, &VBO_positions);
-		VBO_positions = 0;
+		glDeleteBuffers(1, &VBO_cube_positions);
+		VBO_cube_positions = 0;
 	}
 
 	//delete VAO
-	if (VAO)
+	if (VAO_Cube)
 	{
-		glDeleteVertexArrays(1, &VAO);
-		VAO = 0;
+		glDeleteVertexArrays(1, &VAO_Cube);
+		VAO_Cube = 0;
 	}
+
+
+
+
 
 	//If application is exiting in fullscreen:
 	if (gbFullScreen == TRUE)
