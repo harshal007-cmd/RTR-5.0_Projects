@@ -1,13 +1,19 @@
 #include<Foundation/Foundation.h>
 #import<Cocoa/Cocoa.h>
+#import <QuartzCore/CVDisplayLink.h>    //CV core video
+#import <OpenGL/gl3.h>                  //gl.h
+#import <OpenGL/gl3ext.h>
+
+//global function declaration
+CVReturn MyDisplayLinkCallback(CVDisplayLinkRef ,const CVTimeStamp *,const CVTimeStamp *,CVOptionFlags , CVOptionFlags *,void *);
 
 //gobal variabls
 FILE* gpFile = NULL;
 
-@interface AppDelegate:NSObject <NSApplicationDelegate, NSWindowDelegate>
+@interface AppDelegate:NSObjet <NSApplicationDelegate, NSWindowDelegate>
 @end
 
-@interface GLView:NSView
+@interface GLView:OpengGLView
 @end
 
 int main(int argc, char* argv[])
@@ -17,7 +23,7 @@ int main(int argc, char* argv[])
 	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc]init];
 	
 	//create gloabal shared nsapp obj
-	NSApp =[NSApplication sharedApplication];
+	NSApp =[NSApplication shaderApplication];
 
 	//set its delegate to our AppDelegate custom class
 	[NSApp setDelegate:[[AppDelegate alloc]init]];
@@ -35,7 +41,7 @@ int main(int argc, char* argv[])
 @implementation AppDelegate
 {
 	NSWindow* window;
-	NSView *glView;
+	View GLView *glView;
 }
 
 -(void)applicationDidFinishLaunching:(NSNotification*)notification
@@ -55,16 +61,16 @@ int main(int argc, char* argv[])
 		[self release];
 		[NSApp terminate:self];
 	}
-	fprintf(gpFile,"Program started successfully\n");
+	fprintf(gpFile,"Program started sucessfully\n");
 
 	//declare rectangle fram for our window
 	NSRect win_rect = NSMakeRect(0.0,0.0,800.0,600.0);
 
 	//create window
 	window = [[NSWindow alloc]initWithContentRect:win_rect
-									    styleMask:NSWindowStyleMaskTitled |
+				*					    styleMask:NSWindowStyleMaskTiled |
 												  NSWindowStyleMaskClosable |
-												  NSWindowStyleMaskMiniaturizable |
+												  NSWindowStyleMaskMiniaturizalble |
 												  NSWindowStyleMaskResizable
 										  backing:NSBackingStoreBuffered
 											defer:NO];
@@ -97,7 +103,7 @@ int main(int argc, char* argv[])
 	//Log file closing code
 	if(gpFile)
 	{
-		fprintf(gpFile,"Program finished successfully\n");
+		fprintf(gpFile,"Program finished succesfully\n");
 		fclose(gpFile);
 		gpFile = NULL;
 	}
@@ -120,26 +126,200 @@ int main(int argc, char* argv[])
 
 //view interface
 @implementation GLView
+{
+	CVDisplayLinkRef displayLink;
+}
 
 
 -(id)initWithFrame:(NSRect)frame
 {
 	//code
-	self=[super initWithFrame:frame];
+	self=[supe initWithFrame:frame];
 	if(self)
 	{
+		NSOpenGLPixelFormatAttribute attributes[] =
+        {
+            NSOpenGLPFAOpenGLProfile,NSOpenGLProfileVersion4_1Core,
+            NSOpenGLPFAScreenMask,CGDisplayIDToOpenGLDisplayMask(kCGDirectMainDisplay),
+            NSOpenGLPFAColorSize,24,
+            NSOpenGLPFADepthSize,32,
+            NSOpenGLPFAAlphaSize,8,
+			NSOpenGLPFANoRecovery,//to tell mac to dont use low level context
+            NSOpenGLPFAAccelerated,//hardware renderer
+            NSOpenGLPFADoubleBuffer,
+            0
+        };
+        
+		//create pixel format using above attributes
+		NSOpenGLPixelFormat *pixelFormat = [[[NSOpenGLPixelFormat alloc]initWithAttributes:attributes]autorelease];
+        
+		//if pixel format failed
+        if(pixelFormat == nil)
+        {
+            fprintf(gpFile,"Creating pixel format failed\n");
+			[self uninitailize]
+            [self release];
+            [NSApp terminate:self];
+        }
 
+		NSOpenGLContext *glContext = [[[NSOpenGLContext alloc]initWithFormat:pixelFormat shareContext:nil]autorelease];
+        if(glContext == nil)
+        {
+            fprintf(gpFile,"Creating opengl context failed\n");
+			[self uninitailize]
+            [self release];
+            [NSApp terminate:self];
+        }
+
+		//set pixel format
+        [self setPixelFormat:pixelFormat];
+
+		//set opengl context
+        [self setOpenGLContext:glContext];     
+        
 	}
-
 	return self;
 
 }
 
+-(void)prepareOpenGL
+{
+    //code
+    [super prepareOpenGL];
+    [[self openGLContext]makeCurrentContext];
+    
+	//matching monitor retracing with double buffer swapin
+    GLint swapInt = 1;
+    [[self openGLContext]setValues:&swapInt forParameter:NSOpenGLCPSwapInterval];
+    
+	//our initialise
+	[self initialise];
+
+
+	//Create and start display link
+    CVDisplayLinkCreateWithActiveCGDisplays(&displayLink);
+    CVDisplayLinkSetOutputCallback(displayLink,&MyDisplayLinkCallback,self);
+    CGLPixelFormatObj cglPixelFormat = (CGLPixelFormatObj)[[self pixelFormat]CGLPixelFormatObj];
+    CGLContextObj cglContext = (CGLContextObj)[[self openGLContext]CGLContextObj];
+    CVDisplayLinkSetCurrentCGDisplayFromOpenGLContext(displayLink,cglContext,cglPixelFormat);
+    CVDisplayLinkStart(displayLink);
+    
+
+}
+
+-(void)reshape
+{
+    //code
+    [super reshape];
+	[[self openGLContext]makeCurrentContext];
+   
+    CGLLockContext((CGLContextObj)[[self openGLContext]CGLContextObj]);   
+    NSRect rect = [self bounds];
+    
+	int width = rect.size.width;
+	int height = rect.size.height;
+	//our resize
+	[self resize:widht :height];
+	
+    CGLUnlockContext((CGLContextObj)[[self openGLContext]CGLContextObj]);
+}
+
+
 //same as wm paint
 -(void)drawRect:(NSRect)dirtyRect
 {
+	//call rendering funtion here too to avoid flickering
+	[self drawView];
+}
+
+//our function
+-(void)drawView
+{
+    //code
+    [[self openGLContext]makeCurrentContext];
+    CGLLockContext((CGLContextObj)[[self openGLContext]CGLContextObj]);
+    
+	///our display
+    [self display];
+        
+    //like swap buffer
+    CGLFlushDrawable((CGLContextObj)[[self openGLContext]CGLContextObj]);
+    
+    CGLUnlockContext((CGLContextObj)[[self openGLContext]CGLContextObj]);
+}
+
+//function return per fram
+-(CVReturn)getFrameForTime:(const CVTimeStamp*)outputTime
+{
+	//code
+	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc]init];
+
+	//call rendering function here too
+	[self drawView];
+	[self myUpdate];
+	[pool release];
+
+	return kCVReturnSuccess;
 
 }
+
+-(int)initialise
+{
+	//code
+	//Enabling depth
+	glClearDepth(1.0f);//depth buffer to 1
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LEQUAL);//check less than or equal to with 1.0f
+
+	//Set the Clear color of Window to Blue
+	glClearColor(0.0f, 0.0f, 1.0f, 1.0f); //here OpenGL starts
+
+
+	return 0;
+}
+
+-(void)printGLInfo
+{
+	fprintf(gpFILE, "OpenGL Vendor    : %s\n", glGetString(GL_VENDOR));
+	fprintf(gpFILE, "OpenGL Renderer  : %s\n", glGetString(GL_RENDERER));
+	fprintf(gpFILE, "OpenGL Version   : %s\n", glGetString(GL_VERSION));
+	fprintf(gpFILE, "OpenGL GLSL version : %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
+
+}
+
+-(void)resize:(int)width :(int)height
+{
+	//code
+	//code
+	if (height <= 0)
+	{
+		height = 1;
+
+	}
+
+	glViewport(0, 0, (GLsizei)width, (GLsizei)height);
+
+}
+
+-(void)Display
+{
+	//code
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
+}
+
+-(void)myUpdate//our update, as mac has update function
+{
+
+}
+
+-(void)uninitailize
+{
+	//code
+
+}
+
 
 -(BOOL)acceptsFirstResponder
 {
@@ -151,11 +331,12 @@ int main(int argc, char* argv[])
 -(void)keyDown:(NSEvent*)event
 {
 	//code
-	int key = (int)[[event characters]characterAtIndex:0];
+	int key = (int)[[event charaters]charactersAtInder:0];
 
 	switch(key)
 	{
 		case 27:
+			[self uninitailize];
 			[self release];
 			[NSApp terminate:self];
 		break;
@@ -183,9 +364,46 @@ int main(int argc, char* argv[])
 -(void)dealloc
 {
 	[super dealloc];
+
+	[self uninitailize];
+
+	if(displayLink)
+	{
+		CVDisplayLinkStop(displayLink);
+    	CVDisplayLinkRelease(displayLink);
+    	
+	}
+	
 }
 @end
 
 
-//
+//defination of global callback function
+CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink,const CVTimeStamp *now,const CVTimeStamp *outputTime, CVOptionFlags flagsIn, CVOptionFlags *flagsOut,void* displayLinkContext)
+{
+    //code
+    CVReturn result = [(MyOpenGLView*)displayLinkContext getFrameForTime:outputTime];
+    
+    return(result);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
