@@ -117,10 +117,11 @@ int main(int argc, char* argv[])
 
 -(void)dealloc
 {
+	[super dealloc];		
     [glView release];
     [window release];
 
-    [super dealloc];
+    
     
 }
 @end
@@ -190,11 +191,11 @@ int main(int argc, char* argv[])
     [[self openGLContext]makeCurrentContext];
     
     //matching monitor retracing with double buffer swapin
-    GLint swapInt = 1;
+    int swapInt = 1;
     [[self openGLContext]setValues:&swapInt forParameter:NSOpenGLCPSwapInterval];
     
     //our initialise
-    [self initialise];
+    int result = [self initialise];
 
 
     //Create and start display link
@@ -363,16 +364,16 @@ int main(int argc, char* argv[])
 }
 
 -(void)dealloc
-{
+{								
     if(displayLink)
     {
         CVDisplayLinkStop(displayLink);
         CVDisplayLinkRelease(displayLink);
-        
+        displayLink= nil;
     }
     [super dealloc];
 
-  //  [self uninitailize];
+    [self uninitailize];
 
     
     
