@@ -1,0 +1,6 @@
+Program started sucessfully
+OpenGL Vendor    : ATI Technologies Inc.
+OpenGL Renderer  : AMD Radeon Pro 5300M OpenGL Engine
+OpenGL Version   : 4.1 ATI-5.5.17
+OpenGL GLSL version : 4.10
+Program finished succesfully
