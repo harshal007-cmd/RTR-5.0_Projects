@@ -499,7 +499,8 @@ int initialize(void)
 		uninitialize();//exit is available in this function
 	}
 
-
+	
+	
 	//Fragment shader
 	const GLchar* fragmentShaderCode =
 		"#version 460 core" \
@@ -527,7 +528,7 @@ int initialize(void)
 		"out vec4 FragColor;" \
 		"void main(void)" \
 		"{" \
-		"vec3 phongADSLight;"
+		"	vec3 phongADSLight = vec3(0.0);"
 		"\n"
 		"if(uKeyPress == 1)"
 		"{"
@@ -536,6 +537,7 @@ int initialize(void)
 		"	vec3 diffuseLight[2];"
 		"	vec3 lightSpecular[2];"
 		"\n"
+		"	vec3 normalMap = texture(uNormalMapSampler, oTexcoords).rgb;"
 		"	vec3 normalizedTransformedNormal = normalize(oTransformedNormals);"
 		"	vec3 normalizedViewerVector = normalize(oViewerVector);"
 		"	for(int i=0;i<2;i++)"
@@ -555,6 +557,7 @@ int initialize(void)
 		"  vec4 textureColor = texture(uTextureSampler, oTexcoords);"
 		"	FragColor = vec4(phongADSLight, 1.0f) * textureColor;"
 		"}";
+		
 
 	fragmentShaderObject = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fragmentShaderObject, 1, (const GLchar**)&fragmentShaderCode, NULL);
