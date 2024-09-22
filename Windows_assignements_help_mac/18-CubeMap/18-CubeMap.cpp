@@ -410,7 +410,7 @@ int initialize(void)
 		"#version 460 core" \
 		"\n" \
 		"layout(location = 0 ) in vec3 aPosition;" \
-		"in vec2 aTexcoords;" \
+		"layout(location = 1 ) in vec2 aTexcoords;" \
 		"uniform mat4 uModelViewMatrix;" \
 		"uniform mat4 uViewMatrix;" \
 		"uniform mat4 uProjectionMatrix;" \
@@ -419,7 +419,7 @@ int initialize(void)
 		"{" \
 		"	oTexcoords = aPosition;" \
 		"	vec4 pos = uProjectionMatrix * uViewMatrix * uModelViewMatrix * vec4(aPosition,1.0);"
-		"	gl_Position = pos.xyww;"
+		"	gl_Position = pos;"
 		"}";
 	/*
 	const GLchar* vertexShaderCode =
@@ -594,9 +594,58 @@ int initialize(void)
 
 	};
 
+	/*
+	const GLfloat cube_texcoords[] =
+	{
+	-1.0f, 1.0f, -1.0f,
+		-1.0f, -1.0f, -1.0f,
+		1.0f, -1.0f, -1.0f,
+		1.0f, -1.0f, -1.0f,
+		1.0f, 1.0f, -1.0f,
+		-1.0f, 1.0f, -1.0f,
+
+		-1.0f, -1.0f, 1.0f,
+		-1.0f, -1.0f, -1.0f,
+		-1.0f, 1.0f, -1.0f,
+		-1.0f, 1.0f, -1.0f,
+		-1.0f, 1.0f, 1.0f,
+		-1.0f, -1.0f, 1.0f,
+
+		1.0f, -1.0f, -1.0f,
+		1.0f, -1.0f, 1.0f,
+		1.0f, 1.0f, 1.0f,
+		1.0f, 1.0f, 1.0f,
+		1.0f, 1.0f, -1.0f,
+		1.0f, -1.0f, -1.0f,
+
+		-1.0f, -1.0f, 1.0f,
+		-1.0f, 1.0f, 1.0f,
+		1.0f, 1.0f, 1.0f,
+		1.0f, 1.0f, 1.0f,
+		1.0f, -1.0f, 1.0f,
+		-1.0f, -1.0f, 1.0f,
+
+		-1.0f, 1.0f, -1.0f,
+		1.0f, 1.0f, -1.0f,
+		1.0f, 1.0f, 1.0f,
+		1.0f, 1.0f, 1.0f,
+		-1.0f, 1.0f, 1.0f,
+		-1.0f, 1.0f, -1.0f,
+
+		-1.0f, -1.0f, -1.0f,
+		-1.0f, -1.0f, 1.0f,
+		1.0f, -1.0f, 1.0f,
+		1.0f, -1.0f, 1.0f,
+		1.0f, -1.0f, -1.0f,
+		1.0f, -1.0f, -1.0f
+
+	};
+	*/
+	
 	const GLfloat cube_texcoords[] =
 	{
 
+			
 		// front
 		1.0f, 1.0f, // top-right of front
 		0.0f, 1.0f, // top-left of front
@@ -633,6 +682,7 @@ int initialize(void)
 		0.0f, 0.0f, // bottom-left of bottom
 		1.0f, 0.0f, // bottom-right of bottom
 	};
+	
 
 	//Pyramid
 	//VAO - vertex array object
