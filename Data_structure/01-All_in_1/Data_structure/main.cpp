@@ -1,6 +1,7 @@
 #include<iostream>
 #include"Queue.h"
 #include"LinkedList.h"
+#include"Graph.h"
 using namespace std;
 
 int main()
@@ -13,6 +14,7 @@ int main()
         cout << "Select any one of following data strutrue to use\n" << endl;
         cout << "1. Queue\n";
         cout << "2. Singly Linked List\n";
+        cout << "3. Graph\n";
         cout << "0. Exit\n";
  
 
@@ -22,6 +24,8 @@ int main()
         //All object initializations
         Queue* q = nullptr;
         LinkedList l;
+        Graph graph;
+        
         ///-------------------
         switch (choice)
         {
@@ -35,6 +39,9 @@ int main()
         case 2:
                 l.main_LinkedList();
                 break;
+        case 3:
+            graph.mainGraph();
+            break;
         case 0:
             exit(0);
             break;

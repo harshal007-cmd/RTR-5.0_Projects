@@ -4,7 +4,7 @@ LinkedList::LinkedList(): head(nullptr){}
 
 LinkedList::~LinkedList()
 {
-    /*
+    
     Node* current = head;
     while(current != nullptr)
     {
@@ -12,7 +12,7 @@ LinkedList::~LinkedList()
         free(current);
         current = next;
     }
-     */
+     
 }
 
 void LinkedList::add(int value)
@@ -148,7 +148,7 @@ void LinkedList::removeAt()
 void LinkedList::showList()
 {
     Node* current =  head;
-    int x;
+    int x=0;
     while(current != nullptr)
     {
         cout<<current->data<<"->";

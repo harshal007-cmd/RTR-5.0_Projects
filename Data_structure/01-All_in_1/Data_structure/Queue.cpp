@@ -42,11 +42,12 @@ int Queue::peek()
 	if (isEmpty())
 	{
 		cout<<"Queue is Empty\n";
+		return -1;
 	}
-	else
-	{
-		return arr[front];
-	}
+	
+	
+	return arr[front];
+	
 
 }
 
