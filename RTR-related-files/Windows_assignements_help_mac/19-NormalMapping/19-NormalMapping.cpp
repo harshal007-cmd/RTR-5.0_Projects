@@ -10,7 +10,7 @@
 #include<GL/GL.h>
 
 #include"vmath.h"
-using namespace vmath;
+using namespace vmath
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
